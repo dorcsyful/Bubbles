@@ -140,15 +140,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BubbleGame.cpp" />
+    <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BubbleObject.h" />
     <ClInclude Include="BubbleGame.h" />
+    <ClInclude Include="BubbleWrapper.h" />
+    <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="Declarations.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="LineObject.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Rendering.h" />
   </ItemGroup>

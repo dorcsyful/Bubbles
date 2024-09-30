@@ -5,14 +5,12 @@
 int main()
 {
 
-    BubbleGame* bubble_game = new BubbleGame();
+    std::unique_ptr<BubbleGame>  bubble_game = std::make_unique<BubbleGame>();
 
     bubble_game->Initialize();
 
 
     bubble_game->Update();
-
-    delete bubble_game;
 
     return 0;
 }
