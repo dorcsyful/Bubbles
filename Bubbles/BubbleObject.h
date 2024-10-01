@@ -21,6 +21,13 @@ public:
 	float GetRadius() const { return m_Radius; }
 	EBUBBLE_TYPE GetBubbleType() const { return m_BubbleType; }
 
+	void SetPosition(const sf::Vector2f& a_NewPosition) { m_Position = a_NewPosition; }
+
+	void ApplyGravity(float a_Delta)
+	{
+		m_Position.y += GRAVITY * WEIGHT * a_Delta;
+	}
+
 private:
 	sf::Vector2f m_Position;
 	float m_Rotation;

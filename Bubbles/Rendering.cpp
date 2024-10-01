@@ -6,6 +6,7 @@
 
 #include "BubbleObject.h"
 #include "Declarations.h"
+#include "LineObject.h"
 
 Rendering::Rendering(const int a_X, const int a_Y)
 {
@@ -28,14 +29,14 @@ void Rendering::Draw() const
 		m_Window->draw(*element);
 	}
 
+
+
+	m_Window->draw(*m_Line);
+	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
 	for (const auto& element : m_BubbleSprites)
 	{
 		m_Window->draw(*element);
 	}
-
-	m_Window->draw(*m_Line);
-	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
-
 	m_Window->display();
 }
 
@@ -47,8 +48,8 @@ void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position
 	newSprite->setTextureRect(sf::IntRect(0, 0, textureSize.x, textureSize.y));
 
 	sf::Vector2f bubbleSize = sf::Vector2f(bubble_sizes.at(a_Size) * 2.f, bubble_sizes.at(a_Size) * 2.f);
-
 	newSprite->setSize(bubbleSize);
+	newSprite->setOrigin(bubble_sizes.at(a_Size),bubble_sizes.at(a_Size));
 	newSprite->setPosition(a_Position);
 	newSprite->setRotation(a_Rotation);
 }
@@ -76,10 +77,20 @@ void Rendering::MovePointerLine(float a_X)
 void Rendering::MovePreviewBubble(EBUBBLE_TYPE a_NewPreview)
 {
 	m_ActiveBubble = a_NewPreview;
-	sf::Vector2f temp = m_PreviewBubbles.at(m_ActiveBubble)->getPosition();
-	temp.x = m_Line->getPosition().x - bubble_sizes.at(a_NewPreview);
-	temp.y = m_Line->getPosition().y - bubble_sizes.at(a_NewPreview);
-	m_PreviewBubbles.at(m_ActiveBubble)->setPosition(temp);
+	m_PreviewBubbles.at(m_ActiveBubble)->setPosition(m_Line->getPosition());
+}
+
+std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
+{
+	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
+	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(m_Container[0]->getPosition(), sf::Vector2f(m_Container[0]->getPosition().x, m_Container[0]->getPosition().y + CONTAINER_HEIGHT));
+	lines.push_back(temp);
+	temp = std::make_shared<LineObject>(m_Container[1]->getPosition(), sf::Vector2f(m_Container[1]->getPosition().x, m_Container[1]->getPosition().y + CONTAINER_HEIGHT));
+	lines.push_back(temp);
+	temp = std::make_shared<LineObject>(m_Container[2]->getPosition(), sf::Vector2f(m_Container[2]->getPosition().x + CONTAINER_WIDTH, m_Container[2]->getPosition().y));
+	lines.push_back(temp);
+
+	return lines;
 }
 
 void Rendering::LoadBackground()

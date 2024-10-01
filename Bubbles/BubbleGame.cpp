@@ -6,6 +6,14 @@ void BubbleGame::Initialize()
 {
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_Gameplay = std::make_unique<Gameplay>();
+	m_Physics = std::make_unique<Physics>();
+
+	auto lines = m_Rendering->ConvertToLine();
+	for (const auto& lineObject : lines)
+	{
+		m_Physics->AddLine(lineObject);
+	}
+
 	m_Wrappers = std::vector<std::shared_ptr<BubbleWrapper>>();
 }
 
@@ -29,6 +37,12 @@ void BubbleGame::Update()
 		}
 
 		m_Gameplay->Update(delta);
+		m_Physics->Update(delta);
+		
+		for (const auto& bubbleWrapper : m_Wrappers)
+		{
+			bubbleWrapper->Update();
+		}
 
 		m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 		m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
@@ -39,13 +53,12 @@ void BubbleGame::Update()
 
 void BubbleGame::AddBubble(float a_Delta)
 {
-	auto newBubble = m_Gameplay->Drop();
+	sf::Vector2f start = m_Rendering->GetPreviewPosition();
+	auto newBubble = m_Gameplay->Drop(start);
 	auto newRendered = m_Rendering->AddSprite(newBubble->GetBubbleType(), newBubble->GetPosition(), 0);
 	std::shared_ptr<BubbleWrapper> wrapper = std::make_shared <BubbleWrapper>(newBubble, newRendered);
 	m_Wrappers.push_back(wrapper);
-
+	m_Physics->AddBubble(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
-
-
 }

@@ -7,11 +7,14 @@ class CollisionDetection
 public:
 
 	//Checks circle against line segment, aka the container. Returns the number of hits
-	static int CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, sf::Vector2f& a_HitPointRef1, sf::Vector2f& a_HitPointRef2);
+	static bool CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, float& a_Penetration, sf::Vector2f& a_Normal);
 	static bool CircleCircleCheck(const BubbleObject& a_First, const BubbleObject& a_Second, sf::Vector2f a_HitPointRef);
 
-	static float TriangleArea(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2, const sf::Vector2f& a_Point3);
-	static float CalculateDistance(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2);
-	static float CalculateDotProduct(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2);
+	static bool PointCircleCheck(const sf::Vector2f& a_Point, const sf::Vector2f& a_Center, float a_Radius);
+	static bool LinePointCheck(const LineObject& a_Line, sf::Vector2f a_Point);
+	static float Distance(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2);
+	static float DistanceSquared(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2);
+	static float Dot(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2);
+	static sf::Vector2f Normalize(const sf::Vector2f& vector);
 };
 

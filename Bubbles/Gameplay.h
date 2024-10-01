@@ -23,7 +23,7 @@ public:
 	void CombineBubble(std::shared_ptr<BubbleObject> a_First, std::shared_ptr<BubbleObject> a_Second);
 	
 	void Move(float a_Direction);
-	std::shared_ptr<BubbleObject> Drop();
+	std::shared_ptr<BubbleObject> Drop(sf::Vector2f a_Start);
 	float GetCurrentPosition() const { return m_CurrentPosition; }
 	EBUBBLE_TYPE GetCurrentBubble() const { return m_CurrentBubble; }
 
