@@ -83,11 +83,17 @@ void Rendering::MovePreviewBubble(EBUBBLE_TYPE a_NewPreview)
 std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
-	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(m_Container[0]->getPosition(), sf::Vector2f(m_Container[0]->getPosition().x, m_Container[0]->getPosition().y + CONTAINER_HEIGHT));
+	sf::Vector2f correctedY = m_Container[0]->getPosition();
+	correctedY.y *= -1;
+	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
 	lines.push_back(temp);
-	temp = std::make_shared<LineObject>(m_Container[1]->getPosition(), sf::Vector2f(m_Container[1]->getPosition().x, m_Container[1]->getPosition().y + CONTAINER_HEIGHT));
+	correctedY = m_Container[1]->getPosition();
+	correctedY.y *= -1;
+	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
 	lines.push_back(temp);
-	temp = std::make_shared<LineObject>(m_Container[2]->getPosition(), sf::Vector2f(m_Container[2]->getPosition().x + CONTAINER_WIDTH, m_Container[2]->getPosition().y));
+	correctedY = m_Container[2]->getPosition();
+	correctedY.y *= -1;
+	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x + CONTAINER_WIDTH, correctedY.y));
 	lines.push_back(temp);
 
 	return lines;

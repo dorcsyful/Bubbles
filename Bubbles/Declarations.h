@@ -1,8 +1,8 @@
 #pragma once
 
 //UI specific
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 800
 #define CONTAINER_LINE_THICKNESS 5
 #define CONTAINER_LINE_COLOR_R 0
 #define CONTAINER_LINE_COLOR_G 0
@@ -22,10 +22,15 @@
 #define CONTAINER_WIDTH 500
 #define CONTAINER_HEIGHT 600
 #define POINTER_MOVE_SPEED 100
-#define GRAVITY 9.81
-#define WEIGHT 10
+#define GRAVITY -90.81
 #include <map>
 
+enum class EOBJECT_TYPE
+{
+	TYPE_NO_TYPE,
+	TYPE_LINE,
+	TYPE_CIRCLE
+};
 
 enum class EBUBBLE_TYPE
 {
@@ -39,3 +44,6 @@ enum class EBUBBLE_TYPE
 
 static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_BLUE, 50}, {EBUBBLE_TYPE::TYPE_YELLOW, 70}, {EBUBBLE_TYPE::TYPE_GREEN, 90},
 												   {EBUBBLE_TYPE::TYPE_PINK, 110},{EBUBBLE_TYPE::TYPE_PURPLE, 130}, {EBUBBLE_TYPE::TYPE_RED, 150} };
+
+static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_BLUE, 10}, {EBUBBLE_TYPE::TYPE_YELLOW, 20}, {EBUBBLE_TYPE::TYPE_GREEN, 30},
+												   {EBUBBLE_TYPE::TYPE_PINK, 40},{EBUBBLE_TYPE::TYPE_PURPLE, 50}, {EBUBBLE_TYPE::TYPE_RED, 60} };

@@ -151,6 +151,7 @@
     <ClInclude Include="BubbleGame.h" />
     <ClInclude Include="BubbleWrapper.h" />
     <ClInclude Include="CollisionDetection.h" />
+    <ClInclude Include="CollisionManifold.h" />
     <ClInclude Include="Declarations.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gameplay.h" />

@@ -1,11 +1,6 @@
 #pragma once
 
-enum class EOBJECT_TYPE
-{
-	TYPE_NO_TYPE,
-	TYPE_LINE,
-	TYPE_CIRCLE
-};
+
 
 
 class GameObject

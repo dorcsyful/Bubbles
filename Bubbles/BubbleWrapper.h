@@ -10,8 +10,9 @@ public:
 
 	void Update()
 	{
-		
-		m_Rendered->setPosition(m_GameBubble->GetPosition());
+		sf::Vector2f position = m_GameBubble->GetPosition();
+		position.y *= -1;
+		m_Rendered->setPosition(position);
 		m_Rendered->setRotation(0);
 	}
 	std::shared_ptr<sf::RectangleShape> GetShape() { return m_Rendered; }

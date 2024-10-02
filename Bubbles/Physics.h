@@ -19,7 +19,6 @@ public:
 private:
 
 	void DetectCollision();
-	void Integrate(float a_Delta);
 
 	std::vector<std::shared_ptr<LineObject>> m_Lines;
 	std::vector<std::shared_ptr<BubbleObject>> m_Bubbles;

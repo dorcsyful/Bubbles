@@ -1,10 +1,9 @@
 #include "CollisionDetection.h"
 
-bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, float& a_Penetration, sf::Vector2f& a_Normal)
-{
+#include <iostream>
 
-// is either end INSIDE the circle?
-	// if so, return true immediately
+bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, const std::shared_ptr<CollisionManifold>& a_Manifold)
+{
 	bool inside1 = PointCircleCheck(a_Line.GetStart(), a_Bubble.GetPosition(), a_Bubble.GetRadius());
 	bool inside2 = PointCircleCheck(a_Line.GetEnd(), a_Bubble.GetPosition(), a_Bubble.GetRadius());
 	if (inside1 || inside2) return true;
@@ -32,9 +31,8 @@ bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const Lin
 	float distX = closestX - a_Bubble.GetPosition().x;
 	float distY = closestY - a_Bubble.GetPosition().y;
 	float distance = sqrtf((distX * distX) + (distY * distY));
-
-	a_Penetration = distance;
-	a_Normal = Normalize((sf::Vector2f(closestX, closestY) - a_Bubble.GetPosition()));
+	a_Manifold->m_Penetration = distance;
+	a_Manifold->m_Normal = Normalize((sf::Vector2f(closestX, closestY) - a_Bubble.GetPosition()));
 	return distance <= a_Bubble.GetRadius();
 }
 
@@ -54,7 +52,7 @@ bool CollisionDetection::PointCircleCheck(const sf::Vector2f& a_Point, const sf:
 	return false;
 }
 
-bool CollisionDetection::LinePointCheck(const LineObject& a_Line, sf::Vector2f a_Point)
+bool CollisionDetection::LinePointCheck(const LineObject& a_Line, const sf::Vector2f& a_Point)
 {
 	// get distance from the point to the two ends of the line
 	float d1 = Distance(a_Point, a_Line.GetStart());
@@ -89,10 +87,10 @@ float CollisionDetection::Dot(const sf::Vector2f& a_Point1, const sf::Vector2f& 
 	return a_Point1.x * a_Point2.x + a_Point1.y * a_Point2.y;
 }
 
-sf::Vector2f CollisionDetection::Normalize(const sf::Vector2f& vector) {
-	float length = sqrtf(vector.x * vector.x + vector.y * vector.y);
+sf::Vector2f CollisionDetection::Normalize(const sf::Vector2f& a_Vector) {
+	float length = sqrtf(a_Vector.x * a_Vector.x + a_Vector.y * a_Vector.y);
 	if (length == 0.0f) {
 		return {0.0f, 0.0f}; // Avoid division by zero
 	}
-	return {vector.x / length, vector.y / length};
+	return {a_Vector.x / length, a_Vector.y / length};
 }

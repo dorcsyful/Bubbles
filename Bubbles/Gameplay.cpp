@@ -31,10 +31,12 @@ void Gameplay::Move(float a_Direction)
 	m_CurrentPosition = temp;
 }
 
-std::shared_ptr<BubbleObject> Gameplay::Drop(sf::Vector2f a_Start)
+std::shared_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 {
 	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(m_CurrentBubble);
-	newBubble->SetPosition(a_Start);
+	sf::Vector2f temp = a_Start;
+	temp.y *= -1.f;
+	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
 	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 	Move(0);
