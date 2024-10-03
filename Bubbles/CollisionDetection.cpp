@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "BubbleMath.h"
+
 bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, const std::shared_ptr<CollisionManifold>& a_Manifold)
 {
 	bool inside1 = PointCircleCheck(a_Line.GetStart(), a_Bubble.GetPosition(), a_Bubble.GetRadius());
@@ -9,7 +11,7 @@ bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const Lin
 	if (inside1 || inside2) return true;
 
 	// get length of the line
-	float len = Distance(a_Line.GetStart(), a_Line.GetEnd());
+	float len = BubbleMath::Distance(a_Line.GetStart(), a_Line.GetEnd());
 
 	float centerStartX = a_Bubble.GetPosition().x - a_Line.GetStart().x;
 	float endStartX = a_Line.GetEnd().x - a_Line.GetStart().x;
@@ -32,8 +34,42 @@ bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const Lin
 	float distY = closestY - a_Bubble.GetPosition().y;
 	float distance = sqrtf((distX * distX) + (distY * distY));
 	a_Manifold->m_Penetration = distance;
-	a_Manifold->m_Normal = Normalize((sf::Vector2f(closestX, closestY) - a_Bubble.GetPosition()));
+	a_Manifold->m_Normal = BubbleMath::Normalize((sf::Vector2f(closestX, closestY) - a_Bubble.GetPosition()));
 	return distance <= a_Bubble.GetRadius();
+}
+
+bool CollisionDetection::CircleCircleCheck(const BubbleObject& a_First, const BubbleObject& a_Second,
+	const std::shared_ptr<CollisionManifold>& a_Manifold)
+{
+	a_Manifold->m_Normal = a_Second.GetPosition() - a_First.GetPosition();
+	float distance_squared = BubbleMath::LengthSquared(a_Manifold->m_Normal);
+	float radius = a_First.GetRadius() + a_Second.GetRadius();
+
+	if(distance_squared >= radius * radius)
+	{
+		return false;
+	}
+
+	float distance = sqrtf(distance_squared);
+
+	if(distance == 0.0f)
+	{
+		a_Manifold->m_Penetration = a_First.GetRadius();
+		a_Manifold->m_Normal = sf::Vector2f(1, 0);
+		a_Manifold->m_CollisionPoints[0] = a_First.GetPosition();
+	}
+	else
+	{
+		a_Manifold->m_Penetration = radius - distance;
+		a_Manifold->m_Normal = a_Manifold->m_Normal / distance;
+		a_Manifold->m_CollisionPoints[0] = a_Manifold->m_Normal * a_First.GetRadius() + a_First.GetPosition();
+	}
+
+	return true;
+	// if the distance is less than the sum of the circle's
+	// radii, the circles are touching!
+	
+
 }
 
 bool CollisionDetection::PointCircleCheck(const sf::Vector2f& a_Point, const sf::Vector2f& a_Center, float a_Radius)
@@ -55,11 +91,11 @@ bool CollisionDetection::PointCircleCheck(const sf::Vector2f& a_Point, const sf:
 bool CollisionDetection::LinePointCheck(const LineObject& a_Line, const sf::Vector2f& a_Point)
 {
 	// get distance from the point to the two ends of the line
-	float d1 = Distance(a_Point, a_Line.GetStart());
-	float d2 = Distance(a_Point, a_Line.GetEnd());
+	float d1 = BubbleMath::Distance(a_Point, a_Line.GetStart());
+	float d2 = BubbleMath::Distance(a_Point, a_Line.GetEnd());
 
 	// get the length of the line
-	float lineLen = Distance(a_Line.GetStart(), a_Line.GetEnd());
+	float lineLen = BubbleMath::Distance(a_Line.GetStart(), a_Line.GetEnd());
 
 	// since floats are so minutely accurate, add
 	// a little buffer zone that will give collision
@@ -73,24 +109,4 @@ bool CollisionDetection::LinePointCheck(const LineObject& a_Line, const sf::Vect
 		return true;
 	}
 	return false;
-}
-
-float CollisionDetection::Distance(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2)
-{
-	float dx = a_Point2.x - a_Point1.x;
-	float dy = a_Point2.y - a_Point1.y;
-	return sqrtf(dx * dx + dy * dy);
-}
-
-float CollisionDetection::Dot(const sf::Vector2f& a_Point1, const sf::Vector2f& a_Point2)
-{
-	return a_Point1.x * a_Point2.x + a_Point1.y * a_Point2.y;
-}
-
-sf::Vector2f CollisionDetection::Normalize(const sf::Vector2f& a_Vector) {
-	float length = sqrtf(a_Vector.x * a_Vector.x + a_Vector.y * a_Vector.y);
-	if (length == 0.0f) {
-		return {0.0f, 0.0f}; // Avoid division by zero
-	}
-	return {a_Vector.x / length, a_Vector.y / length};
 }

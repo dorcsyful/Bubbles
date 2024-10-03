@@ -47,9 +47,9 @@ void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position
 	sf::Vector2i textureSize = sf::Vector2i(m_BubbleTextures.at(a_Size)->getSize().x, m_BubbleTextures.at(a_Size)->getSize().y);
 	newSprite->setTextureRect(sf::IntRect(0, 0, textureSize.x, textureSize.y));
 
-	sf::Vector2f bubbleSize = sf::Vector2f(bubble_sizes.at(a_Size) * 2.f, bubble_sizes.at(a_Size) * 2.f);
+	sf::Vector2f bubbleSize = sf::Vector2f(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f);
 	newSprite->setSize(bubbleSize);
-	newSprite->setOrigin(bubble_sizes.at(a_Size),bubble_sizes.at(a_Size));
+	newSprite->setOrigin(bubble_sizes.at(a_Size) * PIXEL_TO_METER,bubble_sizes.at(a_Size) * PIXEL_TO_METER);
 	newSprite->setPosition(a_Position);
 	newSprite->setRotation(a_Rotation);
 }
@@ -84,14 +84,20 @@ std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
 	sf::Vector2f correctedY = m_Container[0]->getPosition();
+	correctedY.x /= PIXEL_TO_METER;
+	correctedY.y /= PIXEL_TO_METER;
 	correctedY.y *= -1;
 	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
 	lines.push_back(temp);
 	correctedY = m_Container[1]->getPosition();
+	correctedY.x /= PIXEL_TO_METER;
+	correctedY.y /= PIXEL_TO_METER;
 	correctedY.y *= -1;
 	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
 	lines.push_back(temp);
 	correctedY = m_Container[2]->getPosition();
+	correctedY.x /= PIXEL_TO_METER;
+	correctedY.y /= PIXEL_TO_METER;
 	correctedY.y *= -1;
 	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x + CONTAINER_WIDTH, correctedY.y));
 	lines.push_back(temp);

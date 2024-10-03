@@ -22,7 +22,10 @@
 #define CONTAINER_WIDTH 500
 #define CONTAINER_HEIGHT 600
 #define POINTER_MOVE_SPEED 100
-#define GRAVITY -90.81
+#define GRAVITY (-9.81)
+
+#define PIXEL_TO_METER 100
+
 #include <map>
 
 enum class EOBJECT_TYPE
@@ -42,7 +45,7 @@ enum class EBUBBLE_TYPE
 	TYPE_RED = 5
 };
 
-static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_BLUE, 50}, {EBUBBLE_TYPE::TYPE_YELLOW, 70}, {EBUBBLE_TYPE::TYPE_GREEN, 90},
+static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_BLUE, 0.50}, {EBUBBLE_TYPE::TYPE_YELLOW, 0.70}, {EBUBBLE_TYPE::TYPE_GREEN, 0.90},
 												   {EBUBBLE_TYPE::TYPE_PINK, 110},{EBUBBLE_TYPE::TYPE_PURPLE, 130}, {EBUBBLE_TYPE::TYPE_RED, 150} };
 
 static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_BLUE, 10}, {EBUBBLE_TYPE::TYPE_YELLOW, 20}, {EBUBBLE_TYPE::TYPE_GREEN, 30},

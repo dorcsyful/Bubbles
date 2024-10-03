@@ -11,6 +11,8 @@ public:
 	void Update()
 	{
 		sf::Vector2f position = m_GameBubble->GetPosition();
+		position.x *= PIXEL_TO_METER;
+		position.y *= PIXEL_TO_METER;
 		position.y *= -1;
 		m_Rendered->setPosition(position);
 		m_Rendered->setRotation(0);
