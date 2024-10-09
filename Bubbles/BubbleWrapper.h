@@ -15,7 +15,7 @@ public:
 		position.y *= PIXEL_TO_METER;
 		position.y *= -1;
 		m_Rendered->setPosition(position);
-		m_Rendered->setRotation(0);
+		m_Rendered->setRotation(m_GameBubble->GetRotation() * 57.2957795f);
 	}
 	std::shared_ptr<sf::RectangleShape> GetShape() { return m_Rendered; }
 

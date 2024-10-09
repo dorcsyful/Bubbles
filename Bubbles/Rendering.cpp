@@ -83,23 +83,28 @@ void Rendering::MovePreviewBubble(EBUBBLE_TYPE a_NewPreview)
 std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
-	sf::Vector2f correctedY = m_Container[0]->getPosition();
-	correctedY.x /= PIXEL_TO_METER;
-	correctedY.y /= PIXEL_TO_METER;
-	correctedY.y *= -1;
-	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
+	sf::Vector2f start = m_Container[0]->getPosition();
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	sf::Vector2f end = sf::Vector2f(start.x, ((m_Container[0]->getPosition().y - CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(start, end);
 	lines.push_back(temp);
-	correctedY = m_Container[1]->getPosition();
-	correctedY.x /= PIXEL_TO_METER;
-	correctedY.y /= PIXEL_TO_METER;
-	correctedY.y *= -1;
-	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x, correctedY.y - CONTAINER_HEIGHT));
+
+	start = m_Container[1]->getPosition();
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	end = sf::Vector2f(start.x, -((m_Container[1]->getPosition().y - CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	temp = std::make_shared<LineObject>(start, end);
 	lines.push_back(temp);
-	correctedY = m_Container[2]->getPosition();
-	correctedY.x /= PIXEL_TO_METER;
-	correctedY.y /= PIXEL_TO_METER;
-	correctedY.y *= -1;
-	temp = std::make_shared<LineObject>(correctedY, sf::Vector2f(correctedY.x + CONTAINER_WIDTH, correctedY.y));
+
+	start = m_Container[2]->getPosition();
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	end = sf::Vector2f((m_Container[2]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER,start.y);
+	temp = std::make_shared<LineObject>(start, end);
 	lines.push_back(temp);
 
 	return lines;
@@ -132,16 +137,16 @@ void Rendering::LoadBubbleTextures()
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_BLUE]->loadFromFile(BLUE_FILENAME);
 
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_YELLOW, std::make_shared<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_YELLOW]->loadFromFile(GREEN_FILENAME);
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_YELLOW]->loadFromFile(YELLOW_FILENAME);
 
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_GREEN,std::make_shared<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_GREEN]->loadFromFile(PINK_FILENAME);
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_GREEN]->loadFromFile(GREEN_FILENAME);
 
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PINK,std::make_shared<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PINK]->loadFromFile(PURPLE_FILENAME);
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PINK]->loadFromFile(PINK_FILENAME);
 
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PURPLE,std::make_shared<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PURPLE]->loadFromFile(YELLOW_FILENAME);
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PURPLE]->loadFromFile(PURPLE_FILENAME);
 
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_RED,std::make_shared<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_RED]->loadFromFile(RED_FILENAME);
@@ -151,28 +156,30 @@ void Rendering::LoadBubbleTextures()
 
 void Rendering::CreateContainerLines()
 {
-	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f),((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) /2.f));
+	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f),((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) /2.f));
 	m_Container = std::vector<std::shared_ptr<sf::RectangleShape>>(4);
 
 	m_Container[0] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS,CONTAINER_HEIGHT));
 	m_Container[0]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	m_Container[0]->setPosition(position);
+	m_Container[0]->setPosition(basePos);
 
 	m_Container[1] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS, CONTAINER_HEIGHT));
 	m_Container[1]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	position.x += CONTAINER_WIDTH;
-	m_Container[1]->setPosition(position);
+	sf::Vector2f pos1 = basePos;
+	pos1.x += CONTAINER_WIDTH;
+	m_Container[1]->setPosition(pos1);
 
 	m_Container[2] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
 	m_Container[2]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	position.x -= CONTAINER_WIDTH;
-	position.y += CONTAINER_HEIGHT;
-	m_Container[2]->setPosition(position);
+	sf::Vector2f pos2 = basePos;
+	pos2.y += CONTAINER_HEIGHT;
+	m_Container[2]->setPosition(pos2);
 
 	m_Container[3] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
 	m_Container[3]->setFillColor(sf::Color(CONTAINER_LINE_TOP_COLOR_R, CONTAINER_LINE_TOP_COLOR_G, CONTAINER_LINE_TOP_COLOR_B, CONTAINER_LINE_TOP_COLOR_A));
-	position.y -= CONTAINER_HEIGHT;
-	m_Container[3]->setPosition(position);
+	sf::Vector2f pos3 = basePos;
+	pos3.y -= CONTAINER_HEIGHT;
+	m_Container[3]->setPosition(pos3);
 
 }
 

@@ -18,9 +18,6 @@ public:
 
 private:
 
-	void DetectCollision();
-
-
 	std::vector<std::shared_ptr<LineObject>> m_Lines;
 	std::vector<std::shared_ptr<BubbleObject>> m_Bubbles;
 	std::vector<std::shared_ptr<CollisionManifold>> m_Manifolds;

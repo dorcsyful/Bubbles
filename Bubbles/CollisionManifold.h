@@ -10,7 +10,7 @@
 class CollisionManifold
 {
 public:
-	CollisionManifold(const std::shared_ptr<BubbleObject>& a_First, const std::shared_ptr<BubbleObject>& a_Second):
+	CollisionManifold(const std::shared_ptr<GameObject>& a_First, const std::shared_ptr<GameObject>& a_Second):
 		m_AvgRestitution(0),
 		m_AvgStaticFriction(0),
 		m_AvgDynamicFriction(0),
@@ -20,29 +20,7 @@ public:
 		m_Objects[1] = a_Second;
 	}
 
-	void SetData(float a_Delta)
-	{
-		// Calculate average restitution
-		m_AvgRestitution = std::min(m_Objects[0]->GetRestitution(), m_Objects[1]->GetRestitution());
-
-		// Calculate static and dynamic friction
-		m_AvgStaticFriction = sqrtf(m_Objects[0]->GetStaticFriction() * m_Objects[1]->GetStaticFriction());
-		m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
-
-		// Calculate radii from COM to contact
-		sf::Vector2f ra = m_CollisionPoints[0] - m_Objects[0]->GetPosition();
-		sf::Vector2f rb = m_CollisionPoints[0] - m_Objects[1]->GetPosition();
-
-		sf::Vector2f rv = m_Objects[1]->GetLinearVelocity() + BubbleMath::Cross(m_Objects[1]->GetAngularVelocity(), rb) -
-			m_Objects[0]->GetLinearVelocity() - BubbleMath::Cross(m_Objects[0]->GetAngularVelocity(), ra);
-
-
-		// Determine if we should perform a resting collision or not
-		// The idea is if the only thing moving this object is gravity,
-		// then the collision should be performed without any restitution
-		if (BubbleMath::LengthSquared(rv) < BubbleMath::LengthSquared(a_Delta * sf::Vector2f(0,GRAVITY)) + 0.000001)
-			m_AvgRestitution = 0.0f;
-	}
+	void SetData(float a_Delta);
 
 	void ApplyImpulse();
 
@@ -50,19 +28,32 @@ public:
 	float m_AvgStaticFriction;
 	float m_AvgDynamicFriction;
 
-	std::shared_ptr<BubbleObject> m_Objects[2];
+	std::shared_ptr<GameObject> m_Objects[2];
 	float m_Penetration;
 	sf::Vector2f m_Normal;
-	sf::Vector2f m_CollisionPoints[2];
+	sf::Vector2f m_CollisionPoint;
 
-	void PositionalCorrection(void)
+	void PositionalCorrection()
 	{
 		const float k_slop = 0.05f; // Penetration allowance
 		const float percent = 0.4f; // Penetration percentage to correct
-		float obj0InverseMass = 1.f / bubble_sizes.at(m_Objects[0]->GetBubbleType());
-		float obj1InverseMass = 1.f / bubble_sizes.at(m_Objects[1]->GetBubbleType());
-		sf::Vector2f correction = (std::max(m_Penetration - k_slop, 0.0f) / (obj0InverseMass + obj1InverseMass)) * m_Normal * percent;
-		m_Objects[0]->SetPosition(m_Objects[0]->GetPosition() - (correction * obj0InverseMass));
-		m_Objects[1]->SetPosition(m_Objects[1]->GetPosition() + (correction * obj1InverseMass));
+
+		sf::Vector2f correction = (std::max(m_Penetration - k_slop, 0.0f) / (m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass())) * m_Normal * percent;
+
+		if (isnan(m_Objects[0]->GetPosition().y))
+		{
+			std::cout << "NAN";
+		}
+
+		if(m_Objects[0]->m_IsBubble)
+		{
+			auto bubble = static_cast<BubbleObject*>(m_Objects[0].get());
+			bubble->SetPosition(m_Objects[0]->GetPosition() - (correction * m_Objects[0]->GetInverseMass()));
+		}
+		if(m_Objects[1]->m_IsBubble)
+		{
+			auto bubble = static_cast<BubbleObject*>(m_Objects[1].get());
+			bubble->SetPosition(m_Objects[1]->GetPosition() + (correction * m_Objects[1]->GetInverseMass()));
+		}
 	}
 };

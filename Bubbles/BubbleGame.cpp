@@ -54,8 +54,8 @@ void BubbleGame::Update()
 void BubbleGame::AddBubble(float a_Delta)
 {
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
-	auto newBubble = m_Gameplay->Drop(start);
-	auto newRendered = m_Rendering->AddSprite(newBubble->GetBubbleType(), newBubble->GetPosition(), 0);
+	std::shared_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
+	std::shared_ptr<sf::RectangleShape> newRendered = m_Rendering->AddSprite(newBubble->GetBubbleType(), newBubble->GetPosition(), 0);
 	std::shared_ptr<BubbleWrapper> wrapper = std::make_shared <BubbleWrapper>(newBubble, newRendered);
 	m_Wrappers.push_back(wrapper);
 	m_Physics->AddBubble(newBubble);

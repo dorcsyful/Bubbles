@@ -44,4 +44,7 @@ public:
 	{
 		return a_First.x * a_Second.y - a_First.y * a_Second.x;
 	}
+	static sf::Vector2f Lerp(const sf::Vector2f& a_Start, const sf::Vector2f& a_End, float a_T) {
+		return (1 - a_T) * a_Start + a_T * a_End;
+	}
 };
