@@ -87,7 +87,7 @@ std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 	start.x /= PIXEL_TO_METER;
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
-	sf::Vector2f end = sf::Vector2f(start.x, ((m_Container[0]->getPosition().y - CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	sf::Vector2f end = sf::Vector2f(start.x, (-(m_Container[0]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
 	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(start, end);
 	lines.push_back(temp);
 
@@ -95,7 +95,7 @@ std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 	start.x /= PIXEL_TO_METER;
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
-	end = sf::Vector2f(start.x, -((m_Container[1]->getPosition().y - CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	end = sf::Vector2f(start.x, (-(m_Container[1]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
 	temp = std::make_shared<LineObject>(start, end);
 	lines.push_back(temp);
 
@@ -178,7 +178,7 @@ void Rendering::CreateContainerLines()
 	m_Container[3] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
 	m_Container[3]->setFillColor(sf::Color(CONTAINER_LINE_TOP_COLOR_R, CONTAINER_LINE_TOP_COLOR_G, CONTAINER_LINE_TOP_COLOR_B, CONTAINER_LINE_TOP_COLOR_A));
 	sf::Vector2f pos3 = basePos;
-	pos3.y -= CONTAINER_HEIGHT;
+	//pos3.y -= CONTAINER_HEIGHT;
 	m_Container[3]->setPosition(pos3);
 
 }
