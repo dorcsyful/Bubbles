@@ -11,6 +11,7 @@ public:
 
 	void Initialize();
 	void Update();
+	void CreateWrapper(const std::shared_ptr<BubbleObject>& a_NewBubble);
 
 	void AddBubble(float a_Delta);
 

@@ -18,7 +18,7 @@ public:
 		m_Rendered->setRotation(m_GameBubble->GetRotation() * 57.2957795f);
 	}
 	std::shared_ptr<sf::RectangleShape> GetShape() { return m_Rendered; }
-
+	std::shared_ptr<BubbleObject> GetBubble() { return m_GameBubble; }
 private:
 	std::shared_ptr<sf::RectangleShape> m_Rendered;
 	std::shared_ptr<BubbleObject> m_GameBubble;

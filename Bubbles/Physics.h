@@ -16,6 +16,8 @@ public:
 	void AddBubble(const std::shared_ptr<BubbleObject>& a_Bubble) { m_Bubbles.push_back(a_Bubble); }
 	void RemoveBubble(const std::shared_ptr<BubbleObject>& a_Bubble) { m_Bubbles.erase(std::find(m_Bubbles.begin(), m_Bubbles.end(), a_Bubble)); }
 
+	std::vector<std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>>> m_BubblesToCombine;
+
 private:
 
 	std::vector<std::shared_ptr<LineObject>> m_Lines;

@@ -18,9 +18,16 @@ public:
 	{
 		m_Objects[0] = a_First;
 		m_Objects[1] = a_Second;
+
+		// Calculate average restitution
+		m_AvgRestitution = std::min(m_Objects[0]->GetRestitution(), m_Objects[1]->GetRestitution());
+
+		// Calculate static and dynamic friction
+		m_AvgStaticFriction = sqrtf(m_Objects[0]->GetStaticFriction() * m_Objects[1]->GetStaticFriction());
+		m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
 	}
 
-	void SetData(float a_Delta);
+	void SetData();
 
 	void ApplyImpulse();
 
@@ -39,11 +46,6 @@ public:
 		const float percent = 0.4f; // Penetration percentage to correct
 
 		sf::Vector2f correction = (std::max(m_Penetration - k_slop, 0.0f) / (m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass())) * m_Normal * percent;
-
-		if (isnan(m_Objects[0]->GetPosition().y))
-		{
-			std::cout << "NAN";
-		}
 
 		if(m_Objects[0]->m_IsBubble)
 		{

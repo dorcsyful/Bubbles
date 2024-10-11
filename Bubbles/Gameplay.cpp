@@ -14,8 +14,12 @@ void Gameplay::Update(float a_Delta)
 	}
 }
 
-void Gameplay::CombineBubble(std::shared_ptr<BubbleObject> a_First, std::shared_ptr<BubbleObject> a_Second)
+std::shared_ptr<BubbleObject> Gameplay::CombineBubble(const std::shared_ptr<BubbleObject>& a_First, const std::shared_ptr<BubbleObject>& a_Second)
 {
+	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
+	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(static_cast<int>(a_First->GetBubbleType()) + 1));
+	newBubble->SetPosition(center);
+	return newBubble;
 }
 
 void Gameplay::Move(float a_Direction)
