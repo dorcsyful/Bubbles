@@ -1,5 +1,6 @@
 #include "Gameplay.h"
 
+#include <iostream>
 #include <SFML/Window/Keyboard.hpp>
 
 void Gameplay::Update(float a_Delta)
@@ -17,7 +18,10 @@ void Gameplay::Update(float a_Delta)
 std::shared_ptr<BubbleObject> Gameplay::CombineBubble(const std::shared_ptr<BubbleObject>& a_First, const std::shared_ptr<BubbleObject>& a_Second)
 {
 	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
-	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(static_cast<int>(a_First->GetBubbleType()) + 1));
+	int i = static_cast<int>(a_First->GetBubbleType()) + 1;
+	if (i == bubble_sizes.size()) { i = 0; }
+	std::cout << "New bubble size: " << i << "\n";
+	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	return newBubble;
 }
@@ -44,7 +48,7 @@ std::shared_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 	temp.y *= -1.f;
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
-	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 1 + 4);
 	Move(0);
 	return newBubble;
 }

@@ -48,8 +48,8 @@ void BubbleGame::Update()
 		{
 			auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
 			m_Physics->AddBubble(combined);
-			int markedWrapper[2];
-			for(int j = 0; j < m_Wrappers.size(); j++)
+			size_t markedWrapper[2];
+			for(size_t j = 0; j < m_Wrappers.size(); j++)
 			{
 				if(m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].first)
 				{

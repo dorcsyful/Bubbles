@@ -1,7 +1,7 @@
 #pragma once
 
 //UI specific
-#define WINDOW_WIDTH 600
+#define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
 #define CONTAINER_LINE_THICKNESS 5
 #define CONTAINER_LINE_COLOR_R 0
@@ -15,7 +15,7 @@
 #define BLUE_FILENAME "Assets/Shapes/blue.png"
 #define GREEN_FILENAME "Assets/Shapes/green.png"
 #define PINK_FILENAME "Assets/Shapes/pink.png"
-#define PURPLE_FILENAME "Assets/Shapes/red.png"
+#define PURPLE_FILENAME "Assets/Shapes/purple.png"
 #define YELLOW_FILENAME "Assets/Shapes/yellow.png"
 #define RED_FILENAME "Assets/Shapes/red.png"
 

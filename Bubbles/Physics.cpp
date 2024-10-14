@@ -4,13 +4,10 @@
 
 void Physics::Update(float a_Delta)
 {
-    m_BubblesToCombine.clear();
-    if (m_BubblesToCombine.size() > 0)
-    {
-        throw new std::exception("Bubbles to combine not empty!");
-    }
-    // Generate new collision info
+
     m_Manifolds.clear();
+    m_BubblesToCombine.clear();
+    // Generate new collision info
     for (unsigned int i = 0; i < m_Bubbles.size(); ++i)
     {
         for (const auto& line : m_Lines) {
