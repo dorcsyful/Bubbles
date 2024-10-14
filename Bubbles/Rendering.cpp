@@ -46,7 +46,6 @@ void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position
 	newSprite->setTexture(m_BubbleTextures.at(a_Size).get());
 	sf::Vector2i textureSize = sf::Vector2i(m_BubbleTextures.at(a_Size)->getSize().x, m_BubbleTextures.at(a_Size)->getSize().y);
 	newSprite->setTextureRect(sf::IntRect(0, 0, textureSize.x, textureSize.y));
-	std::cout << "Sprite type: " << (int)a_Size;
 	sf::Vector2f bubbleSize = sf::Vector2f(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f);
 	newSprite->setSize(bubbleSize);
 	newSprite->setOrigin(bubble_sizes.at(a_Size) * PIXEL_TO_METER,bubble_sizes.at(a_Size) * PIXEL_TO_METER);

@@ -20,7 +20,6 @@ std::shared_ptr<BubbleObject> Gameplay::CombineBubble(const std::shared_ptr<Bubb
 	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
 	int i = static_cast<int>(a_First->GetBubbleType()) + 1;
 	if (i == bubble_sizes.size()) { i = 0; }
-	std::cout << "New bubble size: " << i << "\n";
 	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	return newBubble;
