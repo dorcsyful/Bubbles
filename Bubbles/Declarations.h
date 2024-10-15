@@ -19,14 +19,29 @@
 #define YELLOW_FILENAME "Assets/Shapes/yellow.png"
 #define RED_FILENAME "Assets/Shapes/red.png"
 
+#define TITLE_FILENAME "Assets/Menu/Title.png"
+#define BUTTON_FILENAME "Assets/Menu/Button_Base.png"
+#define BUTTON_CLICKED_FILENAME "Assets/Menu/Button_Clicked.png"
+#define FONT_FILENAME "Assets/Menu/Fonts/comic.ttf"
+
 #define CONTAINER_WIDTH 500
 #define CONTAINER_HEIGHT 600
 #define POINTER_MOVE_SPEED 100
 #define GRAVITY (-9.81f)
 
 #define PIXEL_TO_METER 100
-
+#define LOADING_TIME 8
+#define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #include <map>
+
+enum class EGAME_STATE
+{
+	STATE_START,
+	STATE_PLAY,
+	STATE_GAME_OVER,
+	STATE_MENU,
+	STATE_LOADING
+};
 
 enum class EOBJECT_TYPE
 {

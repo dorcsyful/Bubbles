@@ -2,8 +2,11 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "Helpers.h"
+
 void BubbleGame::Initialize()
 {
+	m_State = EGAME_STATE::STATE_MENU;
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>();
@@ -14,8 +17,62 @@ void BubbleGame::Initialize()
 		m_Physics->AddLine(lineObject);
 	}
 
+	m_Physics->AddTopLine(m_Rendering->ConvertTopLine());
+	
 	m_Wrappers = std::vector<std::shared_ptr<BubbleWrapper>>();
 }
+
+void BubbleGame::PlayUpdate(float a_Delta)
+{
+	m_Gameplay->Update(a_Delta);
+	m_Physics->Update(a_Delta);
+
+
+	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
+	{
+		auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
+		m_Physics->AddBubble(combined);
+		size_t markedWrapper[2];
+		for (size_t j = 0; j < m_Wrappers.size(); j++)
+		{
+			if (m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].first)
+			{
+				markedWrapper[0] = j;
+			}
+			if (m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].second)
+			{
+				markedWrapper[1] = j;
+			}
+		}
+		m_Physics->RemoveBubble(m_Physics->m_BubblesToCombine[i].first);
+		m_Physics->RemoveBubble(m_Physics->m_BubblesToCombine[i].second);
+
+		std::shared_ptr<BubbleWrapper> bubbleWrapper = m_Wrappers[markedWrapper[0]];
+		m_Rendering->RemoveSprite(bubbleWrapper->GetShape());
+		std::shared_ptr<BubbleWrapper> wrapper = m_Wrappers[markedWrapper[1]];
+		m_Rendering->RemoveSprite(wrapper->GetShape());
+		m_Wrappers.erase(std::find(m_Wrappers.begin(), m_Wrappers.end(), bubbleWrapper));
+		m_Wrappers.erase(std::find(m_Wrappers.begin(), m_Wrappers.end(), wrapper));
+		CreateWrapper(combined);
+
+	}
+
+	for (const auto& bubbleWrapper : m_Wrappers)
+	{
+		bubbleWrapper->Update();
+	}
+
+	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
+	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
+
+	if (m_Physics->GetTouchedTopLine()) { GameOver();}
+}
+
+void BubbleGame::MenuUpdate(float a_Delta)
+{
+}
+
+
 
 void BubbleGame::Update()
 {
@@ -28,60 +85,47 @@ void BubbleGame::Update()
 		sf::Event event;
 		while (m_Rendering->GetWindow()->pollEvent(event))
 		{
+
 			if (event.type == sf::Event::Closed)
 				m_Rendering->GetWindow()->close();
-			if(event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
+
+			if (m_State == EGAME_STATE::STATE_PLAY && event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
 			{
 				std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop();
-				if(elapsedSeconds.count() > 2)
+				if (elapsedSeconds.count() > 1)
 				{
 					m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
 					AddBubble(delta);
 				}
 			}
-		}
-
-		m_Gameplay->Update(delta);
-		m_Physics->Update(delta);
-
-		for(size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
-		{
-			auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
-			m_Physics->AddBubble(combined);
-			size_t markedWrapper[2];
-			for(size_t j = 0; j < m_Wrappers.size(); j++)
+			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
-				if(m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].first)
+				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+				for (const auto& button : m_Rendering->GetMenuButtons())
 				{
-					markedWrapper[0] = j;
-				}
-				if (m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].second)
-				{
-					markedWrapper[1] = j;
+					if (button->DetectClick(mousePosition))
+					{
+						std::cout << "Button clicked \n";
+						StartLoading();
+						CallAfterDelay::getInstance().AddFunction([this](){StartGame();}, LOADING_TIME);
+					}
 				}
 			}
-			m_Physics->RemoveBubble(m_Physics->m_BubblesToCombine[i].first);
-			m_Physics->RemoveBubble(m_Physics->m_BubblesToCombine[i].second);
-
-			std::shared_ptr<BubbleWrapper> bubbleWrapper = m_Wrappers[markedWrapper[0]];
-			m_Rendering->RemoveSprite(bubbleWrapper->GetShape());
-			std::shared_ptr<BubbleWrapper> wrapper = m_Wrappers[markedWrapper[1]];
-			m_Rendering->RemoveSprite(wrapper->GetShape());
-			m_Wrappers.erase(std::find(m_Wrappers.begin(), m_Wrappers.end(), bubbleWrapper));
-			m_Wrappers.erase(std::find(m_Wrappers.begin(), m_Wrappers.end(), wrapper));
-			CreateWrapper(combined);
 
 		}
-		
-		for (const auto& bubbleWrapper : m_Wrappers)
+
+
+		if (m_State == EGAME_STATE::STATE_PLAY)
 		{
-			bubbleWrapper->Update();
+			PlayUpdate(delta);
+		}
+		if(m_State == EGAME_STATE::STATE_MENU)
+		{
+			MenuUpdate(delta);
 		}
 
-		m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
-		m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
-
-		m_Rendering->Draw();
+		CallAfterDelay::getInstance().LoopThroughFunctions();
+		m_Rendering->Draw(m_State);
 	}
 }
 
@@ -104,4 +148,10 @@ void BubbleGame::AddBubble(float a_Delta)
 	m_Physics->AddBubble(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
+}
+
+void BubbleGame::GameOver()
+{
+	std::cout << "GameOver \n";
+	m_State = EGAME_STATE::STATE_GAME_OVER;
 }

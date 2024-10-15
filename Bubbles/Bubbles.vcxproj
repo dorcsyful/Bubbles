@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="BubbleGame.cpp" />
     <ClCompile Include="BubbleObject.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="main.cpp" />
@@ -149,15 +150,18 @@
     <ClCompile Include="Rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="BubbleMath.h" />
     <ClInclude Include="BubbleObject.h" />
     <ClInclude Include="BubbleGame.h" />
     <ClInclude Include="BubbleWrapper.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="CollisionManifold.h" />
     <ClInclude Include="Declarations.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Rendering.h" />

@@ -44,10 +44,11 @@ std::shared_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 	sf::Vector2f temp = a_Start;
 	temp.x /= PIXEL_TO_METER;
 	temp.y /= PIXEL_TO_METER;
+	temp.y += bubble_sizes.at(m_CurrentBubble);
 	temp.y *= -1.f;
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
-	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 1 + 4);
+	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 	Move(0);
 	return newBubble;
 }

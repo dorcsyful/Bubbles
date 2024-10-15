@@ -4,7 +4,6 @@
 
 int main()
 {
-
     std::unique_ptr<BubbleGame>  bubble_game = std::make_unique<BubbleGame>();
 
     bubble_game->Initialize();

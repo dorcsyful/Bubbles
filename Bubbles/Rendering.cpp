@@ -16,20 +16,15 @@ Rendering::Rendering(const int a_X, const int a_Y)
 	LoadBubbleTextures();
 	CreateContainerLines();
 	CreatePointer();
+	CreateMenuSprites();
 }
 
-void Rendering::Draw() const
+void Rendering::PlayDraw() const
 {
-	m_Window->clear();
-
-	m_Window->draw(*m_BackgroundSprite);
-
 	for (const auto& element : m_Container)
 	{
 		m_Window->draw(*element);
 	}
-
-
 
 	m_Window->draw(*m_Line);
 	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
@@ -37,6 +32,35 @@ void Rendering::Draw() const
 	{
 		m_Window->draw(*element);
 	}
+}
+
+void Rendering::MenuDraw() const
+{
+	m_Window->draw(*m_Title);
+
+	for(const auto& element : m_MenuButtons)
+	{
+		m_Window->draw(*element);
+	}
+}
+
+void Rendering::Draw(EGAME_STATE a_State) const
+{
+	m_Window->clear();
+
+	m_Window->draw(*m_BackgroundSprite);
+
+	if (a_State == EGAME_STATE::STATE_PLAY)
+	{
+		PlayDraw();
+	}
+	if (a_State == EGAME_STATE::STATE_MENU || a_State == EGAME_STATE::STATE_LOADING) MenuDraw();
+	if(a_State == EGAME_STATE::STATE_LOADING)
+	{
+		m_Window->draw(*m_Loading);
+		m_Loading->UpdateFrame();
+	}
+
 	m_Window->display();
 }
 
@@ -107,6 +131,17 @@ std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 	lines.push_back(temp);
 
 	return lines;
+}
+
+std::shared_ptr<LineObject> Rendering::ConvertTopLine()
+{
+	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
+	sf::Vector2f start = m_Container[3]->getPosition();
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	sf::Vector2f end = sf::Vector2f((m_Container[3]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER, start.y);
+	return std::make_shared<LineObject>(start, end);
 }
 
 void Rendering::LoadBackground()
@@ -195,4 +230,46 @@ void Rendering::CreatePointer()
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
 		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::RectangleShape>>(static_cast<EBUBBLE_TYPE>(i), newSprite));
 	}
+}
+
+void Rendering::CreateTitleSprite()
+{
+	m_TitleTexture = std::make_shared<sf::Texture>();
+	m_TitleTexture->loadFromFile(TITLE_FILENAME);
+	m_Title = std::make_shared<sf::RectangleShape>();
+	m_Title = std::make_shared<sf::RectangleShape>();
+	m_Title->setTexture(m_TitleTexture.get());
+	m_Title->setSize(sf::Vector2f(m_TitleTexture->getSize().x, m_TitleTexture->getSize().y));
+	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
+	m_Title->setPosition(basePos);
+}
+
+void Rendering::CreateMenuSprites()
+{
+	CreateTitleSprite();
+	CreateMenuButtonSprites();
+}
+
+void Rendering::CreateMenuButtonSprites()
+{
+	m_Font = std::make_shared<sf::Font>();
+	m_Font->loadFromFile(FONT_FILENAME);
+
+	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
+	basePos.y += m_Title->getSize().y * 2.f;
+	basePos.x += m_Title->getSize().x / 2.f;
+	std::shared_ptr<sf::Texture> baseButtonTexture = std::make_shared<sf::Texture>();
+	baseButtonTexture->loadFromFile(BUTTON_FILENAME);
+	std::shared_ptr<sf::Texture> clickedButtonTexture = std::make_shared<sf::Texture>();
+	clickedButtonTexture->loadFromFile(BUTTON_CLICKED_FILENAME);
+
+	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos,*m_Font,baseButtonTexture,clickedButtonTexture);
+	newButton->SetText("Play");
+	m_MenuButtons = std::vector<std::shared_ptr<Button>>();
+	m_MenuButtons.push_back(newButton);
+
+	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
+	loadingTexture->loadFromFile(LOADING_FILENAME);
+	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_TIME * 2, 8);
+	m_Loading->SetPosition(sf::Vector2f(m_Window->getSize().x - loadingTexture->getSize().x / 8, m_Window->getSize().y - loadingTexture->getSize().y));
 }

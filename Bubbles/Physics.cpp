@@ -10,8 +10,13 @@ void Physics::Update(float a_Delta)
     // Generate new collision info
     for (unsigned int i = 0; i < m_Bubbles.size(); ++i)
     {
+        //Check for game over and return immediately if it is
+        std::shared_ptr<CollisionManifold> manifold = std::make_shared<CollisionManifold>(m_Bubbles[i], m_TopLine);
+        m_TouchedTopLine = CollisionDetection::CircleLineCheck(*m_Bubbles[i], *m_TopLine, manifold);
+        if (m_TouchedTopLine) return;
+
         for (const auto& line : m_Lines) {
-            std::shared_ptr<CollisionManifold> manifold = std::make_shared<CollisionManifold>(m_Bubbles[i], line);
+            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i], line);
             if (CollisionDetection::CircleLineCheck(*m_Bubbles[i], *line, manifold)) {
                 std::shared_ptr<CollisionManifold> newManifold = std::make_shared<CollisionManifold>(line, m_Bubbles[i]);
                 newManifold->m_CollisionPoint = manifold->m_CollisionPoint;
@@ -24,7 +29,7 @@ void Physics::Update(float a_Delta)
         }
         for (unsigned int j = i + 1; j < m_Bubbles.size(); ++j)
         {
-            std::shared_ptr<CollisionManifold> manifold = std::make_shared<CollisionManifold>(m_Bubbles[i],m_Bubbles[j]);
+            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i],m_Bubbles[j]);
             if (CollisionDetection::CircleCircleCheck(*m_Bubbles[i], *m_Bubbles[j], manifold))
             {
                 m_Manifolds.emplace_back(manifold);
