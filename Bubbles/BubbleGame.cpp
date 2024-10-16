@@ -152,5 +152,6 @@ void BubbleGame::AddBubble(float a_Delta)
 void BubbleGame::GameOver()
 {
 	std::cout << "GameOver \n";
-	m_State = EGAME_STATE::STATE_GAME_OVER;
+	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
+	CallAfterDelay::getInstance().AddFunction([this](){m_State = EGAME_STATE::STATE_GAME_OVER;}, BUBBLE_FRAME_TIME * BUBBLE_FRAME_NUMBER - 1);
 }

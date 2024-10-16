@@ -35,7 +35,7 @@ public:
 private:
 	void PlayDraw() const;
 	void MenuDraw() const;
-
+	void GameOverAnimationDraw() const;
 	void LoadBackground();
 	void LoadBubbleTextures();
 	void CreateContainerLines();
@@ -57,6 +57,8 @@ private:
 	EBUBBLE_TYPE m_ActiveBubble;
 	std::map<EBUBBLE_TYPE, std::shared_ptr<AnimatedSprite>> m_PreviewBubbles;
 	std::shared_ptr<sf::RectangleShape> m_Line;
+
+	//Play mode UI
 
 	//Menu mode
 	std::shared_ptr<sf::RectangleShape> m_Title;

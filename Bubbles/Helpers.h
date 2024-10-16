@@ -9,9 +9,9 @@ class CallAfterDelay {
     struct FunctionData {
 		bool operator==(const FunctionData& a_Other) const
 		{
-			return id == a_Other.id;
+			return m_Id == a_Other.m_Id;
 		}
-		int id = 0;
+		int m_Id = 0;
 		std::function<void()> m_Function;
 		std::chrono::time_point<std::chrono::steady_clock> m_TargetTime;
 	};
@@ -30,7 +30,7 @@ public:
 		int temp = rand();
 		for(int i = 0; i < m_Functions.size(); i++)
 		{
-			if(m_Functions[i].id == temp)
+			if(m_Functions[i].m_Id == temp)
 			{
 				temp = rand();
 				i = 0;

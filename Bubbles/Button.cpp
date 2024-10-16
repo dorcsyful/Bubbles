@@ -26,7 +26,7 @@ void Button::SetText(const std::string& a_Text)
 	m_Text->setString(a_Text);
 	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
 
-	auto position = m_Shape->getPosition();
+	sf::Vector2f position = m_Shape->getPosition();
 	position.y -= 10;
 	m_Text->setPosition(position);
 

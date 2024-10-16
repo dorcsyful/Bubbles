@@ -44,6 +44,22 @@ void Rendering::MenuDraw() const
 	}
 }
 
+void Rendering::GameOverAnimationDraw() const
+{
+	for (const auto& element : m_Container)
+	{
+		m_Window->draw(*element);
+	}
+
+	m_Window->draw(*m_Line);
+	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
+	for (auto& element : m_BubbleSprites)
+	{
+		element->UpdateFrameByTime();
+		m_Window->draw(*element);
+	}
+}
+
 void Rendering::Draw(EGAME_STATE a_State) const
 {
 	m_Window->clear();
@@ -60,15 +76,20 @@ void Rendering::Draw(EGAME_STATE a_State) const
 		m_Window->draw(*m_Loading);
 		m_Loading->UpdateFrameByTime();
 	}
+	if(a_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
+	{
+		GameOverAnimationDraw();
+	}
 
 	m_Window->display();
 }
 
 void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation, std::shared_ptr<AnimatedSprite>& a_NewSprite)
 {
-	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Size),0,1);
+	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Size),BUBBLE_FRAME_TIME,4);
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Size)->getSize());
+	size.x /= 4;
 	a_NewSprite->GetSprite()->setScale(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.x, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.y);
 
 	float x = bubble_sizes.at(a_Size) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
@@ -272,7 +293,7 @@ void Rendering::CreateMenuButtonSprites()
 
 	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
 	loadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_TIME * 16, 8);
+	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(loadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
