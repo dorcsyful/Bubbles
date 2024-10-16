@@ -38,7 +38,8 @@
 #define BUBBLE_FRAME_NUMBER 4
 #define BUBBLE_FRAME_TIME 1.f
 
-#define GAME_OVER_FILENAME "Assets/Menu/GameOver.png"
+#define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
+#define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
 #include <map>
 
 enum class EGAME_STATE

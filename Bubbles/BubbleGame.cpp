@@ -57,6 +57,8 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 	}
 
+	m_Rendering->UpdateScore(m_Gameplay->GetScore());
+
 	for (const auto& bubbleWrapper : m_Wrappers)
 	{
 		bubbleWrapper->Update();
@@ -71,8 +73,6 @@ void BubbleGame::PlayUpdate(float a_Delta)
 void BubbleGame::MenuUpdate(float a_Delta)
 {
 }
-
-
 
 void BubbleGame::Update()
 {

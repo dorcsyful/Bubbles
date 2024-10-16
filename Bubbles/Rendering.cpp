@@ -18,6 +18,7 @@ Rendering::Rendering(const int a_X, const int a_Y)
 	CreatePointer();
 	CreateMenuSprites();
 	CreateGameOverSprite();
+	CreateScoreText();
 }
 
 void Rendering::PlayDraw() const
@@ -33,6 +34,8 @@ void Rendering::PlayDraw() const
 	{
 		m_Window->draw(*element);
 	}
+	m_Window->draw(*m_ScoreBackground);
+	m_Window->draw(*m_ScoreText);
 }
 
 void Rendering::MenuDraw() const
@@ -312,4 +315,30 @@ void Rendering::CreateMenuButtonSprites()
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(loadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
+}
+
+void Rendering::CreateScoreText()
+{
+	m_ScoreText = std::make_shared<sf::Text>();
+	m_ScoreText->setFont(*m_Font);
+	m_ScoreText->setCharacterSize(50);
+	m_ScoreText->setFillColor(sf::Color::Black);
+	m_ScoreText->setStyle(sf::Text::Bold);
+	m_ScoreText->setString("Score:\n 0");
+	sf::Vector2f position = m_Container[3]->getPosition();
+	position.x = CONTAINER_WIDTH / 4;
+	position.y += 300;
+	m_ScoreText->setPosition(position);
+
+	m_ScoreBackgroundTexture = std::make_shared<sf::Texture>();
+	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
+
+	m_ScoreBackground = std::make_shared<sf::RectangleShape>(sf::Vector2f(200, 100));
+	m_ScoreBackground->setTexture(m_ScoreBackgroundTexture.get());
+	sf::Vector2<float> size = m_ScoreText->getGlobalBounds().getSize();
+	size.x += 40;
+	size.y += 40;
+	m_ScoreBackground->setSize(size);
+	position.x -= 20;
+	m_ScoreBackground->setPosition(position);
 }

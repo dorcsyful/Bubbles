@@ -22,6 +22,7 @@ std::shared_ptr<BubbleObject> Gameplay::CombineBubble(const std::shared_ptr<Bubb
 	if (i == bubble_sizes.size()) { i = 0; }
 	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
+	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) * 10;
 	return newBubble;
 }
 

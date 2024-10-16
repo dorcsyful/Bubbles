@@ -29,6 +29,8 @@ public:
 
 	std::vector<std::shared_ptr<Button>> GetMenuButtons() { return m_MenuButtons; }
 
+	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
+
 	std::vector<std::shared_ptr<LineObject>> ConvertToLine();
 	std::shared_ptr<LineObject> ConvertTopLine();
 
@@ -42,9 +44,9 @@ private:
 	void CreatePointer();
 	void CreateTitleSprite();
 	void CreateGameOverSprite();
-
 	void CreateMenuSprites();
 	void CreateMenuButtonSprites();
+	void CreateScoreText();
 
 	std::shared_ptr<sf::RenderWindow> m_Window;
 
@@ -60,6 +62,9 @@ private:
 	std::shared_ptr<sf::RectangleShape> m_Line;
 
 	//Play mode UI
+	std::shared_ptr<sf::Text> m_ScoreText;
+	std::shared_ptr<sf::RectangleShape> m_ScoreBackground;
+	std::shared_ptr<sf::Texture> m_ScoreBackgroundTexture;
 
 	//Game over mode
 	std::shared_ptr<sf::RectangleShape> m_GameOver;
