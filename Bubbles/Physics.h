@@ -22,7 +22,7 @@ public:
 	std::vector<std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>>> m_BubblesToCombine;
 private:
 
-	bool m_TouchedTopLine;
+	bool m_TouchedTopLine = false;
 
 	std::shared_ptr<LineObject> m_TopLine;
 	std::vector<std::shared_ptr<LineObject>> m_Lines;

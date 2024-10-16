@@ -28,7 +28,7 @@ void Rendering::PlayDraw() const
 
 	m_Window->draw(*m_Line);
 	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
-	for (const auto& element : m_BubbleSprites)
+	for (auto& element : m_BubbleSprites)
 	{
 		m_Window->draw(*element);
 	}
@@ -58,34 +58,36 @@ void Rendering::Draw(EGAME_STATE a_State) const
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
 		m_Window->draw(*m_Loading);
-		m_Loading->UpdateFrame();
+		m_Loading->UpdateFrameByTime();
 	}
 
 	m_Window->display();
 }
 
-void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation, std::shared_ptr<sf::RectangleShape>& newSprite)
+void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation, std::shared_ptr<AnimatedSprite>& a_NewSprite)
 {
-	newSprite = std::make_shared<sf::RectangleShape>();
-	newSprite->setTexture(m_BubbleTextures.at(a_Size).get());
-	sf::Vector2i textureSize = sf::Vector2i(m_BubbleTextures.at(a_Size)->getSize().x, m_BubbleTextures.at(a_Size)->getSize().y);
-	newSprite->setTextureRect(sf::IntRect(0, 0, textureSize.x, textureSize.y));
-	sf::Vector2f bubbleSize = sf::Vector2f(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2.f);
-	newSprite->setSize(bubbleSize);
-	newSprite->setOrigin(bubble_sizes.at(a_Size) * PIXEL_TO_METER,bubble_sizes.at(a_Size) * PIXEL_TO_METER);
-	newSprite->setPosition(a_Position);
-	newSprite->setRotation(a_Rotation);
+	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Size),0,1);
+
+	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Size)->getSize());
+	a_NewSprite->GetSprite()->setScale(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.x, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.y);
+
+	float x = bubble_sizes.at(a_Size) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
+	float y = bubble_sizes.at(a_Size) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().y;
+	a_NewSprite->GetSprite()->setOrigin(x, y);
+
+	a_NewSprite->SetPosition(a_Position);
+	a_NewSprite->SetRotation(a_Rotation);
 }
 
-std::shared_ptr<sf::RectangleShape>& Rendering::AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation)
+std::shared_ptr<AnimatedSprite>& Rendering::AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation)
 {
-	std::shared_ptr<sf::RectangleShape> newSprite;
+	std::shared_ptr<AnimatedSprite> newSprite;
 	CreateSprite(a_Size, a_Position, a_Rotation, newSprite);
 	m_BubbleSprites.push_back(newSprite);
 	return m_BubbleSprites.back();
 }
 
-void Rendering::RemoveSprite(const std::shared_ptr<sf::RectangleShape>& a_SpriteToRemove)
+void Rendering::RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRemove)
 {
 	m_BubbleSprites.erase(std::find(m_BubbleSprites.begin(), m_BubbleSprites.end(), a_SpriteToRemove));
 }
@@ -100,7 +102,7 @@ void Rendering::MovePointerLine(float a_X)
 void Rendering::MovePreviewBubble(EBUBBLE_TYPE a_NewPreview)
 {
 	m_ActiveBubble = a_NewPreview;
-	m_PreviewBubbles.at(m_ActiveBubble)->setPosition(m_Line->getPosition());
+	m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(m_Line->getPosition());
 }
 
 std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
@@ -157,9 +159,9 @@ void Rendering::LoadBackground()
 
 	m_BackgroundSprite = std::make_shared<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
-	sf::Vector2<float> v = sf::Vector2<float>(static_cast<float>(m_Window->getSize().x), static_cast<float>(m_Window->getSize().y));
-
-	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, v.x, v.y));
+	sf::Vector2f v = sf::Vector2f(static_cast<float>(m_Window->getSize().x), static_cast<float>(m_Window->getSize().y));
+	
+	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, static_cast<int>(m_Window->getSize().x), static_cast<int>(m_Window->getSize().y)));
 
 	m_BackgroundSprite->setSize(v);
 }
@@ -226,9 +228,9 @@ void Rendering::CreatePointer()
 
 	for(int i = 0; i < bubble_sizes.size(); i++)
 	{
-		std::shared_ptr<sf::RectangleShape> newSprite;
+		std::shared_ptr<AnimatedSprite> newSprite;
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
-		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::RectangleShape>>(static_cast<EBUBBLE_TYPE>(i), newSprite));
+		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<AnimatedSprite>>(static_cast<EBUBBLE_TYPE>(i), newSprite));
 	}
 }
 
@@ -239,7 +241,7 @@ void Rendering::CreateTitleSprite()
 	m_Title = std::make_shared<sf::RectangleShape>();
 	m_Title = std::make_shared<sf::RectangleShape>();
 	m_Title->setTexture(m_TitleTexture.get());
-	m_Title->setSize(sf::Vector2f(m_TitleTexture->getSize().x, m_TitleTexture->getSize().y));
+	m_Title->setSize(BubbleMath::ToVector2f(m_TitleTexture->getSize()));
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
 	m_Title->setPosition(basePos);
 }
@@ -270,6 +272,8 @@ void Rendering::CreateMenuButtonSprites()
 
 	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
 	loadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_TIME * 2, 8);
-	m_Loading->SetPosition(sf::Vector2f(m_Window->getSize().x - loadingTexture->getSize().x / 8, m_Window->getSize().y - loadingTexture->getSize().y));
+	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_TIME * 16, 8);
+	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
+	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(loadingTexture->getSize());
+	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
 }

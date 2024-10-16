@@ -47,4 +47,14 @@ public:
 	static sf::Vector2f Lerp(const sf::Vector2f& a_Start, const sf::Vector2f& a_End, float a_T) {
 		return (1 - a_T) * a_Start + a_T * a_End;
 	}
+
+	static sf::Vector2f ToVector2f(const sf::Vector2i& a_Vector)
+	{
+		return { static_cast<float>(a_Vector.x), static_cast<float>(a_Vector.y) };
+	}
+
+	static sf::Vector2f ToVector2f(const sf::Vector2u& a_Vector)
+	{
+		return { static_cast<float>(a_Vector.x), static_cast<float>(a_Vector.y) };
+	}
 };

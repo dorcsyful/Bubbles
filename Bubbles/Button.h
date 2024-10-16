@@ -23,8 +23,6 @@ private:
         // You can draw other high-level objects
         a_Target.draw(*m_Shape, a_States);
         a_Target.draw(*m_Text, a_States);
-
-
     }
     std::shared_ptr<sf::Texture> m_BaseBackGround;
     std::shared_ptr<sf::Texture> m_ClickedBackground;

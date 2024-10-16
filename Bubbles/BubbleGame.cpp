@@ -32,7 +32,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	{
 		auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
 		m_Physics->AddBubble(combined);
-		size_t markedWrapper[2];
+		size_t markedWrapper[2] = { 0,0 };
 		for (size_t j = 0; j < m_Wrappers.size(); j++)
 		{
 			if (m_Wrappers[j]->GetBubble() == m_Physics->m_BubblesToCombine[i].first)
@@ -105,7 +105,6 @@ void BubbleGame::Update()
 				{
 					if (button->DetectClick(mousePosition))
 					{
-						std::cout << "Button clicked \n";
 						StartLoading();
 						CallAfterDelay::getInstance().AddFunction([this](){StartGame();}, LOADING_TIME);
 					}
@@ -135,7 +134,7 @@ void BubbleGame::CreateWrapper(const std::shared_ptr<BubbleObject>& a_NewBubble)
 	temp.x *= PIXEL_TO_METER;
 	temp.y *= PIXEL_TO_METER;
 	temp.y *= -1.f;
-	std::shared_ptr<sf::RectangleShape> newRendered = m_Rendering->AddSprite(a_NewBubble->GetBubbleType(), temp, 0);
+	std::shared_ptr<AnimatedSprite> newRendered = m_Rendering->AddSprite(a_NewBubble->GetBubbleType(), temp, 0);
 	std::shared_ptr<BubbleWrapper> wrapper = std::make_shared <BubbleWrapper>(a_NewBubble, newRendered);
 	m_Wrappers.push_back(wrapper);
 }

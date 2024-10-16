@@ -17,12 +17,12 @@ public:
 	Rendering(int a_X, int a_Y);
 	void Draw(EGAME_STATE a_State) const;
 	void CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation,
-	                  std::shared_ptr<sf::RectangleShape>& newSprite);
+	                  std::shared_ptr<AnimatedSprite>& a_NewSprite);
 
 	sf::RenderWindow* GetWindow() const { return m_Window.get(); }
-	sf::Vector2f GetPreviewPosition() const { return m_PreviewBubbles.at(m_ActiveBubble)->getPosition(); }
-	std::shared_ptr<sf::RectangleShape>& AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation);
-	void RemoveSprite(const std::shared_ptr<sf::RectangleShape>& a_SpriteToRemove);
+	sf::Vector2f GetPreviewPosition() const { return m_PreviewBubbles.at(m_ActiveBubble)->GetPosition(); }
+	std::shared_ptr<AnimatedSprite>& AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation);
+	void RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRemove);
 	
 	void MovePointerLine(float a_X);
 	void MovePreviewBubble(EBUBBLE_TYPE a_NewPreview);
@@ -53,9 +53,9 @@ private:
 	//Play mode
 	std::vector<std::shared_ptr<sf::RectangleShape>> m_Container;
 	std::map<EBUBBLE_TYPE,std::shared_ptr<sf::Texture>> m_BubbleTextures;
-	std::vector<std::shared_ptr<sf::RectangleShape>> m_BubbleSprites;
+	std::vector<std::shared_ptr<AnimatedSprite>> m_BubbleSprites;
 	EBUBBLE_TYPE m_ActiveBubble;
-	std::map<EBUBBLE_TYPE, std::shared_ptr<sf::RectangleShape>> m_PreviewBubbles;
+	std::map<EBUBBLE_TYPE, std::shared_ptr<AnimatedSprite>> m_PreviewBubbles;
 	std::shared_ptr<sf::RectangleShape> m_Line;
 
 	//Menu mode

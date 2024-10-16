@@ -30,7 +30,7 @@
 #define GRAVITY (-9.81f)
 
 #define PIXEL_TO_METER 100
-#define LOADING_TIME 8
+#define LOADING_TIME 3
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #include <map>
 

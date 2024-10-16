@@ -11,7 +11,7 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std
 	m_ClickedBackground = a_ClickedTexture;
 
 	m_Shape->setTexture(*m_BaseBackGround);
-	m_Shape->setOrigin(m_BaseBackGround->getSize().x / 2.f, m_BaseBackGround->getSize().y / 2.f);
+	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 2.f, static_cast<float>(m_BaseBackGround->getSize().y) / 2.f);
 	m_Shape->setPosition(a_Position);
 
 
