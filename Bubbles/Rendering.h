@@ -41,6 +41,7 @@ private:
 	void CreateContainerLines();
 	void CreatePointer();
 	void CreateTitleSprite();
+	void CreateGameOverSprite();
 
 	void CreateMenuSprites();
 	void CreateMenuButtonSprites();
@@ -59,6 +60,10 @@ private:
 	std::shared_ptr<sf::RectangleShape> m_Line;
 
 	//Play mode UI
+
+	//Game over mode
+	std::shared_ptr<sf::RectangleShape> m_GameOver;
+	std::shared_ptr<sf::Texture> m_GameOverTexture;
 
 	//Menu mode
 	std::shared_ptr<sf::RectangleShape> m_Title;

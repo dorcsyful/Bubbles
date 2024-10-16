@@ -17,6 +17,7 @@ Rendering::Rendering(const int a_X, const int a_Y)
 	CreateContainerLines();
 	CreatePointer();
 	CreateMenuSprites();
+	CreateGameOverSprite();
 }
 
 void Rendering::PlayDraw() const
@@ -79,6 +80,10 @@ void Rendering::Draw(EGAME_STATE a_State) const
 	if(a_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
 	{
 		GameOverAnimationDraw();
+	}
+	if(a_State == EGAME_STATE::STATE_GAME_OVER)
+	{
+		m_Window->draw(*m_GameOver);
 	}
 
 	m_Window->display();
@@ -265,6 +270,17 @@ void Rendering::CreateTitleSprite()
 	m_Title->setSize(BubbleMath::ToVector2f(m_TitleTexture->getSize()));
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
 	m_Title->setPosition(basePos);
+}
+
+void Rendering::CreateGameOverSprite()
+{
+	m_GameOverTexture = std::make_shared<sf::Texture>();
+	m_GameOverTexture->loadFromFile(GAME_OVER_FILENAME);
+	m_GameOver = std::make_shared<sf::RectangleShape>();
+	m_GameOver->setTexture(m_GameOverTexture.get());
+	m_GameOver->setSize(BubbleMath::ToVector2f(m_GameOverTexture->getSize()));
+	m_GameOver->setOrigin(m_GameOverTexture->getSize().x / 2, m_GameOverTexture->getSize().y / 2);
+	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2, m_Window->getSize().y / 2));
 }
 
 void Rendering::CreateMenuSprites()
