@@ -53,7 +53,6 @@ void Rendering::GameOverAnimationDraw() const
 	}
 
 	m_Window->draw(*m_Line);
-	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
 	for (auto& element : m_BubbleSprites)
 	{
 		element->UpdateFrameByTime();
