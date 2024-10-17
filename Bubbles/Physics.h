@@ -22,6 +22,8 @@ public:
 	std::vector<std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>>> m_BubblesToCombine;
 private:
 
+	bool BubbleAlreadyInCombineList(const std::shared_ptr<BubbleObject>& a_Bubble) const;
+
 	bool m_TouchedTopLine = false;
 
 	std::shared_ptr<LineObject> m_TopLine;

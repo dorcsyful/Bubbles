@@ -35,9 +35,9 @@ protected:
 	float m_Mass = 0;
 	float m_InverseMass = 0;
 	EOBJECT_TYPE m_Type = EOBJECT_TYPE::TYPE_NO_TYPE;
-	float m_Restitution = 0.2f;
-	float m_DynamicFriction = 0.4f;
-	float m_StaticFriction = 0.2f;
+	float m_Restitution = 0.7f;
+	float m_DynamicFriction = 0.7f;
+	float m_StaticFriction = 0.5f;
 
 	float m_Inertia = 0;
 	float m_InverseInertia = 0;

@@ -35,16 +35,14 @@ void Physics::Update(float a_Delta)
                 m_Manifolds.emplace_back(manifold);
 	            if(m_Bubbles[i]->GetBubbleType() == m_Bubbles[j]->GetBubbleType())
 	            {
-                    std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>> combination;
-                    combination.first = m_Bubbles[j];
-                    combination.second = m_Bubbles[i];
-                    if(std::find(m_BubblesToCombine.begin(),m_BubblesToCombine.end(),combination) == m_BubblesToCombine.end())
+                    if(!BubbleAlreadyInCombineList(m_Bubbles[i]) && !BubbleAlreadyInCombineList(m_Bubbles[j]))
                     {
-                        combination.first = m_Bubbles[i];
-                        combination.second = m_Bubbles[j];
-                        m_BubblesToCombine.emplace_back(combination);
-
+	                    std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>> combination;
+	                    combination.first = m_Bubbles[i];
+	                    combination.second = m_Bubbles[j];
+	                    m_BubblesToCombine.emplace_back(combination);	                    
                     }
+
 	            }
             }
         }
@@ -69,4 +67,14 @@ void Physics::Update(float a_Delta)
 
     for (unsigned int i = 0; i < m_Manifolds.size(); ++i)
         m_Manifolds[i]->PositionalCorrection();
+}
+
+bool Physics::BubbleAlreadyInCombineList(const std::shared_ptr<BubbleObject>& a_Bubble) const
+{
+    for(const auto& bubblePair : m_BubblesToCombine)
+	{
+		if (bubblePair.first == a_Bubble || bubblePair.second == a_Bubble)
+			return true;
+	}
+    return false;
 }
