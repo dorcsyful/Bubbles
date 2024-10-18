@@ -58,12 +58,14 @@ void Rendering::GameOverAnimationDraw() const
 	m_Window->draw(*m_Line);
 	for (auto& element : m_BubbleSprites)
 	{
-		element->UpdateFrameByTime();
+		//element->UpdateFrameByTime();
 		m_Window->draw(*element);
 	}
+
+	m_Window->draw(*m_GameOver);
 }
 
-void Rendering::Draw(EGAME_STATE a_State) const
+void Rendering::Draw(const EGAME_STATE a_State) const
 {
 	m_Window->clear();
 
@@ -91,23 +93,23 @@ void Rendering::Draw(EGAME_STATE a_State) const
 	m_Window->display();
 }
 
-void Rendering::CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation, std::shared_ptr<AnimatedSprite>& a_NewSprite)
+void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::shared_ptr<AnimatedSprite>& a_NewSprite)
 {
-	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Size),BUBBLE_FRAME_TIME,4);
+	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Type),BUBBLE_FRAME_TIME,4);
 
-	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Size)->getSize());
+	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= 4;
-	a_NewSprite->GetSprite()->setScale(bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.x, bubble_sizes.at(a_Size) * PIXEL_TO_METER * 2 / size.y);
+	a_NewSprite->GetSprite()->setScale(bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.x, bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.y);
 
-	float x = bubble_sizes.at(a_Size) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
-	float y = bubble_sizes.at(a_Size) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().y;
+	float x = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
+	float y = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().y;
 	a_NewSprite->GetSprite()->setOrigin(x, y);
 
 	a_NewSprite->SetPosition(a_Position);
 	a_NewSprite->SetRotation(a_Rotation);
 }
 
-std::shared_ptr<AnimatedSprite>& Rendering::AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation)
+std::shared_ptr<AnimatedSprite>& Rendering::AddSprite(const EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, const float a_Rotation)
 {
 	std::shared_ptr<AnimatedSprite> newSprite;
 	CreateSprite(a_Size, a_Position, a_Rotation, newSprite);
@@ -120,20 +122,20 @@ void Rendering::RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRe
 	m_BubbleSprites.erase(std::find(m_BubbleSprites.begin(), m_BubbleSprites.end(), a_SpriteToRemove));
 }
 
-void Rendering::MovePointerLine(float a_X)
+void Rendering::MovePointerLine(const float a_X) const
 {
 	sf::Vector2f temp = m_Line->getPosition();
 	temp.x = a_X;
 	m_Line->setPosition(temp);
 }
 
-void Rendering::MovePreviewBubble(EBUBBLE_TYPE a_NewPreview)
+void Rendering::MovePreviewBubble(const EBUBBLE_TYPE a_NewPreview)
 {
 	m_ActiveBubble = a_NewPreview;
 	m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(m_Line->getPosition());
 }
 
-std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
+std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine() const
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
 	sf::Vector2f start = m_Container[0]->getPosition();
@@ -163,7 +165,7 @@ std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine()
 	return lines;
 }
 
-std::shared_ptr<LineObject> Rendering::ConvertTopLine()
+std::shared_ptr<LineObject> Rendering::ConvertTopLine() const
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
 	sf::Vector2f start = m_Container[3]->getPosition();
@@ -281,8 +283,12 @@ void Rendering::CreateGameOverSprite()
 	m_GameOver = std::make_shared<sf::RectangleShape>();
 	m_GameOver->setTexture(m_GameOverTexture.get());
 	m_GameOver->setSize(BubbleMath::ToVector2f(m_GameOverTexture->getSize()));
-	m_GameOver->setOrigin(m_GameOverTexture->getSize().x / 2, m_GameOverTexture->getSize().y / 2);
-	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2, m_Window->getSize().y / 2));
+
+	sf::Vector2f basePos = BubbleMath::ToVector2f(m_GameOverTexture->getSize());
+	m_GameOver->setOrigin(basePos.x / 2, basePos.y / 2);
+
+	basePos = BubbleMath::ToVector2f(m_Window->getSize());
+	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 2));
 }
 
 void Rendering::CreateMenuSprites()

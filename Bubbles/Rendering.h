@@ -24,15 +24,15 @@ public:
 	std::shared_ptr<AnimatedSprite>& AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation);
 	void RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRemove);
 	
-	void MovePointerLine(float a_X);
+	void MovePointerLine(float a_X) const;
 	void MovePreviewBubble(EBUBBLE_TYPE a_NewPreview);
 
 	std::vector<std::shared_ptr<Button>> GetMenuButtons() { return m_MenuButtons; }
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
 
-	std::vector<std::shared_ptr<LineObject>> ConvertToLine();
-	std::shared_ptr<LineObject> ConvertTopLine();
+	std::vector<std::shared_ptr<LineObject>> ConvertToLine() const;
+	std::shared_ptr<LineObject> ConvertTopLine() const;
 
 private:
 	void PlayDraw() const;

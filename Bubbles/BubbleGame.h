@@ -29,6 +29,9 @@ private:
 
 	void GameOver();
 
+	void RemoveAtEnd();
+
+
 	std::vector<std::shared_ptr<BubbleWrapper>> m_Wrappers;
 };
 

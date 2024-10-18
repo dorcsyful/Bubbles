@@ -25,7 +25,7 @@ public:
 	float GetInertia() const { return m_Inertia; }
 	float GetInverseInertia() const { return m_InverseInertia; }
 
-	bool m_IsBubble = false;;
+	bool m_IsBubble = false;
 
 protected:
 
@@ -35,7 +35,7 @@ protected:
 	float m_Mass = 0;
 	float m_InverseMass = 0;
 	EOBJECT_TYPE m_Type = EOBJECT_TYPE::TYPE_NO_TYPE;
-	float m_Restitution = 0.7f;
+	float m_Restitution = 0.4f;
 	float m_DynamicFriction = 0.7f;
 	float m_StaticFriction = 0.5f;
 

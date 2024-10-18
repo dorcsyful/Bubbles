@@ -3,6 +3,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Helpers.h"
+#include <chrono>
 
 void BubbleGame::Initialize()
 {
@@ -106,8 +107,15 @@ void BubbleGame::Update()
 					if (button->DetectClick(mousePosition))
 					{
 						StartLoading();
-						CallAfterDelay::getInstance().AddFunction([this](){StartGame();}, LOADING_TIME);
+						CallAfterDelay::getInstance().AddFunction([this](){StartGame();}, LOADING_TIME, false);
 					}
+				}
+			}
+			else if(m_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
+			{
+				if ( sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				{
+					m_State = EGAME_STATE::STATE_GAME_OVER;
 				}
 			}
 
@@ -153,5 +161,20 @@ void BubbleGame::GameOver()
 {
 	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
-	CallAfterDelay::getInstance().AddFunction([this](){m_State = EGAME_STATE::STATE_GAME_OVER;}, BUBBLE_FRAME_TIME * BUBBLE_FRAME_NUMBER - 1);
+	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, GAME_OVER_ANIMATION_TOTAL_TIME / m_Wrappers.size(), true);
+}
+
+void BubbleGame::RemoveAtEnd()
+{
+	if(m_Wrappers.empty())
+	{
+		CallAfterDelay::getInstance().RemoveFunction([this](){RemoveAtEnd();});
+		m_State = EGAME_STATE::STATE_GAME_OVER;
+		return;
+	}
+	int index = rand() % m_Wrappers.size();
+	std::shared_ptr<BubbleWrapper> bubbleWrapper = m_Wrappers[index];
+	m_Wrappers.erase(std::find(m_Wrappers.begin(), m_Wrappers.end(), bubbleWrapper));
+
+	m_Rendering->RemoveSprite(bubbleWrapper->GetShape());
 }

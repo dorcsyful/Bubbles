@@ -10,8 +10,8 @@ class Gameplay
 {
 public:
 	Gameplay() {
-		time_t current_time = time(nullptr);
-		srand(current_time);
+		time_t currentTime = time(nullptr);
+		srand(static_cast<unsigned int>(currentTime));
 		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 		m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 		m_ContainerEdges[0] = (static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f);
