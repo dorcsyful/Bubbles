@@ -2,6 +2,8 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "Helpers.h"
+
 Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std::shared_ptr<sf::Texture>& a_BaseTexture, const std::shared_ptr<sf::Texture>& a_ClickedTexture)
 {
 	m_Text = std::make_unique<sf::Text>();
@@ -42,9 +44,10 @@ void Button::SetText(const std::string& a_Text)
 
 bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 {
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Shape->getGlobalBounds().contains(a_MousePosition))
+	if(!m_IsClicked && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
 		m_Shape->setTexture(*m_ClickedBackground);
+		CallAfterDelay::getInstance().AddFunction([this](){DisableClicked();}, 0.2f, false);
 		return true;
 	}
 	m_Shape->setTexture(*m_BaseBackGround);

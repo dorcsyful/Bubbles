@@ -14,7 +14,10 @@ public:
 	void CreateWrapper(const std::shared_ptr<BubbleObject>& a_NewBubble);
 
 	void AddBubble(float a_Delta);
-	void StartGame() { m_State = EGAME_STATE::STATE_PLAY; }
+	void StartGame()
+	{
+		m_State = EGAME_STATE::STATE_PLAY;
+	}
 	void StartLoading() { m_State = EGAME_STATE::STATE_LOADING; }
 
 	std::unique_ptr<Physics> m_Physics;

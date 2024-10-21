@@ -3,7 +3,8 @@
 
 #include <functional>
 #include <vector>
-
+#include <chrono>
+#include <iostream>
 class CallAfterDelay {
 
     struct FunctionData {
@@ -67,18 +68,25 @@ public:
 
     void LoopThroughFunctions()
     {
+		std::vector<FunctionData> markedForDelete;
 	    for (auto& function : m_Functions)
 	    {
 		    if (std::chrono::steady_clock::now() > function.m_TargetTime)
 		    {
 			    function.m_Function();
-				if(!function.m_IsRepeating) m_Functions.erase(std::remove(m_Functions.begin(), m_Functions.end(), function), m_Functions.end());
+				if (!function.m_IsRepeating) {
+					markedForDelete.push_back(function);
+				}
 				else
 				{
 					function.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(function.m_Delay * 1000.f));
 				}
 		    }
 	    }
+		for (auto& function : markedForDelete)
+		{
+			m_Functions.erase(std::find(m_Functions.begin(),m_Functions.end(), function));
+		}
 	
     }
 

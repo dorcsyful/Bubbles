@@ -7,7 +7,7 @@
 
 void BubbleGame::Initialize()
 {
-	m_State = EGAME_STATE::STATE_GAME_OVER;
+	m_State = EGAME_STATE::STATE_MENU;
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>();
@@ -99,16 +99,14 @@ void BubbleGame::Update()
 					AddBubble(delta);
 				}
 			}
-			else if(m_State == EGAME_STATE::STATE_MENU || m_State == EGAME_STATE::STATE_GAME_OVER)
+			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
 				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-				for (const auto& button : m_Rendering->GetMenuButtons())
+				auto button = m_Rendering->GetMenuButtons().at("Play");
+				if (button->DetectClick(mousePosition))
 				{
-					if (button.second->DetectClick(mousePosition))
-					{
-						StartLoading();
-						CallAfterDelay::getInstance().AddFunction([this](){StartGame();}, LOADING_TIME, false);
-					}
+					CallAfterDelay::getInstance().AddFunction([this](){StartLoading(); }, 0.2f, false);
+					CallAfterDelay::getInstance().AddFunction([this](){StartGame(); }, LOADING_TIME, false);
 				}
 			}
 			else if(m_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
