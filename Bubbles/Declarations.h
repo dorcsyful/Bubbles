@@ -38,7 +38,7 @@
 #define BUBBLE_FRAME_NUMBER 4
 #define BUBBLE_FRAME_TIME 1
 
-#define GAME_OVER_ANIMATION_TOTAL_TIME 5
+#define GAME_OVER_ANIMATION_TOTAL_TIME 10
 
 #define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
 #define SCORE_FILENAME "Assets/Other/ScoreBackground.png"

@@ -42,10 +42,7 @@ void Rendering::MenuDraw() const
 {
 	m_Window->draw(*m_Title);
 
-	for(const auto& element : m_MenuButtons)
-	{
-		m_Window->draw(*element);
-	}
+	m_Window->draw(*m_MenuButtons.at("Play"));
 }
 
 void Rendering::GameOverAnimationDraw() const
@@ -75,7 +72,7 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	{
 		PlayDraw();
 	}
-	if (a_State == EGAME_STATE::STATE_MENU || a_State == EGAME_STATE::STATE_LOADING) MenuDraw();
+	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
 		m_Window->draw(*m_Loading);
@@ -88,6 +85,7 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	if(a_State == EGAME_STATE::STATE_GAME_OVER)
 	{
 		m_Window->draw(*m_GameOver);
+		m_Window->draw(*m_MenuButtons.at("PlayAgain"));
 	}
 
 	m_Window->display();
@@ -133,6 +131,14 @@ void Rendering::MovePreviewBubble(const EBUBBLE_TYPE a_NewPreview)
 {
 	m_ActiveBubble = a_NewPreview;
 	m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(m_Line->getPosition());
+}
+
+void Rendering::ResetButtons() const
+{
+	for(const auto& element : m_MenuButtons)
+	{
+		element.second->ApplyBaseTexture();
+	}
 }
 
 std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine() const
@@ -288,7 +294,14 @@ void Rendering::CreateGameOverSprite()
 	m_GameOver->setOrigin(basePos.x / 2, basePos.y / 2);
 
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
-	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 2));
+	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 4));
+
+	basePos = m_GameOver->getPosition();
+	basePos.y += m_GameOver->getSize().y;
+	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos, *m_Font, m_BaseButtonTexture, m_ClickedButtonTexture);
+	newButton->SetText("Play again");
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::shared_ptr<Button>>("PlayAgain", newButton));
+
 }
 
 void Rendering::CreateMenuSprites()
@@ -305,15 +318,15 @@ void Rendering::CreateMenuButtonSprites()
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 	basePos.y += m_Title->getSize().y * 2.f;
 	basePos.x += m_Title->getSize().x / 2.f;
-	std::shared_ptr<sf::Texture> baseButtonTexture = std::make_shared<sf::Texture>();
-	baseButtonTexture->loadFromFile(BUTTON_FILENAME);
-	std::shared_ptr<sf::Texture> clickedButtonTexture = std::make_shared<sf::Texture>();
-	clickedButtonTexture->loadFromFile(BUTTON_CLICKED_FILENAME);
+	m_BaseButtonTexture = std::make_shared<sf::Texture>();
+	m_BaseButtonTexture->loadFromFile(BUTTON_FILENAME);
+	m_ClickedButtonTexture = std::make_shared<sf::Texture>();
+	m_ClickedButtonTexture->loadFromFile(BUTTON_CLICKED_FILENAME);
 
-	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos,*m_Font,baseButtonTexture,clickedButtonTexture);
+	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos,*m_Font, m_BaseButtonTexture, m_ClickedButtonTexture);
 	newButton->SetText("Play");
-	m_MenuButtons = std::vector<std::shared_ptr<Button>>();
-	m_MenuButtons.push_back(newButton);
+	m_MenuButtons = std::map<std::string, std::shared_ptr<Button>>();
+	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::shared_ptr<Button>>("Play",newButton));
 
 	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
 	loadingTexture->loadFromFile(LOADING_FILENAME);

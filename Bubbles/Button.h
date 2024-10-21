@@ -13,6 +13,7 @@ public:
     Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std::shared_ptr<sf::Texture>& a_BaseTexture, const std::shared_ptr<sf::Texture>& a_ClickedTexture);
     void SetText(const std::string& a_Text);
 
+    void ApplyBaseTexture() const { m_Shape->setTexture(*m_BaseBackGround); }
     bool DetectClick(const sf::Vector2f& a_MousePosition);
 
 private:

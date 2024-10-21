@@ -16,7 +16,7 @@ public:
 
 	Rendering(int a_X, int a_Y);
 	void Draw(EGAME_STATE a_State) const;
-	void CreateSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation,
+	void CreateSprite(EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, float a_Rotation,
 	                  std::shared_ptr<AnimatedSprite>& a_NewSprite);
 
 	sf::RenderWindow* GetWindow() const { return m_Window.get(); }
@@ -27,7 +27,8 @@ public:
 	void MovePointerLine(float a_X) const;
 	void MovePreviewBubble(EBUBBLE_TYPE a_NewPreview);
 
-	std::vector<std::shared_ptr<Button>> GetMenuButtons() { return m_MenuButtons; }
+	std::map<std::string, std::shared_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
+	void ResetButtons() const;
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
 
@@ -73,8 +74,10 @@ private:
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;
 	std::unique_ptr<sf::Texture> m_TitleTexture;
-	std::vector<std::shared_ptr<Button>> m_MenuButtons;
+	std::map<std::string, std::shared_ptr<Button>> m_MenuButtons;
 	std::shared_ptr<sf::Font> m_Font;
 	std::unique_ptr<AnimatedSprite> m_Loading;
+	std::shared_ptr<sf::Texture> m_BaseButtonTexture;
+	std::shared_ptr<sf::Texture> m_ClickedButtonTexture;
 };
 

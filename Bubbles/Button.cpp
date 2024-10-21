@@ -24,6 +24,14 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std
 void Button::SetText(const std::string& a_Text)
 {
 	m_Text->setString(a_Text);
+	sf::FloatRect fr = m_Text->getGlobalBounds();
+	float width = m_Shape->getGlobalBounds().width;
+	if(fr.width > width)
+	{
+		unsigned int size = m_Text->getString().getSize();
+		unsigned int size1 = static_cast<unsigned int>(width) / size;
+		m_Text->setCharacterSize(size1 * 2 - 5);
+	}
 	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
 
 	sf::Vector2f position = m_Shape->getPosition();
