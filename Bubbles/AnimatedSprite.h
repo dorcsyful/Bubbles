@@ -20,13 +20,13 @@ public:
 
 	void SetRotation(const float a_Rotation) const { m_Sprite->setRotation(a_Rotation); }
 
-	std::shared_ptr<sf::Sprite> GetSprite() const { return m_Sprite; }
+	sf::Sprite* GetSprite() const { return m_Sprite.get(); }
 	sf::Vector2f GetPosition() const { return m_Sprite->getPosition(); }
 
 private:
 	void draw(sf::RenderTarget& a_Target, sf::RenderStates a_States) const override;
 
-	std::shared_ptr<sf::Sprite> m_Sprite;
+	std::unique_ptr<sf::Sprite> m_Sprite;
 	std::shared_ptr<sf::Texture> m_Texture;
 	float m_FrameTime;
 	int m_CurrentFrame;

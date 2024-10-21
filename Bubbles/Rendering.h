@@ -54,7 +54,7 @@ private:
 	std::shared_ptr<sf::Texture> m_BackgroundTexture;
 
 	//Play mode
-	std::vector<std::shared_ptr<sf::RectangleShape>> m_Container;
+	std::vector<std::unique_ptr<sf::RectangleShape>> m_Container;
 	std::map<EBUBBLE_TYPE,std::shared_ptr<sf::Texture>> m_BubbleTextures;
 	std::vector<std::shared_ptr<AnimatedSprite>> m_BubbleSprites;
 	EBUBBLE_TYPE m_ActiveBubble;
@@ -62,19 +62,19 @@ private:
 	std::shared_ptr<sf::RectangleShape> m_Line;
 
 	//Play mode UI
-	std::shared_ptr<sf::Text> m_ScoreText;
+	std::unique_ptr<sf::Text> m_ScoreText;
 	std::shared_ptr<sf::RectangleShape> m_ScoreBackground;
 	std::shared_ptr<sf::Texture> m_ScoreBackgroundTexture;
 
 	//Game over mode
-	std::shared_ptr<sf::RectangleShape> m_GameOver;
-	std::shared_ptr<sf::Texture> m_GameOverTexture;
+	std::unique_ptr<sf::RectangleShape> m_GameOver;
+	std::unique_ptr<sf::Texture> m_GameOverTexture;
 
 	//Menu mode
-	std::shared_ptr<sf::RectangleShape> m_Title;
-	std::shared_ptr<sf::Texture> m_TitleTexture;
+	std::unique_ptr<sf::RectangleShape> m_Title;
+	std::unique_ptr<sf::Texture> m_TitleTexture;
 	std::vector<std::shared_ptr<Button>> m_MenuButtons;
 	std::shared_ptr<sf::Font> m_Font;
-	std::shared_ptr<AnimatedSprite> m_Loading;
+	std::unique_ptr<AnimatedSprite> m_Loading;
 };
 

@@ -4,8 +4,8 @@
 
 Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std::shared_ptr<sf::Texture>& a_BaseTexture, const std::shared_ptr<sf::Texture>& a_ClickedTexture)
 {
-	m_Text = std::make_shared<sf::Text>();
-	m_Shape = std::make_shared<sf::Sprite>();
+	m_Text = std::make_unique<sf::Text>();
+	m_Shape = std::make_unique<sf::Sprite>();
 
 	m_BaseBackGround = a_BaseTexture;
 	m_ClickedBackground = a_ClickedTexture;

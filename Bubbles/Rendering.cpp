@@ -223,25 +223,25 @@ void Rendering::LoadBubbleTextures()
 void Rendering::CreateContainerLines()
 {
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f),((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) /2.f));
-	m_Container = std::vector<std::shared_ptr<sf::RectangleShape>>(4);
+	m_Container = std::vector<std::unique_ptr<sf::RectangleShape>>(4);
 
-	m_Container[0] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS,CONTAINER_HEIGHT));
+	m_Container[0] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS,CONTAINER_HEIGHT));
 	m_Container[0]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
 	m_Container[0]->setPosition(basePos);
 
-	m_Container[1] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS, CONTAINER_HEIGHT));
+	m_Container[1] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS, CONTAINER_HEIGHT));
 	m_Container[1]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
 	sf::Vector2f pos1 = basePos;
 	pos1.x += CONTAINER_WIDTH;
 	m_Container[1]->setPosition(pos1);
 
-	m_Container[2] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
+	m_Container[2] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
 	m_Container[2]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
 	sf::Vector2f pos2 = basePos;
 	pos2.y += CONTAINER_HEIGHT;
 	m_Container[2]->setPosition(pos2);
 
-	m_Container[3] = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
+	m_Container[3] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
 	m_Container[3]->setFillColor(sf::Color(CONTAINER_LINE_TOP_COLOR_R, CONTAINER_LINE_TOP_COLOR_G, CONTAINER_LINE_TOP_COLOR_B, CONTAINER_LINE_TOP_COLOR_A));
 	sf::Vector2f pos3 = basePos;
 	//pos3.y -= CONTAINER_HEIGHT;
@@ -266,10 +266,10 @@ void Rendering::CreatePointer()
 
 void Rendering::CreateTitleSprite()
 {
-	m_TitleTexture = std::make_shared<sf::Texture>();
+	m_TitleTexture = std::make_unique<sf::Texture>();
 	m_TitleTexture->loadFromFile(TITLE_FILENAME);
-	m_Title = std::make_shared<sf::RectangleShape>();
-	m_Title = std::make_shared<sf::RectangleShape>();
+	m_Title = std::make_unique<sf::RectangleShape>();
+	m_Title = std::make_unique<sf::RectangleShape>();
 	m_Title->setTexture(m_TitleTexture.get());
 	m_Title->setSize(BubbleMath::ToVector2f(m_TitleTexture->getSize()));
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
@@ -278,9 +278,9 @@ void Rendering::CreateTitleSprite()
 
 void Rendering::CreateGameOverSprite()
 {
-	m_GameOverTexture = std::make_shared<sf::Texture>();
+	m_GameOverTexture = std::make_unique<sf::Texture>();
 	m_GameOverTexture->loadFromFile(GAME_OVER_FILENAME);
-	m_GameOver = std::make_shared<sf::RectangleShape>();
+	m_GameOver = std::make_unique<sf::RectangleShape>();
 	m_GameOver->setTexture(m_GameOverTexture.get());
 	m_GameOver->setSize(BubbleMath::ToVector2f(m_GameOverTexture->getSize()));
 
@@ -317,7 +317,7 @@ void Rendering::CreateMenuButtonSprites()
 
 	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
 	loadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_shared<AnimatedSprite>(loadingTexture, LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
+	m_Loading = std::make_unique<AnimatedSprite>(loadingTexture, LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(loadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
@@ -325,7 +325,7 @@ void Rendering::CreateMenuButtonSprites()
 
 void Rendering::CreateScoreText()
 {
-	m_ScoreText = std::make_shared<sf::Text>();
+	m_ScoreText = std::make_unique<sf::Text>();
 	m_ScoreText->setFont(*m_Font);
 	m_ScoreText->setCharacterSize(50);
 	m_ScoreText->setFillColor(sf::Color::Black);

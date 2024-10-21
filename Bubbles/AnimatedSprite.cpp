@@ -6,7 +6,7 @@ AnimatedSprite::AnimatedSprite(const std::shared_ptr<sf::Texture>& a_Texture, co
 	m_CurrentFrame(0),
 	m_FrameCount(a_FrameCount)
 {
-	m_Sprite = std::make_shared<sf::Sprite>(*m_Texture);
+	m_Sprite = std::make_unique<sf::Sprite>(*m_Texture);
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;
 	m_Sprite->setTextureRect(sf::IntRect(0, 0, size.x, size.y));
