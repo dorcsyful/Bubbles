@@ -69,6 +69,14 @@ void Physics::Update(float a_Delta)
         m_Manifolds[i]->PositionalCorrection();
 }
 
+void Physics::Reset()
+{
+	m_Bubbles.clear();
+	m_Manifolds.clear();
+	m_BubblesToCombine.clear();
+	m_TouchedTopLine = false;
+}
+
 bool Physics::BubbleAlreadyInCombineList(const std::shared_ptr<BubbleObject>& a_Bubble) const
 {
     for(const auto& bubblePair : m_BubblesToCombine)

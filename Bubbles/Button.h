@@ -24,7 +24,10 @@ private:
         a_Target.draw(*m_Text, a_States);
     }
 
-    void DisableClicked() { m_IsClicked = false; m_Shape->setTexture(*m_BaseBackGround); }
+    void DisableClicked()
+	{
+		m_IsClicked = false; m_Shape->setTexture(*m_BaseBackGround);
+	}
     std::shared_ptr<sf::Texture> m_BaseBackGround;
     std::shared_ptr<sf::Texture> m_ClickedBackground;
     std::unique_ptr<sf::Text> m_Text;

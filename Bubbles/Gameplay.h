@@ -32,6 +32,8 @@ public:
 	std::chrono::time_point<std::chrono::system_clock> GetLastDrop() const { return m_LastDrop; }
 	void SetLastDrop(const std::chrono::time_point<std::chrono::system_clock>& a_Time) { m_LastDrop = a_Time; }
 
+	void Reset();
+
 private:
 	unsigned int m_Score;
 	std::chrono::time_point<std::chrono::system_clock> m_LastDrop;

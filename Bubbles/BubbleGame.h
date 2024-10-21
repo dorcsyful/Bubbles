@@ -29,6 +29,7 @@ public:
 private:
 	void PlayUpdate(float a_Delta);
 	void MenuUpdate(float a_Delta);
+	void RestartGame();
 
 	void GameOver();
 

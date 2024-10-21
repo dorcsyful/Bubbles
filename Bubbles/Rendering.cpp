@@ -182,6 +182,13 @@ std::shared_ptr<LineObject> Rendering::ConvertTopLine() const
 	return std::make_shared<LineObject>(start, end);
 }
 
+void Rendering::Reset()
+{
+	m_BubbleSprites.clear();
+	m_ActiveBubble = EBUBBLE_TYPE::TYPE_BLUE;
+	m_ScoreText->setString("Score:\n 0");
+}
+
 void Rendering::LoadBackground()
 {
 	m_BackgroundTexture = std::make_shared<sf::Texture>();

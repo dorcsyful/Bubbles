@@ -53,3 +53,15 @@ std::shared_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 	Move(0);
 	return newBubble;
 }
+
+void Gameplay::Reset()
+{
+	time_t currentTime = time(nullptr);
+	srand(static_cast<unsigned int>(currentTime));
+	m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+	m_ContainerEdges[0] = (static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f);
+	m_ContainerEdges[1] = m_ContainerEdges[0] + CONTAINER_WIDTH;
+	Move(0);
+	m_Score = 0;
+}

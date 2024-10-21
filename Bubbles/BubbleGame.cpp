@@ -7,7 +7,7 @@
 
 void BubbleGame::Initialize()
 {
-	m_State = EGAME_STATE::STATE_MENU;
+	m_State = EGAME_STATE::STATE_GAME_OVER;
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>();
@@ -75,6 +75,17 @@ void BubbleGame::MenuUpdate(float a_Delta)
 {
 }
 
+void BubbleGame::RestartGame()
+{
+	m_Gameplay->Reset();
+	m_Physics->Reset();
+	m_Rendering->Reset();
+	m_Wrappers.clear();
+	CallAfterDelay::getInstance().AddFunction([this]() {StartLoading(); }, 0.2f, false);
+	CallAfterDelay::getInstance().AddFunction([this]() {StartGame(); }, LOADING_TIME, false);
+
+}
+
 void BubbleGame::Update()
 {
 	sf::Clock dtClock;
@@ -116,7 +127,15 @@ void BubbleGame::Update()
 					m_State = EGAME_STATE::STATE_GAME_OVER;
 				}
 			}
-
+			else if(m_State == EGAME_STATE::STATE_GAME_OVER)
+			{
+				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+				auto button = m_Rendering->GetMenuButtons().at("PlayAgain");
+				if (button->DetectClick(mousePosition))
+				{
+					RestartGame();
+				}
+			}
 		}
 
 

@@ -35,6 +35,8 @@ public:
 	std::vector<std::shared_ptr<LineObject>> ConvertToLine() const;
 	std::shared_ptr<LineObject> ConvertTopLine() const;
 
+	void Reset();
+
 private:
 	void PlayDraw() const;
 	void MenuDraw() const;

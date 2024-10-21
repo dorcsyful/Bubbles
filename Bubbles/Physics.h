@@ -19,6 +19,7 @@ public:
 
 	bool GetTouchedTopLine() const { return m_TouchedTopLine; }
 
+	void Reset();
 	std::vector<std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>>> m_BubblesToCombine;
 private:
 
