@@ -46,8 +46,8 @@ void BubbleGame::PlayUpdate(float a_Delta)
 			}
 		}
 
-		m_Wrapper->RemoveBubbleByIndex(markedWrapper[0]);
-		m_Wrapper->RemoveBubbleByIndex(markedWrapper[0]);
+		m_Wrapper->RemoveBubbleByPointer(m_Physics->m_BubblesToCombine[i].first);
+		m_Wrapper->RemoveBubbleByPointer(m_Physics->m_BubblesToCombine[i].second);
 
 		CreateWrapper(combined);
 

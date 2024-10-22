@@ -29,15 +29,15 @@ public:
 
 	size_t GetNumOfBubbles() const { return m_GameBubble.size(); }
 
-	AnimatedSprite* GetShapeByIndex(int a_Index) const { return m_Rendered[a_Index].get(); }
-	BubbleObject* GetBubbleByIndex(int a_Index) const { return m_GameBubble[a_Index].get(); }
+	AnimatedSprite* GetShapeByIndex(size_t a_Index) const { return m_Rendered[a_Index].get(); }
+	BubbleObject* GetBubbleByIndex(size_t a_Index) const { return m_GameBubble[a_Index].get(); }
 
 	void AddBubble(std::unique_ptr<BubbleObject> a_Bubble, std::unique_ptr<AnimatedSprite> a_Rendered)
 	{
 		m_GameBubble.push_back(std::move(a_Bubble));
 		m_Rendered.push_back(std::move(a_Rendered));
 	}
-	void RemoveBubbleByIndex(size_t a_Index)
+	void RemoveBubbleByIndex(int a_Index)
 	{
 		m_GameBubble.erase(m_GameBubble.begin() + a_Index);
 		m_Rendered.erase(m_Rendered.begin() + a_Index);
