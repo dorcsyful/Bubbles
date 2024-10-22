@@ -14,26 +14,24 @@ class Rendering
 {
 public:
 
-	Rendering(int a_X, int a_Y);
+	Rendering(int a_X, int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper);
 	void Draw(EGAME_STATE a_State) const;
 	void CreateSprite(EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, float a_Rotation,
-	                  std::shared_ptr<AnimatedSprite>& a_NewSprite);
+	                  std::unique_ptr<AnimatedSprite>& a_NewSprite) const;
 
 	sf::RenderWindow* GetWindow() const { return m_Window.get(); }
 	sf::Vector2f GetPreviewPosition() const { return m_PreviewBubbles.at(m_ActiveBubble)->GetPosition(); }
-	std::shared_ptr<AnimatedSprite>& AddSprite(EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, float a_Rotation);
-	void RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRemove);
 	
 	void MovePointerLine(float a_X) const;
 	void MovePreviewBubble(EBUBBLE_TYPE a_NewPreview);
 
-	std::map<std::string, std::shared_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
+	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
 
-	std::vector<std::shared_ptr<LineObject>> ConvertToLine() const;
-	std::shared_ptr<LineObject> ConvertTopLine() const;
+	std::vector<std::unique_ptr<LineObject>> ConvertToLine() const;
+	std::unique_ptr<LineObject> ConvertTopLine() const;
 
 	void Reset();
 
@@ -51,23 +49,23 @@ private:
 	void CreateMenuButtonSprites();
 	void CreateScoreText();
 
-	std::shared_ptr<sf::RenderWindow> m_Window;
+	std::unique_ptr<sf::RenderWindow> m_Window;
 
-	std::shared_ptr<sf::RectangleShape> m_BackgroundSprite;
-	std::shared_ptr<sf::Texture> m_BackgroundTexture;
+	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
+	std::unique_ptr<sf::Texture> m_BackgroundTexture;
 
 	//Play mode
+	 std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
 	std::vector<std::unique_ptr<sf::RectangleShape>> m_Container;
-	std::map<EBUBBLE_TYPE,std::shared_ptr<sf::Texture>> m_BubbleTextures;
-	std::vector<std::shared_ptr<AnimatedSprite>> m_BubbleSprites;
+	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
 	EBUBBLE_TYPE m_ActiveBubble;
-	std::map<EBUBBLE_TYPE, std::shared_ptr<AnimatedSprite>> m_PreviewBubbles;
-	std::shared_ptr<sf::RectangleShape> m_Line;
+	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
+	std::unique_ptr<sf::RectangleShape> m_Line;
 
 	//Play mode UI
 	std::unique_ptr<sf::Text> m_ScoreText;
-	std::shared_ptr<sf::RectangleShape> m_ScoreBackground;
-	std::shared_ptr<sf::Texture> m_ScoreBackgroundTexture;
+	std::unique_ptr<sf::RectangleShape> m_ScoreBackground;
+	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;
@@ -76,10 +74,11 @@ private:
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;
 	std::unique_ptr<sf::Texture> m_TitleTexture;
-	std::map<std::string, std::shared_ptr<Button>> m_MenuButtons;
-	std::shared_ptr<sf::Font> m_Font;
+	std::map<std::string, std::unique_ptr<Button>> m_MenuButtons;
+	std::unique_ptr<sf::Font> m_Font;
 	std::unique_ptr<AnimatedSprite> m_Loading;
-	std::shared_ptr<sf::Texture> m_BaseButtonTexture;
-	std::shared_ptr<sf::Texture> m_ClickedButtonTexture;
+	std::unique_ptr<sf::Texture> m_LoadingTexture;
+	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
+	std::unique_ptr<sf::Texture> m_ClickedButtonTexture;
 };
 

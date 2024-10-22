@@ -11,7 +11,7 @@ public:
 
 	void Initialize();
 	void Update();
-	void CreateWrapper(const std::shared_ptr<BubbleObject>& a_NewBubble);
+	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble);
 
 	void AddBubble(float a_Delta);
 	void StartGame()
@@ -36,6 +36,6 @@ private:
 	void RemoveAtEnd();
 
 
-	std::vector<std::shared_ptr<BubbleWrapper>> m_Wrappers;
+	std::unique_ptr<BubbleWrapper> m_Wrapper;
 };
 

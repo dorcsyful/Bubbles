@@ -15,12 +15,12 @@ void Gameplay::Update(float a_Delta)
 	}
 }
 
-std::shared_ptr<BubbleObject> Gameplay::CombineBubble(const std::shared_ptr<BubbleObject>& a_First, const std::shared_ptr<BubbleObject>& a_Second)
+std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second)
 {
 	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
 	int i = static_cast<int>(a_First->GetBubbleType()) + 1;
 	if (i == bubble_sizes.size()) { i = 0; }
-	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
+	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) * 10;
 	return newBubble;
@@ -39,9 +39,9 @@ void Gameplay::Move(float a_Direction)
 	m_CurrentPosition = temp;
 }
 
-std::shared_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
+std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 {
-	std::shared_ptr<BubbleObject> newBubble = std::make_shared<BubbleObject>(m_CurrentBubble);
+	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(m_CurrentBubble);
 	sf::Vector2f temp = a_Start;
 	temp.x /= PIXEL_TO_METER;
 	temp.y /= PIXEL_TO_METER;

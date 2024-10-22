@@ -1,16 +1,12 @@
 #pragma once
-#include <iostream>
-#include <memory>
 #include <SFML/System/Vector2.hpp>
-
-#include "BubbleMath.h"
 #include "BubbleObject.h"
 #include "GameObject.h"
 
 class CollisionManifold
 {
 public:
-	CollisionManifold(const std::shared_ptr<GameObject>& a_First, const std::shared_ptr<GameObject>& a_Second):
+	CollisionManifold(GameObject* a_First, GameObject* a_Second):
 		m_AvgRestitution(0),
 		m_AvgStaticFriction(0),
 		m_AvgDynamicFriction(0),
@@ -27,20 +23,18 @@ public:
 		m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
 	}
 
-	void SetData();
-
 	void ApplyImpulse();
 
 	float m_AvgRestitution;
 	float m_AvgStaticFriction;
 	float m_AvgDynamicFriction;
 
-	std::shared_ptr<GameObject> m_Objects[2];
+	GameObject* m_Objects[2];
 	float m_Penetration;
 	sf::Vector2f m_Normal;
 	sf::Vector2f m_CollisionPoint;
 
-	void PositionalCorrection()
+	void PositionalCorrection() const
 	{
 		const float k_slop = 0.05f; // Penetration allowance
 		const float percent = 0.4f; // Penetration percentage to correct
@@ -49,12 +43,12 @@ public:
 
 		if(m_Objects[0]->m_IsBubble)
 		{
-			auto bubble = static_cast<BubbleObject*>(m_Objects[0].get());
+			BubbleObject* bubble = static_cast<BubbleObject*>(m_Objects[0]);
 			bubble->SetPosition(m_Objects[0]->GetPosition() - (correction * m_Objects[0]->GetInverseMass()));
 		}
 		if(m_Objects[1]->m_IsBubble)
 		{
-			auto bubble = static_cast<BubbleObject*>(m_Objects[1].get());
+			auto bubble = static_cast<BubbleObject*>(m_Objects[1]);
 			bubble->SetPosition(m_Objects[1]->GetPosition() + (correction * m_Objects[1]->GetInverseMass()));
 		}
 	}

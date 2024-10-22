@@ -10,7 +10,7 @@
 class AnimatedSprite : public sf::Drawable
 {
 public:
-	AnimatedSprite(const std::shared_ptr<sf::Texture>& a_Texture, const float a_TotalTime, const int a_FrameCount);
+	AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, const int a_FrameCount);
 
 	void SetNextFrame(const std::chrono::steady_clock::time_point a_Now);
 
@@ -27,7 +27,7 @@ private:
 	void draw(sf::RenderTarget& a_Target, sf::RenderStates a_States) const override;
 
 	std::unique_ptr<sf::Sprite> m_Sprite;
-	std::shared_ptr<sf::Texture> m_Texture;
+	sf::Texture* m_Texture;
 	float m_FrameTime;
 	int m_CurrentFrame;
 	int m_FrameCount;

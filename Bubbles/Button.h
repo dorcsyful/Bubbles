@@ -10,7 +10,7 @@
 class Button : public sf::Drawable
 {
 public:
-    Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std::shared_ptr<sf::Texture>& a_BaseTexture, const std::shared_ptr<sf::Texture>& a_ClickedTexture);
+    Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture);
     void SetText(const std::string& a_Text);
 
     void ApplyBaseTexture() const { m_Shape->setTexture(*m_BaseBackGround); }
@@ -28,8 +28,8 @@ private:
 	{
 		m_IsClicked = false; m_Shape->setTexture(*m_BaseBackGround);
 	}
-    std::shared_ptr<sf::Texture> m_BaseBackGround;
-    std::shared_ptr<sf::Texture> m_ClickedBackground;
+	sf::Texture* m_BaseBackGround;
+    sf::Texture* m_ClickedBackground;
     std::unique_ptr<sf::Text> m_Text;
     std::unique_ptr<sf::Sprite> m_Shape;
 

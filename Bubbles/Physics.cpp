@@ -10,15 +10,17 @@ void Physics::Update(float a_Delta)
     // Generate new collision info
     for (unsigned int i = 0; i < m_Bubbles.size(); ++i)
     {
+    	BubbleObject* bubble1 = m_Bubbles[i].get();
+
         //Check for game over and return immediately if it is
-        std::shared_ptr<CollisionManifold> manifold = std::make_shared<CollisionManifold>(m_Bubbles[i], m_TopLine);
+        std::shared_ptr<CollisionManifold> manifold = std::make_shared<CollisionManifold>(bubble1, m_TopLine.get());
         m_TouchedTopLine = CollisionDetection::CircleLineCheck(*m_Bubbles[i], *m_TopLine, manifold);
         if (m_TouchedTopLine) return;
 
         for (const auto& line : m_Lines) {
-            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i], line);
+            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i].get(), line.get());
             if (CollisionDetection::CircleLineCheck(*m_Bubbles[i], *line, manifold)) {
-                std::shared_ptr<CollisionManifold> newManifold = std::make_shared<CollisionManifold>(line, m_Bubbles[i]);
+                std::shared_ptr<CollisionManifold> newManifold = std::make_shared<CollisionManifold>(line.get(), m_Bubbles[i].get());
                 newManifold->m_CollisionPoint = manifold->m_CollisionPoint;
                 newManifold->m_Normal = -manifold->m_Normal;
                 newManifold->m_Penetration = manifold->m_Penetration;
@@ -29,17 +31,17 @@ void Physics::Update(float a_Delta)
         }
         for (unsigned int j = i + 1; j < m_Bubbles.size(); ++j)
         {
-            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i],m_Bubbles[j]);
+            manifold = std::make_shared<CollisionManifold>(m_Bubbles[i].get(),m_Bubbles[j].get());
             if (CollisionDetection::CircleCircleCheck(*m_Bubbles[i], *m_Bubbles[j], manifold))
             {
                 m_Manifolds.emplace_back(manifold);
 	            if(m_Bubbles[i]->GetBubbleType() == m_Bubbles[j]->GetBubbleType())
 	            {
-                    if(!BubbleAlreadyInCombineList(m_Bubbles[i]) && !BubbleAlreadyInCombineList(m_Bubbles[j]))
+                    if(!BubbleAlreadyInCombineList(m_Bubbles[i].get()) && !BubbleAlreadyInCombineList(m_Bubbles[j].get()))
                     {
-	                    std::pair<std::shared_ptr<BubbleObject>, std::shared_ptr<BubbleObject>> combination;
-	                    combination.first = m_Bubbles[i];
-	                    combination.second = m_Bubbles[j];
+	                    std::pair<const BubbleObject*, const BubbleObject*> combination;
+	                    combination.first = m_Bubbles[i].get();
+	                    combination.second = m_Bubbles[j].get();
 	                    m_BubblesToCombine.emplace_back(combination);	                    
                     }
 
@@ -71,13 +73,12 @@ void Physics::Update(float a_Delta)
 
 void Physics::Reset()
 {
-	m_Bubbles.clear();
 	m_Manifolds.clear();
 	m_BubblesToCombine.clear();
 	m_TouchedTopLine = false;
 }
 
-bool Physics::BubbleAlreadyInCombineList(const std::shared_ptr<BubbleObject>& a_Bubble) const
+bool Physics::BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const
 {
     for(const auto& bubblePair : m_BubblesToCombine)
 	{

@@ -1,6 +1,6 @@
 #include "AnimatedSprite.h"
 
-AnimatedSprite::AnimatedSprite(const std::shared_ptr<sf::Texture>& a_Texture, const float a_TotalTime, const int a_FrameCount):
+AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, const int a_FrameCount):
 	m_Texture(a_Texture),
 	m_FrameTime(a_TotalTime),
 	m_CurrentFrame(0),

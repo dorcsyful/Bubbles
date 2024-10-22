@@ -4,7 +4,7 @@
 
 #include "Helpers.h"
 
-Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, const std::shared_ptr<sf::Texture>& a_BaseTexture, const std::shared_ptr<sf::Texture>& a_ClickedTexture)
+Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture)
 {
 	m_Text = std::make_unique<sf::Text>();
 	m_Shape = std::make_unique<sf::Sprite>();

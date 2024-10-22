@@ -8,9 +8,11 @@
 #include "Declarations.h"
 #include "LineObject.h"
 
-Rendering::Rendering(const int a_X, const int a_Y)
+Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper):
+	m_RenderedBubbles(a_Wrapper)
 {
-	m_Window = std::make_shared<sf::RenderWindow>(sf::VideoMode(a_X, a_Y), "Bubbles!", sf::Style::Titlebar | sf::Style::Close);
+	m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(a_X, a_Y), "Bubbles!",
+	                                              sf::Style::Titlebar | sf::Style::Close);
 	m_Window->setSize(sf::Vector2u(a_X, a_Y));
 	LoadBackground();
 	LoadBubbleTextures();
@@ -30,7 +32,7 @@ void Rendering::PlayDraw() const
 
 	m_Window->draw(*m_Line);
 	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
-	for (auto& element : m_BubbleSprites)
+	for (auto& element : m_RenderedBubbles)
 	{
 		m_Window->draw(*element);
 	}
@@ -53,7 +55,7 @@ void Rendering::GameOverAnimationDraw() const
 	}
 
 	m_Window->draw(*m_Line);
-	for (auto& element : m_BubbleSprites)
+	for (auto& element : m_RenderedBubbles)
 	{
 		//element->UpdateFrameByTime();
 		m_Window->draw(*element);
@@ -91,9 +93,9 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	m_Window->display();
 }
 
-void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::shared_ptr<AnimatedSprite>& a_NewSprite)
+void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
 {
-	a_NewSprite = std::make_shared<AnimatedSprite>(m_BubbleTextures.at(a_Type),BUBBLE_FRAME_TIME,4);
+	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),BUBBLE_FRAME_TIME,4);
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= 4;
@@ -107,18 +109,6 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 	a_NewSprite->SetRotation(a_Rotation);
 }
 
-std::shared_ptr<AnimatedSprite>& Rendering::AddSprite(const EBUBBLE_TYPE a_Size, const sf::Vector2f& a_Position, const float a_Rotation)
-{
-	std::shared_ptr<AnimatedSprite> newSprite;
-	CreateSprite(a_Size, a_Position, a_Rotation, newSprite);
-	m_BubbleSprites.push_back(newSprite);
-	return m_BubbleSprites.back();
-}
-
-void Rendering::RemoveSprite(const std::shared_ptr<AnimatedSprite>& a_SpriteToRemove)
-{
-	m_BubbleSprites.erase(std::find(m_BubbleSprites.begin(), m_BubbleSprites.end(), a_SpriteToRemove));
-}
 
 void Rendering::MovePointerLine(const float a_X) const
 {
@@ -141,37 +131,37 @@ void Rendering::ResetButtons() const
 	}
 }
 
-std::vector<std::shared_ptr<LineObject>> Rendering::ConvertToLine() const
+std::vector<std::unique_ptr<LineObject>> Rendering::ConvertToLine() const
 {
-	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
+	std::vector<std::unique_ptr<LineObject>> lines = std::vector<std::unique_ptr<LineObject>>();
 	sf::Vector2f start = m_Container[0]->getPosition();
 	start.x /= PIXEL_TO_METER;
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
 	sf::Vector2f end = sf::Vector2f(start.x, (-(m_Container[0]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
-	std::shared_ptr<LineObject> temp = std::make_shared<LineObject>(start, end);
-	lines.push_back(temp);
+	std::unique_ptr<LineObject> temp = std::make_unique<LineObject>(start, end);
+	lines.push_back(std::move(temp));
 
 	start = m_Container[1]->getPosition();
 	start.x /= PIXEL_TO_METER;
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
 	end = sf::Vector2f(start.x, (-(m_Container[1]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
-	temp = std::make_shared<LineObject>(start, end);
-	lines.push_back(temp);
+	temp = std::make_unique<LineObject>(start, end);
+	lines.push_back(std::move(temp));
 
 	start = m_Container[2]->getPosition();
 	start.x /= PIXEL_TO_METER;
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
 	end = sf::Vector2f((m_Container[2]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER,start.y);
-	temp = std::make_shared<LineObject>(start, end);
-	lines.push_back(temp);
+	temp = std::make_unique<LineObject>(start, end);
+	lines.push_back(std::move(temp));
 
 	return lines;
 }
 
-std::shared_ptr<LineObject> Rendering::ConvertTopLine() const
+std::unique_ptr<LineObject> Rendering::ConvertTopLine() const
 {
 	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
 	sf::Vector2f start = m_Container[3]->getPosition();
@@ -179,19 +169,18 @@ std::shared_ptr<LineObject> Rendering::ConvertTopLine() const
 	start.y /= PIXEL_TO_METER;
 	start.y *= -1;
 	sf::Vector2f end = sf::Vector2f((m_Container[3]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER, start.y);
-	return std::make_shared<LineObject>(start, end);
+	return std::make_unique<LineObject>(start, end);
 }
 
 void Rendering::Reset()
 {
-	m_BubbleSprites.clear();
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_BLUE;
 	m_ScoreText->setString("Score:\n 0");
 }
 
 void Rendering::LoadBackground()
 {
-	m_BackgroundTexture = std::make_shared<sf::Texture>();
+	m_BackgroundTexture = std::make_unique<sf::Texture>();
 
 
 	if (!m_BackgroundTexture->loadFromFile("Assets/background.jpg"))
@@ -200,7 +189,7 @@ void Rendering::LoadBackground()
 	}
 	m_BackgroundTexture->setRepeated(true);
 
-	m_BackgroundSprite = std::make_shared<sf::RectangleShape>();
+	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f v = sf::Vector2f(static_cast<float>(m_Window->getSize().x), static_cast<float>(m_Window->getSize().y));
 	
@@ -211,23 +200,23 @@ void Rendering::LoadBackground()
 
 void Rendering::LoadBubbleTextures()
 {
-	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::shared_ptr<sf::Texture>>();
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE,std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_BLUE,std::make_shared<sf::Texture>()));
+	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_BLUE,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_BLUE]->loadFromFile(BLUE_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_YELLOW, std::make_shared<sf::Texture>()));
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_YELLOW, std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_YELLOW]->loadFromFile(YELLOW_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_GREEN,std::make_shared<sf::Texture>()));
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_GREEN,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_GREEN]->loadFromFile(GREEN_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PINK,std::make_shared<sf::Texture>()));
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PINK,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PINK]->loadFromFile(PINK_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PURPLE,std::make_shared<sf::Texture>()));
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PURPLE,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PURPLE]->loadFromFile(PURPLE_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_RED,std::make_shared<sf::Texture>()));
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_RED,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_RED]->loadFromFile(RED_FILENAME);
 
 
@@ -265,15 +254,15 @@ void Rendering::CreateContainerLines()
 void Rendering::CreatePointer()
 {
 	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
-	m_Line = std::make_shared<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS / 2.f, CONTAINER_HEIGHT));
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS / 2.f, CONTAINER_HEIGHT));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
 	for(int i = 0; i < bubble_sizes.size(); i++)
 	{
-		std::shared_ptr<AnimatedSprite> newSprite;
+		std::unique_ptr<AnimatedSprite> newSprite;
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
-		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::shared_ptr<AnimatedSprite>>(static_cast<EBUBBLE_TYPE>(i), newSprite));
+		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>>(static_cast<EBUBBLE_TYPE>(i), std::move(newSprite)));
 	}
 }
 
@@ -305,9 +294,9 @@ void Rendering::CreateGameOverSprite()
 
 	basePos = m_GameOver->getPosition();
 	basePos.y += m_GameOver->getSize().y;
-	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos, *m_Font, m_BaseButtonTexture, m_ClickedButtonTexture);
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton->SetText("Play again");
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::shared_ptr<Button>>("PlayAgain", newButton));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
 }
 
@@ -319,27 +308,27 @@ void Rendering::CreateMenuSprites()
 
 void Rendering::CreateMenuButtonSprites()
 {
-	m_Font = std::make_shared<sf::Font>();
+	m_Font = std::make_unique<sf::Font>();
 	m_Font->loadFromFile(FONT_FILENAME);
 
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 	basePos.y += m_Title->getSize().y * 2.f;
 	basePos.x += m_Title->getSize().x / 2.f;
-	m_BaseButtonTexture = std::make_shared<sf::Texture>();
+	m_BaseButtonTexture = std::make_unique<sf::Texture>();
 	m_BaseButtonTexture->loadFromFile(BUTTON_FILENAME);
-	m_ClickedButtonTexture = std::make_shared<sf::Texture>();
+	m_ClickedButtonTexture = std::make_unique<sf::Texture>();
 	m_ClickedButtonTexture->loadFromFile(BUTTON_CLICKED_FILENAME);
 
-	std::shared_ptr<Button> newButton = std::make_shared<Button>(basePos,*m_Font, m_BaseButtonTexture, m_ClickedButtonTexture);
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton->SetText("Play");
-	m_MenuButtons = std::map<std::string, std::shared_ptr<Button>>();
-	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::shared_ptr<Button>>("Play",newButton));
+	m_MenuButtons = std::map<std::string, std::unique_ptr<Button>>();
+	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play",std::move(newButton)));
 
-	std::shared_ptr<sf::Texture> loadingTexture = std::make_shared<sf::Texture>();
-	loadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_unique<AnimatedSprite>(loadingTexture, LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
+	m_LoadingTexture = std::make_unique<sf::Texture>();
+	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
+	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
-	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(loadingTexture->getSize());
+	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(m_LoadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
 }
 
@@ -356,10 +345,10 @@ void Rendering::CreateScoreText()
 	position.y += 300;
 	m_ScoreText->setPosition(position);
 
-	m_ScoreBackgroundTexture = std::make_shared<sf::Texture>();
+	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
 
-	m_ScoreBackground = std::make_shared<sf::RectangleShape>(sf::Vector2f(200, 100));
+	m_ScoreBackground = std::make_unique<sf::RectangleShape>(sf::Vector2f(200, 100));
 	m_ScoreBackground->setTexture(m_ScoreBackgroundTexture.get());
 	sf::Vector2<float> size = m_ScoreText->getGlobalBounds().getSize();
 	size.x += 40;
