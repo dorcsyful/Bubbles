@@ -39,15 +39,15 @@ private:
         std::string m_Date;
     };
 
-    uint64_t CalculateHash(const Data& a_Data);
+    static uint64_t CalculateHash(const Data& a_Data);
 
-    void SaveData(const std::vector<Data>& a_Data);
+    static void SaveData(const std::vector<Data>& a_Data);
 
-    std::vector<Data> LoadData();
+    static std::vector<Data> LoadData();
 
-    bool DoesSaveFileExist();
+    static bool DoesSaveFileExist();
 
-    void CreateSaveFile();
+    static void CreateSaveFile();
 
     static bool GreaterThan(const Data& a_First, const Data& a_Second)
     {

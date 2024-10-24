@@ -37,7 +37,7 @@ public:
 		m_GameBubble.push_back(std::move(a_Bubble));
 		m_Rendered.push_back(std::move(a_Rendered));
 	}
-	void RemoveBubbleByIndex(int a_Index)
+	void RemoveBubbleByIndex(size_t a_Index)
 	{
 		m_GameBubble.erase(m_GameBubble.begin() + a_Index);
 		m_Rendered.erase(m_Rendered.begin() + a_Index);

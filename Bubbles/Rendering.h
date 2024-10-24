@@ -39,6 +39,8 @@ private:
 	void PlayDraw() const;
 	void MenuDraw() const;
 	void GameOverAnimationDraw() const;
+	void LeaderboardDraw() const;
+
 	void LoadBackground();
 	void LoadBubbleTextures();
 	void CreateContainerLines();

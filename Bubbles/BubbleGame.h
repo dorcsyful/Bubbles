@@ -12,14 +12,9 @@ public:
 
 	void Initialize();
 	void Update();
-	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble);
+	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const;
 
 	void AddBubble(float a_Delta);
-	void StartGame()
-	{
-		m_State = EGAME_STATE::STATE_PLAY;
-	}
-	void StartLoading() { m_State = EGAME_STATE::STATE_LOADING; }
 
 	std::unique_ptr<Physics> m_Physics;
 	std::unique_ptr<Rendering> m_Rendering;
@@ -31,6 +26,10 @@ private:
 	void PlayUpdate(float a_Delta);
 	void MenuUpdate(float a_Delta);
 	void RestartGame();
+	void PlayInput(float a_Delta);
+	void MenuInput();
+	void GameOverAnimationInput();
+	void GameOverInput();
 
 	void GameOver();
 

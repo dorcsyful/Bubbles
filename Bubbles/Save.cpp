@@ -16,8 +16,8 @@ void Save::SaveIfHighScore(unsigned a_Score)
     {
         m_Scores[29].m_Score = a_Score;
         const auto now = std::chrono::system_clock::now();
-        m_Scores[29].m_Date = std::format("{:%d-%m-%Y %H:%M:%OS}", now);
-        std::sort(m_Scores.begin(), m_Scores.end(), GreaterThan);
+        m_Scores[29].m_Date = std::format("{:%d-%m-%Y}", now);
+        std::ranges::sort(m_Scores, GreaterThan);
         SaveData(m_Scores);
     }
 }
@@ -26,8 +26,8 @@ uint64_t Save::CalculateHash(const Data& a_Data)
 {
     std::hash<unsigned int> intHash;
     std::hash<std::string> stringHash;
-    uint64_t hash_value = intHash(a_Data.m_Score) ^ stringHash(a_Data.m_Date);
-    return hash_value;
+    uint64_t hashValue = intHash(a_Data.m_Score) ^ stringHash(a_Data.m_Date);
+    return hashValue;
 }
 
 void Save::SaveData(const std::vector<Data>& a_Data)

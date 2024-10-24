@@ -32,7 +32,7 @@ void Button::SetText(const std::string& a_Text)
 	{
 		unsigned int size = m_Text->getString().getSize();
 		unsigned int size1 = static_cast<unsigned int>(width) / size;
-		m_Text->setCharacterSize(size1 * 2 - 5);
+		m_Text->setCharacterSize(size1 * 2 - 10);
 	}
 	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
 
@@ -47,7 +47,7 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 	if(!m_IsClicked && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
 		m_Shape->setTexture(*m_ClickedBackground);
-		CallAfterDelay::getInstance().AddFunction([this](){DisableClicked();}, 0.2f, false);
+		CallAfterDelay::getInstance().AddFunction([this](){DisableClicked();}, 0.5f, false);
 		return true;
 	}
 	m_Shape->setTexture(*m_BaseBackGround);
