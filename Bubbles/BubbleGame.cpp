@@ -13,6 +13,7 @@ void BubbleGame::Initialize()
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT, m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameBubbles());
+	m_Save = std::make_unique<Save>();
 
 	auto lines = m_Rendering->ConvertToLine();
 	for(auto& lineObject : lines)
@@ -167,6 +168,8 @@ void BubbleGame::GameOver()
 {
 	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
+	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
+	m_Save->OutPutValue();
 	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, GAME_OVER_ANIMATION_TOTAL_TIME / m_Wrapper->GetNumOfBubbles(), true);
 }
 

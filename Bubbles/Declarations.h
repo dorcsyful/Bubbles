@@ -42,6 +42,8 @@
 
 #define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
 #define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
+
+#define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
 #include <map>
 
 enum class EGAME_STATE

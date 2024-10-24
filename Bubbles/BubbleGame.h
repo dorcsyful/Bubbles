@@ -4,6 +4,7 @@
 #include "Gameplay.h"
 #include "Physics.h"
 #include "Rendering.h"
+#include "Save.h"
 
 class BubbleGame
 {
@@ -37,5 +38,6 @@ private:
 
 
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
+	std::unique_ptr<Save> m_Save;
 };
 
