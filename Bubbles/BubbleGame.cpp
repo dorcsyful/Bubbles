@@ -23,6 +23,7 @@ void BubbleGame::Initialize()
 
 	std::unique_ptr<LineObject> topLine = m_Rendering->ConvertTopLine();
 	m_Physics->AddTopLine(topLine);
+	m_Rendering->UpdateHighScores(m_Save->GetScores());
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)

@@ -30,7 +30,7 @@ public:
 	void ResetButtons() const;
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
-	void UpdateHighScores(const std::vector<int>& a_Scores);
+	void UpdateHighScores(const std::vector<unsigned int>& a_Scores);
 	std::vector<std::unique_ptr<LineObject>> ConvertToLine() const;
 	std::unique_ptr<LineObject> ConvertTopLine() const;
 

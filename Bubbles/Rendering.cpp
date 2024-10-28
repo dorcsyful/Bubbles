@@ -147,8 +147,12 @@ void Rendering::ResetButtons() const
 	}
 }
 
-void Rendering::UpdateHighScores(const std::vector<int>& a_Scores)
+void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores)
 {
+	for(int i = 0; i < 10; i++)
+	{
+		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
+	}
 }
 
 std::vector<std::unique_ptr<LineObject>> Rendering::ConvertToLine() const

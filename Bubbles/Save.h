@@ -17,7 +17,18 @@ public:
 
     Save();
 
-    void SaveIfHighScore(unsigned a_Score);
+    bool SaveIfHighScore(unsigned a_Score);
+
+    std::vector<unsigned int> GetScores() const
+    {
+        std::vector<unsigned int> temp(10);
+        for(int i = 0; i < 10; i++)
+        {
+            temp[i] = m_Scores[i].m_Score;
+        }
+
+        return temp;
+    }
 
 private:
 

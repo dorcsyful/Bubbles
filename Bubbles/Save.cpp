@@ -10,7 +10,7 @@ Save::Save()
     std::ranges::sort(m_Scores, GreaterThan);
 }
 
-void Save::SaveIfHighScore(unsigned a_Score)
+bool Save::SaveIfHighScore(unsigned a_Score)
 {
     if (a_Score >= m_Scores[29].m_Score)
     {
@@ -19,7 +19,11 @@ void Save::SaveIfHighScore(unsigned a_Score)
         m_Scores[29].m_Date = std::format("{:%d-%m-%Y}", now);
         std::ranges::sort(m_Scores, GreaterThan);
         SaveData(m_Scores);
+
+        return true;
     }
+
+    return false;
 }
 
 uint64_t Save::CalculateHash(const Data& a_Data)
