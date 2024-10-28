@@ -30,7 +30,6 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	m_Gameplay->Update(a_Delta);
 	m_Physics->Update(a_Delta);
 
-
 	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
 	{
 		auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
@@ -52,19 +51,14 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
 }
 
-void BubbleGame::MenuUpdate(float a_Delta)
-{
-}
-
 void BubbleGame::RestartGame()
 {
 	m_Gameplay->Reset();
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
-	CallAfterDelay::getInstance().AddFunction([this]() {StartLoading(); }, 0.2f, false);
-	CallAfterDelay::getInstance().AddFunction([this]() {StartGame(); }, LOADING_TIME, false);
-
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, 0.2f, false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, LOADING_TIME, false);
 }
 
 void BubbleGame::Update()
@@ -102,10 +96,6 @@ void BubbleGame::Update()
 		if (m_State == EGAME_STATE::STATE_PLAY)
 		{
 			PlayUpdate(delta);
-		}
-		if(m_State == EGAME_STATE::STATE_MENU)
-		{
-			MenuUpdate(delta);
 		}
 
 		CallAfterDelay::getInstance().LoopThroughFunctions();

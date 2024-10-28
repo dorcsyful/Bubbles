@@ -44,6 +44,9 @@
 #define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
 
 #define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
+
+#define LEADERBOARD_ITEM_WIDTH 300
+#define LEADERBOARD_ITEM_HEIGHT 50
 #include <map>
 
 enum class EGAME_STATE

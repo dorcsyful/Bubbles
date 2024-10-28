@@ -154,6 +154,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="Save.cpp" />
+    <ClCompile Include="SpriteWithText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="Save.h" />
+    <ClInclude Include="SpriteWithText.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

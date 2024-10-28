@@ -21,6 +21,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateMenuSprites();
 	CreateGameOverSprite();
 	CreateScoreText();
+	CreateHighScoreSprites();
 }
 
 void Rendering::PlayDraw() const
@@ -94,6 +95,13 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 		m_Window->draw(*m_GameOver);
 		m_Window->draw(*m_MenuButtons.at("PlayAgain"));
 	}
+	if(a_State == EGAME_STATE::STATE_LEADERBOARD)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			m_Window->draw(*(m_HighScoreSprites[i]));
+		}
+	}
 
 	m_Window->display();
 }
@@ -134,6 +142,10 @@ void Rendering::ResetButtons() const
 	{
 		element.second->ApplyBaseTexture();
 	}
+}
+
+void Rendering::UpdateHighScores(const std::vector<int>& a_Scores)
+{
 }
 
 std::vector<std::unique_ptr<LineObject>> Rendering::ConvertToLine() const
@@ -367,4 +379,21 @@ void Rendering::CreateScoreText()
 	m_ScoreBackground->setSize(size);
 	position.x -= 20;
 	m_ScoreBackground->setPosition(position);
+}
+
+void Rendering::CreateHighScoreSprites()
+{
+	m_HighScoreSprites = std::vector < std::unique_ptr<SpriteWithText>>(10);
+	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
+	basePos.y += m_Title->getSize().y + 10;
+
+	for(int i = 0; i < 10; i ++)
+	{
+		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
+		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
+
+		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(LEADERBOARD_ITEM_WIDTH, LEADERBOARD_ITEM_HEIGHT), 
+							basePos, textColor,shapeColor);
+		basePos.y += LEADERBOARD_ITEM_HEIGHT + 2;
+	}
 }

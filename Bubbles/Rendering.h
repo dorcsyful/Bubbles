@@ -7,6 +7,7 @@
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
 #include "Button.h"
+#include "SpriteWithText.h"
 
 class LineObject;
 
@@ -29,7 +30,7 @@ public:
 	void ResetButtons() const;
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
-
+	void UpdateHighScores(const std::vector<int>& a_Scores);
 	std::vector<std::unique_ptr<LineObject>> ConvertToLine() const;
 	std::unique_ptr<LineObject> ConvertTopLine() const;
 
@@ -50,6 +51,7 @@ private:
 	void CreateMenuSprites();
 	void CreateMenuButtonSprites();
 	void CreateScoreText();
+	void CreateHighScoreSprites();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -57,7 +59,7 @@ private:
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
 
 	//Play mode
-	 std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
+	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
 	std::vector<std::unique_ptr<sf::RectangleShape>> m_Container;
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
 	EBUBBLE_TYPE m_ActiveBubble;
@@ -82,5 +84,8 @@ private:
 	std::unique_ptr<sf::Texture> m_LoadingTexture;
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
 	std::unique_ptr<sf::Texture> m_ClickedButtonTexture;
+
+	//Leaderboard
+	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoreSprites;
 };
 
