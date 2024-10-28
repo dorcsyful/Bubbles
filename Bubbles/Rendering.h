@@ -31,6 +31,8 @@ public:
 
 	void UpdateScore(const unsigned int a_Score) const { m_ScoreText->setString("Score: \n" + std::to_string(a_Score)); }
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores);
+	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
+
 	std::vector<std::unique_ptr<LineObject>> ConvertToLine() const;
 	std::unique_ptr<LineObject> ConvertTopLine() const;
 
@@ -89,5 +91,6 @@ private:
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoreSprites;
 	std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
 	std::unique_ptr<sf::Texture> m_HighScoreTexture;
+	std::unique_ptr<Button> m_HSBackButton;
 };
 

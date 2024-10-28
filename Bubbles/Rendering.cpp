@@ -69,7 +69,7 @@ void Rendering::GameOverAnimationDraw() const
 void Rendering::HighScoreDraw() const
 {
 	m_Window->draw(*m_HighScoreTitle);
-
+	m_Window->draw(*m_HSBackButton);
 	for (int i = 0; i < 10; i++)
 	{
 		m_Window->draw(*(m_HighScoreSprites[i]));
@@ -414,4 +414,9 @@ void Rendering::CreateHighScoreSprites()
 							basePos, textColor,shapeColor);
 		basePos.y += HIGH_SCORE_ITEM_HEIGHT ;
 	}
+
+	sf::Vector2f buttonPos = sf::Vector2f(m_BaseButtonTexture->getSize().x / 2, WINDOW_HEIGHT - m_BaseButtonTexture->getSize().y);
+	m_HSBackButton = std::make_unique<Button>(buttonPos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
+	m_HSBackButton->SetText("Back");
+	m_HSBackButton->SetScale(sf::Vector2f(0.7, 0.7));
 }

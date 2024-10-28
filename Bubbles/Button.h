@@ -12,7 +12,7 @@ class Button : public sf::Drawable
 public:
     Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture);
     void SetText(const std::string& a_Text);
-
+    void SetScale(const sf::Vector2f& a_Scale) { m_Shape->setScale(a_Scale), m_Text->setScale(a_Scale); }
     void ApplyBaseTexture() const { m_Shape->setTexture(*m_BaseBackGround); }
     bool DetectClick(const sf::Vector2f& a_MousePosition);
 

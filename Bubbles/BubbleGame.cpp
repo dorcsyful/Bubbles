@@ -92,6 +92,14 @@ void BubbleGame::Update()
 			{
 				GameOverInput();
 			}
+			else if(m_State == EGAME_STATE::STATE_HIGH_SCORE)
+			{
+				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+				if(m_Rendering->GetHSBackButton()->DetectClick(mousePosition))
+				{
+					CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, 0.2f, false);
+				}
+			}
 		}
 
 		if (m_State == EGAME_STATE::STATE_PLAY)
