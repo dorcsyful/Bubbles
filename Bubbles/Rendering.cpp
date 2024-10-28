@@ -66,8 +66,14 @@ void Rendering::GameOverAnimationDraw() const
 	m_Window->draw(*m_GameOver);
 }
 
-void Rendering::LeaderboardDraw() const
+void Rendering::HighScoreDraw() const
 {
+	m_Window->draw(*m_HighScoreTitle);
+
+	for (int i = 0; i < 10; i++)
+	{
+		m_Window->draw(*(m_HighScoreSprites[i]));
+	}
 }
 
 void Rendering::Draw(const EGAME_STATE a_State) const
@@ -95,12 +101,9 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 		m_Window->draw(*m_GameOver);
 		m_Window->draw(*m_MenuButtons.at("PlayAgain"));
 	}
-	if(a_State == EGAME_STATE::STATE_LEADERBOARD)
+	if(a_State == EGAME_STATE::STATE_HIGH_SCORE)
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			m_Window->draw(*(m_HighScoreSprites[i]));
-		}
+		HighScoreDraw();
 	}
 
 	m_Window->display();
@@ -291,7 +294,7 @@ void Rendering::CreateTitleSprite()
 	m_Title = std::make_unique<sf::RectangleShape>();
 	m_Title->setTexture(m_TitleTexture.get());
 	m_Title->setSize(BubbleMath::ToVector2f(m_TitleTexture->getSize()));
-	m_Title->setOrigin(m_TitleTexture->getSize().x / 2, m_TitleTexture->getSize().y / 2);
+	m_Title->setOrigin(m_TitleTexture->getSize().x / 2.f, m_TitleTexture->getSize().y / 2.f);
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) ));
 	m_Title->setPosition(basePos);
 }
@@ -344,7 +347,7 @@ void Rendering::CreateMenuButtonSprites()
 
 	basePos.y += m_BaseButtonTexture->getSize().y * 1.5f;
 	std::unique_ptr<Button> newButton1 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
-	newButton1->SetText("Leaderboard");
+	newButton1->SetText("High Scores");
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton1)));
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();
@@ -385,6 +388,17 @@ void Rendering::CreateHighScoreSprites()
 {
 	m_HighScoreSprites = std::vector < std::unique_ptr<SpriteWithText>>(10);
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
+
+	m_HighScoreTexture = std::make_unique<sf::Texture>();
+	m_HighScoreTexture->loadFromFile(HIGH_SCORE_TITLE_FILENAME);
+
+	m_HighScoreTitle = std::make_unique<sf::RectangleShape>();
+	m_HighScoreTitle->setTexture(m_HighScoreTexture.get());
+	sf::Vector2f temp = sf::Vector2f(static_cast<float>(m_HighScoreTexture->getSize().x), static_cast<float>(m_HighScoreTexture->getSize().y));
+	m_HighScoreTitle->setSize(temp);
+	m_HighScoreTitle->setOrigin(static_cast<float>(m_HighScoreTexture->getSize().x) / 2.f, static_cast<float>(m_HighScoreTexture->getSize().y) / 2.f);
+	m_HighScoreTitle->setPosition(m_Title->getPosition());
+
 	basePos.y += m_Title->getSize().y + 10;
 
 	for(int i = 0; i < 10; i ++)
@@ -392,8 +406,8 @@ void Rendering::CreateHighScoreSprites()
 		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
 		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
 
-		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(LEADERBOARD_ITEM_WIDTH, LEADERBOARD_ITEM_HEIGHT), 
+		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(HIGH_SCORE_ITEM_WIDTH, HIGH_SCORE_ITEM_HEIGHT),
 							basePos, textColor,shapeColor);
-		basePos.y += LEADERBOARD_ITEM_HEIGHT + 2;
+		basePos.y += HIGH_SCORE_ITEM_HEIGHT ;
 	}
 }

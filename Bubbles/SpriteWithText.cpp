@@ -1,5 +1,7 @@
 #include "SpriteWithText.h"
 
+#include <iostream>
+
 SpriteWithText::SpriteWithText(const sf::Font& a_Font)
 {
 	m_Shape = std::make_unique<sf::RectangleShape>();
@@ -28,15 +30,12 @@ void SpriteWithText::SetText(const std::string& a_Text)
 {
 	m_Text->setString(a_Text);
 
-	sf::FloatRect fr = m_Text->getGlobalBounds();
-	if (float width = m_Shape->getGlobalBounds().width; fr.width > width)
-	{
-		unsigned int size = m_Text->getString().getSize();
-		unsigned int size1 = static_cast<unsigned int>(width) / size;
-		m_Text->setCharacterSize(size1 * 2 - 10);
-	}
+	float height = m_Shape->getGlobalBounds().height;
+	unsigned int size1 = static_cast<unsigned int>(height);
+	m_Text->setCharacterSize(size1);
 
-	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
+	auto vector2 = m_Text->getGlobalBounds().getSize();
+	m_Text->setOrigin(vector2 / 2.f);
 
 }
 
@@ -46,20 +45,14 @@ void SpriteWithText::InitializeWithData(const std::string& a_Text, const sf::Fon
 	m_Text = std::make_unique<sf::Text>();
 
 	m_Shape->setSize(a_Size);
-	m_Shape->setOrigin(m_Shape->getSize().x / 2, m_Shape->getSize().y / 2);
+	m_Shape->setOrigin(m_Shape->getSize().x / 2.f, m_Shape->getSize().y / 2.f);
 	m_Shape->setPosition(a_Position);
 
 	m_Text->setFont(a_Font);
-	m_Text->setString(a_Text);
 
-	sf::FloatRect fr = m_Text->getGlobalBounds();
-	if (float width = m_Shape->getGlobalBounds().width; fr.width > width)
-	{
-		unsigned int size = m_Text->getString().getSize();
-		unsigned int size1 = static_cast<unsigned int>(width) / size;
-		m_Text->setCharacterSize(size1 * 2 - 10);
-	}
+	SetText(a_Text);
 
-	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
-	m_Text->setPosition(a_Position);
+	sf::Vector2f pos = a_Position;
+	pos.y -= 7.5f;
+	m_Text->setPosition(pos);
 }

@@ -40,7 +40,7 @@ private:
 	void PlayDraw() const;
 	void MenuDraw() const;
 	void GameOverAnimationDraw() const;
-	void LeaderboardDraw() const;
+	void HighScoreDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -85,7 +85,9 @@ private:
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
 	std::unique_ptr<sf::Texture> m_ClickedButtonTexture;
 
-	//Leaderboard
+	//HighScore
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoreSprites;
+	std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
+	std::unique_ptr<sf::Texture> m_HighScoreTexture;
 };
 

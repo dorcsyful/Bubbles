@@ -163,7 +163,7 @@ void BubbleGame::MenuInput()
 	}
 	if (buttons.at("High_Score")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LEADERBOARD; }, 0.5f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, 0.5f, false);
 	}
 }
 
