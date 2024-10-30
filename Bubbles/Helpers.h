@@ -25,7 +25,7 @@ public:
         return instance;
     }
 
-    void AddFunction(const std::function<void()>& a_Function, double a_Delay, bool a_Repeating)
+    void AddFunction(const std::function<void()>& a_Function, float a_Delay, bool a_Repeating)
     {
 	    FunctionData data;
 		data.m_IsRepeating = a_Repeating;

@@ -41,12 +41,12 @@ public:
 
 		sf::Vector2f correction = (std::max(m_Penetration - k_slop, 0.0f) / (m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass())) * m_Normal * percent;
 
-		if(m_Objects[0]->m_IsBubble)
+		if(m_Objects[0]->GetType() == EOBJECT_TYPE::TYPE_CIRCLE)
 		{
 			BubbleObject* bubble = static_cast<BubbleObject*>(m_Objects[0]);
 			bubble->SetPosition(m_Objects[0]->GetPosition() - (correction * m_Objects[0]->GetInverseMass()));
 		}
-		if(m_Objects[1]->m_IsBubble)
+		if(m_Objects[1]->GetType() == EOBJECT_TYPE::TYPE_CIRCLE)
 		{
 			auto bubble = static_cast<BubbleObject*>(m_Objects[1]);
 			bubble->SetPosition(m_Objects[1]->GetPosition() + (correction * m_Objects[1]->GetInverseMass()));

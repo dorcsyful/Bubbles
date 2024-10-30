@@ -1,7 +1,7 @@
 #pragma once
+#include <SFML/System/Vector2.hpp>
 
-
-
+#include "Declarations.h"
 
 class GameObject
 {
@@ -20,12 +20,23 @@ public:
 	float GetInverseMass() const { return m_InverseMass; }
 	float GetRotation() const { return m_Rotation; }
 	sf::Vector2f GetPosition() const { return m_Position; }
-	virtual void ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector) = 0;
 
 	float GetInertia() const { return m_Inertia; }
 	float GetInverseInertia() const { return m_InverseInertia; }
 
-	bool m_IsBubble = false;
+	EOBJECT_TYPE GetType() const { return m_Type; }
+
+	void SetRotation(float a_Rotation) { m_Rotation = a_Rotation; }
+
+	sf::Vector2f GetImpulse() const { return m_Impulse; }
+	void SetPosition(const sf::Vector2f& a_NewPosition) { m_Position = a_NewPosition; }
+
+	void Integrate(float a_Delta);
+	void IntegrateForces(float a_Delta);
+
+	void CalculateInertia();
+
+	virtual void ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector);
 
 protected:
 

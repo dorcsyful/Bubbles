@@ -10,7 +10,7 @@ class Physics
 {
 public:
 
-	Physics(std::vector<std::unique_ptr<BubbleObject>>& a_Bubbles) : m_Bubbles(a_Bubbles) {}
+	Physics(std::vector<std::unique_ptr<GameObject>>& a_Objects) : m_GameObjects(a_Objects) {}
 
 	void Update(float a_Delta);
 
@@ -29,7 +29,7 @@ private:
 
 	std::unique_ptr<LineObject> m_TopLine;
 	std::vector<std::unique_ptr<LineObject>> m_Lines;
-	std::vector<std::unique_ptr<BubbleObject>>& m_Bubbles;
-	std::vector<std::shared_ptr<CollisionManifold>> m_Manifolds;
+	std::vector<std::unique_ptr<GameObject>>& m_GameObjects;
+	std::vector<std::unique_ptr<CollisionManifold>> m_Manifolds;
 };
 

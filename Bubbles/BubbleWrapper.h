@@ -4,6 +4,7 @@
 
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
+#include "NailObject.h"
 
 class BubbleWrapper
 {
@@ -11,44 +12,44 @@ public:
 
 	void Update()
 	{
-		if(m_GameBubble.size() != m_Rendered.size())
+		if(m_GameObjects.size() != m_Rendered.size())
 		{
-			throw std::runtime_error("BubbleWrapper::Update() - m_GameBubble and m_Rendered size mismatch");
+			throw std::runtime_error("BubbleWrapper::Update() - m_GameObjects and m_Rendered size mismatch");
 		}
 
-		for(size_t i = 0; i < m_GameBubble.size(); i++)
+		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
-			sf::Vector2f position = m_GameBubble[i]->GetPosition();
+			sf::Vector2f position = m_GameObjects[i]->GetPosition();
 			position.x *= PIXEL_TO_METER;
 			position.y *= PIXEL_TO_METER;
 			position.y *= -1;
 			m_Rendered[i]->SetPosition(position);
-			m_Rendered[i]->SetRotation(m_GameBubble[i]->GetRotation() * 57.2957795f);
+			m_Rendered[i]->SetRotation(m_GameObjects[i]->GetRotation() * 57.2957795f);
 		}
 	}
 
-	size_t GetNumOfBubbles() const { return m_GameBubble.size(); }
+	size_t GetNumOfObjects() const { return m_GameObjects.size(); }
 
 	AnimatedSprite* GetShapeByIndex(size_t a_Index) const { return m_Rendered[a_Index].get(); }
-	BubbleObject* GetBubbleByIndex(size_t a_Index) const { return m_GameBubble[a_Index].get(); }
+	GameObject* GetObjectByIndex(size_t a_Index) const { return m_GameObjects[a_Index].get(); }
 
-	void AddBubble(std::unique_ptr<BubbleObject> a_Bubble, std::unique_ptr<AnimatedSprite> a_Rendered)
+	void AddObject(std::unique_ptr<GameObject> a_GameObject, std::unique_ptr<AnimatedSprite> a_Rendered)
 	{
-		m_GameBubble.push_back(std::move(a_Bubble));
+		m_GameObjects.push_back(std::move(a_GameObject));
 		m_Rendered.push_back(std::move(a_Rendered));
 	}
-	void RemoveBubbleByIndex(size_t a_Index)
+	void RemoveObjectByIndex(size_t a_Index)
 	{
-		m_GameBubble.erase(m_GameBubble.begin() + a_Index);
+		m_GameObjects.erase(m_GameObjects.begin() + a_Index);
 		m_Rendered.erase(m_Rendered.begin() + a_Index);
 	}
-	void RemoveBubbleByPointer(const BubbleObject* a_Bubble)
+	void RemoveObjectByPointer(const BubbleObject* a_Bubble)
 	{
-		for(size_t i = 0; i < m_GameBubble.size(); i++)
+		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
-			if(m_GameBubble[i].get() == a_Bubble)
+			if(m_GameObjects[i].get() == a_Bubble)
 			{
-				m_GameBubble.erase(m_GameBubble.begin() + i);
+				m_GameObjects.erase(m_GameObjects.begin() + i);
 				m_Rendered.erase(m_Rendered.begin() + i);
 				break;
 			}
@@ -57,15 +58,15 @@ public:
 
 	void Clear()
 	{
-		m_GameBubble.clear();
+		m_GameObjects.clear();
 		m_Rendered.clear();
 	}
 
-	std::vector<std::unique_ptr<BubbleObject>>& GetGameBubbles() { return m_GameBubble; }
+	std::vector<std::unique_ptr<GameObject>>& GetGameObjects() { return m_GameObjects; }
 	std::vector<std::unique_ptr<AnimatedSprite>>& GetRendered() { return m_Rendered; }
 
 private:
 	std::vector<std::unique_ptr<AnimatedSprite>> m_Rendered;
-	std::vector<std::unique_ptr<BubbleObject>> m_GameBubble;
+	std::vector<std::unique_ptr<GameObject>> m_GameObjects;
 
 };

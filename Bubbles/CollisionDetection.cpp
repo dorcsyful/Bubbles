@@ -4,12 +4,8 @@
 
 #include "BubbleMath.h"
 
-bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, const std::shared_ptr<CollisionManifold>& a_Manifold)
+bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const LineObject& a_Line, const std::unique_ptr<CollisionManifold>& a_Manifold)
 {
-	bool inside1 = PointCircleCheck(a_Line.GetStart(), a_Bubble.GetPosition(), a_Bubble.GetRadius());
-	bool inside2 = PointCircleCheck(a_Line.GetEnd(), a_Bubble.GetPosition(), a_Bubble.GetRadius());
-	//if (inside1 || inside2) return true;
-
 	// get length of the line
 	float len = BubbleMath::Distance(a_Line.GetStart(), a_Line.GetEnd());
 
@@ -40,7 +36,7 @@ bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const Lin
 }
 
 bool CollisionDetection::CircleCircleCheck(const BubbleObject& a_First, const BubbleObject& a_Second,
-	const std::shared_ptr<CollisionManifold>& a_Manifold)
+	const std::unique_ptr<CollisionManifold>& a_Manifold)
 {
 	a_Manifold->m_Normal = a_Second.GetPosition() - a_First.GetPosition();
 	float distance_squared = BubbleMath::LengthSquared(a_Manifold->m_Normal);

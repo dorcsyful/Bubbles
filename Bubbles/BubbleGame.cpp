@@ -12,7 +12,7 @@ void BubbleGame::Initialize()
 	m_State = EGAME_STATE::STATE_MENU;
 	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT, m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
-	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameBubbles());
+	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects());
 	m_Save = std::make_unique<Save>();
 
 	auto lines = m_Rendering->ConvertToLine();
@@ -35,8 +35,8 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	{
 		auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
 
-		m_Wrapper->RemoveBubbleByPointer(m_Physics->m_BubblesToCombine[i].first);
-		m_Wrapper->RemoveBubbleByPointer(m_Physics->m_BubblesToCombine[i].second);
+		m_Wrapper->RemoveObjectByPointer(m_Physics->m_BubblesToCombine[i].first);
+		m_Wrapper->RemoveObjectByPointer(m_Physics->m_BubblesToCombine[i].second);
 
 		CreateWrapper(combined);
 
@@ -120,7 +120,7 @@ void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 	temp.y *= -1.f;
 	std::unique_ptr<AnimatedSprite> newRendered;
 	m_Rendering->CreateSprite(a_NewBubble->GetBubbleType(), temp, 0, newRendered);
-	m_Wrapper->AddBubble(std::move(a_NewBubble), std::move(newRendered));
+	m_Wrapper->AddObject(std::move(a_NewBubble), std::move(newRendered));
 }
 
 void BubbleGame::AddBubble(float a_Delta)
@@ -137,19 +137,19 @@ void BubbleGame::GameOver()
 	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
-	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, GAME_OVER_ANIMATION_TOTAL_TIME / m_Wrapper->GetNumOfBubbles(), true);
+	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, GAME_OVER_ANIMATION_TOTAL_TIME / m_Wrapper->GetNumOfObjects(), true);
 }
 
 void BubbleGame::RemoveAtEnd()
 {
-	if(m_Wrapper->GetNumOfBubbles() == 0)
+	if(m_Wrapper->GetNumOfObjects() == 0)
 	{
 		CallAfterDelay::getInstance().RemoveFunction([this](){RemoveAtEnd();});
 		m_State = EGAME_STATE::STATE_GAME_OVER;
 		return;
 	}
-	size_t index = rand() % m_Wrapper->GetNumOfBubbles();
-	m_Wrapper->RemoveBubbleByIndex(index);
+	size_t index = rand() % m_Wrapper->GetNumOfObjects();
+	m_Wrapper->RemoveObjectByIndex(index);
 }
 
 void BubbleGame::PlayInput(float a_Delta)

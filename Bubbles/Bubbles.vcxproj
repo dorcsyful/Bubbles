@@ -148,9 +148,11 @@
     <ClCompile Include="BubbleObject.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CollisionManifold.cpp" />
+    <ClCompile Include="NailObject.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="Save.cpp" />
@@ -170,6 +172,7 @@
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="LineObject.h" />
+    <ClInclude Include="NailObject.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="Save.h" />

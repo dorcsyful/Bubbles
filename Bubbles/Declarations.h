@@ -48,6 +48,10 @@
 #define HIGH_SCORE_ITEM_WIDTH 300
 #define	HIGH_SCORE_ITEM_HEIGHT 35
 #define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
+
+#define NAIL_LENGTH 0.5f
+#define NAIL_WEIGHT 0.5f
+
 #include <map>
 
 enum class EGAME_STATE
@@ -65,7 +69,8 @@ enum class EOBJECT_TYPE
 {
 	TYPE_NO_TYPE,
 	TYPE_LINE,
-	TYPE_CIRCLE
+	TYPE_CIRCLE,
+	TYPE_NAIL
 };
 
 enum class EBUBBLE_TYPE
