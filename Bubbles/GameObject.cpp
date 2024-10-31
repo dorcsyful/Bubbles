@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <exception>
+#include <iostream>
 #include <SFML/System/Vector2.hpp>
 
 #include "BubbleMath.h"
@@ -27,13 +28,6 @@ void GameObject::IntegrateForces(float a_Delta)
 	{
 		throw std::exception("NAN");
 	}
-}
-
-void GameObject::CalculateInertia()
-{
-	//m_Inertia = m_Mass * m_Mass * m_Radius;
-	m_Inertia = m_Mass * m_Mass;
-	m_InverseInertia = 1.f / m_Inertia;
 }
 
 void GameObject::ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector) {

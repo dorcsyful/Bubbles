@@ -18,15 +18,12 @@ public:
 		m_InverseMass = 0;
 		m_Inertia = 0;
 		m_InverseInertia = 0;
-		m_DynamicFriction = 0;
-		m_Restitution = 0;
-		m_StaticFriction = 0;
 	}
 
 	sf::Vector2f GetStart() const { return m_StartPoint; }
 	sf::Vector2f GetEnd() const { return m_EndPoint; }
 	void ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector) override {}
-
+	void CalculateInertia() override {}
 
 private:
 	sf::Vector2f m_StartPoint;

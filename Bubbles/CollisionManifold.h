@@ -6,22 +6,7 @@
 class CollisionManifold
 {
 public:
-	CollisionManifold(GameObject* a_First, GameObject* a_Second):
-		m_AvgRestitution(0),
-		m_AvgStaticFriction(0),
-		m_AvgDynamicFriction(0),
-		m_Penetration(0)
-	{
-		m_Objects[0] = a_First;
-		m_Objects[1] = a_Second;
-
-		// Calculate average restitution
-		m_AvgRestitution = std::min(m_Objects[0]->GetRestitution(), m_Objects[1]->GetRestitution());
-
-		// Calculate static and dynamic friction
-		m_AvgStaticFriction = sqrtf(m_Objects[0]->GetStaticFriction() * m_Objects[1]->GetStaticFriction());
-		m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
-	}
+	CollisionManifold(GameObject* a_First, GameObject* a_Second);
 
 	void ApplyImpulse();
 

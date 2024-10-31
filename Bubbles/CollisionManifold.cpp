@@ -1,5 +1,22 @@
 #include "CollisionManifold.h"
 
+#include <iostream>
+
+CollisionManifold::CollisionManifold(GameObject* a_First, GameObject* a_Second)
+{
+    m_Penetration = 0;
+    m_Objects[0] = a_First;
+    m_Objects[1] = a_Second;
+
+    // Calculate average restitution
+    m_AvgRestitution = std::min(m_Objects[0]->GetRestitution(), m_Objects[1]->GetRestitution());
+
+    // Calculate static and dynamic friction
+    m_AvgStaticFriction = sqrtf(m_Objects[0]->GetStaticFriction() * m_Objects[1]->GetStaticFriction());
+    m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
+    std::cout << m_Objects[1]->GetStaticFriction() << "\n";
+}
+
 void CollisionManifold::ApplyImpulse()
 {
     // Relative velocity
@@ -15,12 +32,13 @@ void CollisionManifold::ApplyImpulse()
     if (contactVel > 0)
         return;
 
-    float raCrossN = BubbleMath::Cross(ra, m_Normal) * m_Objects[0]->GetInverseInertia();
-    float rbCrossN = BubbleMath::Cross(rb, m_Normal) * m_Objects[1]->GetInverseInertia();
-    float invMassSum = m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass() + raCrossN + rbCrossN;
+    float raCrossN = BubbleMath::Cross(ra, m_Normal);
+    float rbCrossN = BubbleMath::Cross(rb, m_Normal);
+    float invMassSum = m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass() + (raCrossN * raCrossN) * m_Objects[0]->GetInverseInertia() + (rbCrossN * rbCrossN) * m_Objects[1]->GetInverseInertia();
 
     // Calculate impulse scalar
-    float j = (-(1.0f + m_AvgRestitution) * contactVel) / invMassSum;
+    float j = (-(1.0f + m_AvgRestitution) * contactVel);
+    j /= invMassSum;
 
     // Apply main impulse
     sf::Vector2f impulse = m_Normal * j;
@@ -39,7 +57,7 @@ void CollisionManifold::ApplyImpulse()
     jt /= invMassSum;
 
     // Don't apply tiny friction impulses
-    if (jt <= 0.0001f)
+    if (std::abs(m_Objects[0] - m_Objects[1]) <= 0.0001f)
         return;
 
     sf::Vector2f tangentImpulse;

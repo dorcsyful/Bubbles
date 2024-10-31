@@ -26,15 +26,13 @@ public:
 
 	EOBJECT_TYPE GetType() const { return m_Type; }
 
-	void SetRotation(float a_Rotation) { m_Rotation = a_Rotation; }
-
 	sf::Vector2f GetImpulse() const { return m_Impulse; }
 	void SetPosition(const sf::Vector2f& a_NewPosition) { m_Position = a_NewPosition; }
 
 	void Integrate(float a_Delta);
 	void IntegrateForces(float a_Delta);
 
-	void CalculateInertia();
+	virtual void CalculateInertia() = 0;
 
 	virtual void ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector);
 
@@ -46,8 +44,8 @@ protected:
 	float m_Mass = 0;
 	float m_InverseMass = 0;
 	EOBJECT_TYPE m_Type = EOBJECT_TYPE::TYPE_NO_TYPE;
-	float m_Restitution = 0.4f;
-	float m_DynamicFriction = 0.7f;
+	float m_Restitution = 0.2f;
+	float m_DynamicFriction = 0.2f;
 	float m_StaticFriction = 0.5f;
 
 	float m_Inertia = 0;

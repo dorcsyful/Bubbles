@@ -30,7 +30,7 @@
 #define GRAVITY (-9.81f)
 
 #define PIXEL_TO_METER 100
-#define LOADING_TIME 3
+#define LOADING_TIME 0.1
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define LOADING_NUMBER_OF_FRAMES 8
 #define LOADING_FRAME_TIME 0.5f

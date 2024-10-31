@@ -29,9 +29,11 @@ bool CollisionDetection::CircleLineCheck(const BubbleObject& a_Bubble, const Lin
 	float distX = closestX - a_Bubble.GetPosition().x;
 	float distY = closestY - a_Bubble.GetPosition().y;
 	float distance = sqrtf((distX * distX) + (distY * distY));
+
 	a_Manifold->m_Penetration = a_Bubble.GetRadius() - distance;
 	a_Manifold->m_Normal = BubbleMath::Normalize((sf::Vector2f(closestX, closestY) - a_Bubble.GetPosition()));
 	a_Manifold->m_CollisionPoint = a_Bubble.GetPosition() + a_Manifold->m_Normal * distance;
+
 	return distance < a_Bubble.GetRadius();
 }
 
