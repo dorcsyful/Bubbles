@@ -115,7 +115,9 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= 4;
-	a_NewSprite->GetSprite()->setScale(bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.x, bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.y);
+	float factorX = bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.x;
+	float factorY = bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.y;
+	a_NewSprite->GetSprite()->setScale(factorX, factorY);
 
 	float x = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
 	float y = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().y;
@@ -227,7 +229,7 @@ void Rendering::LoadBubbleTextures()
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_BLUE,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_BLUE]->loadFromFile(BLUE_FILENAME);
-
+	
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_YELLOW, std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_YELLOW]->loadFromFile(YELLOW_FILENAME);
 
@@ -243,7 +245,10 @@ void Rendering::LoadBubbleTextures()
 	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_RED,std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_RED]->loadFromFile(RED_FILENAME);
 
-
+	for (auto& current : m_BubbleTextures)
+	{
+		current.second->setSmooth(true);
+	}
 }
 
 void Rendering::CreateContainerLines()

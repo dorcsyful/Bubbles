@@ -14,7 +14,6 @@ CollisionManifold::CollisionManifold(GameObject* a_First, GameObject* a_Second)
     // Calculate static and dynamic friction
     m_AvgStaticFriction = sqrtf(m_Objects[0]->GetStaticFriction() * m_Objects[1]->GetStaticFriction());
     m_AvgDynamicFriction = sqrtf(m_Objects[0]->GetDynamicFriction() * m_Objects[1]->GetDynamicFriction());
-    std::cout << m_Objects[1]->GetStaticFriction() << "\n";
 }
 
 void CollisionManifold::ApplyImpulse()
