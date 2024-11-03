@@ -16,7 +16,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	m_Window->setSize(sf::Vector2u(a_X, a_Y));
 	LoadBackground();
 	LoadBubbleTextures();
-	CreateContainerLines();
 	CreatePointer();
 	CreateMenuSprites();
 	CreateGameOverSprite();
@@ -26,12 +25,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 
 void Rendering::PlayDraw() const
 {
-	for (const auto& element : m_Container)
-	{
-		m_Window->draw(*element);
-	}
-
-	m_Window->draw(*m_Line);
+	m_Window->draw(*m_Container);
 	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
 	for (auto& element : m_RenderedBubbles)
 	{
@@ -51,12 +45,7 @@ void Rendering::MenuDraw() const
 
 void Rendering::GameOverAnimationDraw() const
 {
-	for (const auto& element : m_Container)
-	{
-		m_Window->draw(*element);
-	}
-
-	m_Window->draw(*m_Line);
+	m_Window->draw(*m_Container);
 	for (auto& element : m_RenderedBubbles)
 	{
 		//element->UpdateFrameByTime();
@@ -157,47 +146,6 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores)
 	}
 }
 
-std::vector<std::unique_ptr<LineObject>> Rendering::ConvertToLine() const
-{
-	std::vector<std::unique_ptr<LineObject>> lines = std::vector<std::unique_ptr<LineObject>>();
-	sf::Vector2f start = m_Container[0]->getPosition();
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
-	start.y *= -1;
-	sf::Vector2f end = sf::Vector2f(start.x, (-(m_Container[0]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
-	std::unique_ptr<LineObject> temp = std::make_unique<LineObject>(start, end);
-	lines.push_back(std::move(temp));
-
-	start = m_Container[1]->getPosition();
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
-	start.y *= -1;
-	end = sf::Vector2f(start.x, (-(m_Container[1]->getPosition().y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
-	temp = std::make_unique<LineObject>(start, end);
-	lines.push_back(std::move(temp));
-
-	start = m_Container[2]->getPosition();
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
-	start.y *= -1;
-	end = sf::Vector2f((m_Container[2]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER,start.y);
-	temp = std::make_unique<LineObject>(start, end);
-	lines.push_back(std::move(temp));
-
-	return lines;
-}
-
-std::unique_ptr<LineObject> Rendering::ConvertTopLine() const
-{
-	std::vector<std::shared_ptr<LineObject>> lines = std::vector<std::shared_ptr<LineObject>>();
-	sf::Vector2f start = m_Container[3]->getPosition();
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
-	start.y *= -1;
-	sf::Vector2f end = sf::Vector2f((m_Container[3]->getPosition().x + CONTAINER_WIDTH) / PIXEL_TO_METER, start.y);
-	return std::make_unique<LineObject>(start, end);
-}
-
 void Rendering::Reset()
 {
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_BLUE;
@@ -206,22 +154,32 @@ void Rendering::Reset()
 
 void Rendering::LoadBackground()
 {
+	//Game Background
 	m_BackgroundTexture = std::make_unique<sf::Texture>();
 
-
-	if (!m_BackgroundTexture->loadFromFile("Assets/background.jpg"))
+	if (!m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME))
 	{
 		throw std::exception("Failed to load background texture");
 	}
 	m_BackgroundTexture->setRepeated(true);
-
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f v = sf::Vector2f(static_cast<float>(m_Window->getSize().x), static_cast<float>(m_Window->getSize().y));
-	
 	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, static_cast<int>(m_Window->getSize().x), static_cast<int>(m_Window->getSize().y)));
-
 	m_BackgroundSprite->setSize(v);
+
+	//Container
+	m_ContainerTexture = std::make_unique<sf::Texture>();
+	if(!m_ContainerTexture->loadFromFile(CONTAINER_FILENAME))
+	{
+		throw std::exception("Failed to load container texture");
+	}
+	m_ContainerTexture->setRepeated(true);
+	m_Container = std::make_unique<sf::RectangleShape>();
+	m_Container->setTexture(m_ContainerTexture.get());
+	m_Container->setSize(sf::Vector2f(m_ContainerTexture->getSize().x, m_ContainerTexture->getSize().y));
+	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
+	m_Container->setPosition(basePos);
 }
 
 void Rendering::LoadBubbleTextures()
@@ -250,36 +208,6 @@ void Rendering::LoadBubbleTextures()
 		current.second->setSmooth(true);
 	}
 }
-
-void Rendering::CreateContainerLines()
-{
-	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f),((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) /2.f));
-	m_Container = std::vector<std::unique_ptr<sf::RectangleShape>>(4);
-
-	m_Container[0] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS,CONTAINER_HEIGHT));
-	m_Container[0]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	m_Container[0]->setPosition(basePos);
-
-	m_Container[1] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS, CONTAINER_HEIGHT));
-	m_Container[1]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	sf::Vector2f pos1 = basePos;
-	pos1.x += CONTAINER_WIDTH;
-	m_Container[1]->setPosition(pos1);
-
-	m_Container[2] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
-	m_Container[2]->setFillColor(sf::Color(CONTAINER_LINE_COLOR_R, CONTAINER_LINE_COLOR_G, CONTAINER_LINE_COLOR_B));
-	sf::Vector2f pos2 = basePos;
-	pos2.y += CONTAINER_HEIGHT;
-	m_Container[2]->setPosition(pos2);
-
-	m_Container[3] = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_WIDTH + CONTAINER_LINE_THICKNESS, CONTAINER_LINE_THICKNESS));
-	m_Container[3]->setFillColor(sf::Color(CONTAINER_LINE_TOP_COLOR_R, CONTAINER_LINE_TOP_COLOR_G, CONTAINER_LINE_TOP_COLOR_B, CONTAINER_LINE_TOP_COLOR_A));
-	sf::Vector2f pos3 = basePos;
-	//pos3.y -= CONTAINER_HEIGHT;
-	m_Container[3]->setPosition(pos3);
-
-}
-
 void Rendering::CreatePointer()
 {
 	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
@@ -375,7 +303,7 @@ void Rendering::CreateScoreText()
 	m_ScoreText->setFillColor(sf::Color::Black);
 	m_ScoreText->setStyle(sf::Text::Bold);
 	m_ScoreText->setString("Score:\n 0");
-	sf::Vector2f position = m_Container[3]->getPosition();
+	sf::Vector2f position = m_Container->getPosition();
 	position.x = CONTAINER_WIDTH / 4;
 	position.y += 300;
 	m_ScoreText->setPosition(position);

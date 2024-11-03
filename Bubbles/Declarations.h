@@ -1,29 +1,38 @@
 #pragma once
 
-//UI specific
+//Base UI
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
-#define CONTAINER_LINE_THICKNESS 5
-#define CONTAINER_LINE_COLOR_R 0
-#define CONTAINER_LINE_COLOR_G 0
-#define CONTAINER_LINE_COLOR_B 255
-#define CONTAINER_LINE_TOP_COLOR_R 0
-#define CONTAINER_LINE_TOP_COLOR_G 0
-#define CONTAINER_LINE_TOP_COLOR_B 128
-#define CONTAINER_LINE_TOP_COLOR_A 128
+#define HIGH_SCORE_ITEM_WIDTH 300
+#define	HIGH_SCORE_ITEM_HEIGHT 35
 
-#define BLUE_FILENAME "Assets/Shapes/blue.png"
-#define GREEN_FILENAME "Assets/Shapes/green.png"
-#define PINK_FILENAME "Assets/Shapes/pink.png"
-#define PURPLE_FILENAME "Assets/Shapes/purple.png"
-#define YELLOW_FILENAME "Assets/Shapes/yellow.png"
-#define RED_FILENAME "Assets/Shapes/red.png"
+//Files
+#define CLAM_FILENAME "Assets/Shapes/0.png"
+#define CRAB_FILENAME "Assets/Shapes/1.png"
+#define FISH_FILENAME "Assets/Shapes/2.png"
+#define FROG_FILENAME "Assets/Shapes/3.png"
+#define JELLY_FILENAME "Assets/Shapes/4.png"
+#define KRILL_FILENAME "Assets/Shapes/5.png"
+#define SEAL_FILENAME "Assets/Shapes/6.png"
+#define SHARK_FILENAME "Assets/Shapes/7.png"
+#define SQUID_FILENAME "Assets/Shapes/8.png"
+#define WHALE_FILENAME "Assets/Shapes/9.png"
 
 #define TITLE_FILENAME "Assets/Menu/Title.png"
 #define BUTTON_FILENAME "Assets/Menu/Button_Base.png"
 #define BUTTON_CLICKED_FILENAME "Assets/Menu/Button_Clicked.png"
 #define FONT_FILENAME "Assets/Menu/Fonts/comic.ttf"
+#define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 
+#define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
+#define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
+#define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
+#define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
+#define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
+
+#define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
+
+//Gameplay
 #define CONTAINER_WIDTH 500
 #define CONTAINER_HEIGHT 600
 #define POINTER_MOVE_SPEED 100
@@ -31,7 +40,6 @@
 
 #define PIXEL_TO_METER 100
 #define LOADING_TIME 0.1
-#define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define LOADING_NUMBER_OF_FRAMES 8
 #define LOADING_FRAME_TIME 0.5f
 
@@ -39,15 +47,6 @@
 #define BUBBLE_FRAME_TIME 1
 
 #define GAME_OVER_ANIMATION_TOTAL_TIME 10
-
-#define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
-#define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
-
-#define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
-
-#define HIGH_SCORE_ITEM_WIDTH 300
-#define	HIGH_SCORE_ITEM_HEIGHT 35
-#define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
 
 #define NAIL_LENGTH 0.5f
 #define NAIL_WEIGHT 0.5f
@@ -75,16 +74,24 @@ enum class EOBJECT_TYPE
 
 enum class EBUBBLE_TYPE
 {
-	TYPE_BLUE = 0,
-	TYPE_YELLOW = 1,
-	TYPE_GREEN = 2,
-	TYPE_PINK = 3,
-	TYPE_PURPLE = 4,
-	TYPE_RED = 5
+	TYPE_CLAM = 0,
+	TYPE_CRAB = 1,
+	TYPE_FISH = 2,
+	TYPE_FROG = 3,
+	TYPE_JELLY = 4,
+	TYPE_KRILL = 5,
+	TYPE_SEAL = 6,
+	TYPE_SHARK = 7,
+	TYPE_SQUID = 8,
+	TYPE_WHALE = 9
 };
 
-static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_BLUE, 0.50}, {EBUBBLE_TYPE::TYPE_YELLOW, 0.70}, {EBUBBLE_TYPE::TYPE_GREEN, 0.90},
-												   {EBUBBLE_TYPE::TYPE_PINK, 1.10},{EBUBBLE_TYPE::TYPE_PURPLE, 1.30}, {EBUBBLE_TYPE::TYPE_RED, 1.50} };
+static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_CLAM, 0.10}, {EBUBBLE_TYPE::TYPE_CRAB, 0.15}, {EBUBBLE_TYPE::TYPE_FISH, 0.20},
+												   {EBUBBLE_TYPE::TYPE_FROG, 0.30},{EBUBBLE_TYPE::TYPE_JELLY, 0.35}, {EBUBBLE_TYPE::TYPE_KRILL, 0.40},
+															{EBUBBLE_TYPE::TYPE_SEAL, 0.50}, {EBUBBLE_TYPE::TYPE_SHARK, 0.60}, {EBUBBLE_TYPE::TYPE_SQUID, 0.70},
+												   {EBUBBLE_TYPE::TYPE_WHALE, 0.80}};
 
-static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_BLUE, 1}, {EBUBBLE_TYPE::TYPE_YELLOW, 2}, {EBUBBLE_TYPE::TYPE_GREEN, 3},
-												   {EBUBBLE_TYPE::TYPE_PINK, 4},{EBUBBLE_TYPE::TYPE_PURPLE, 5}, {EBUBBLE_TYPE::TYPE_RED, 6} };
+static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_CLAM, 1}, {EBUBBLE_TYPE::TYPE_CRAB, 1.5}, {EBUBBLE_TYPE::TYPE_FISH, 2},
+												   {EBUBBLE_TYPE::TYPE_FROG, 3},{EBUBBLE_TYPE::TYPE_JELLY, 3.5}, {EBUBBLE_TYPE::TYPE_KRILL, 4},
+															{EBUBBLE_TYPE::TYPE_SEAL, 5}, {EBUBBLE_TYPE::TYPE_SHARK, 6}, {EBUBBLE_TYPE::TYPE_SQUID, 7},
+												   {EBUBBLE_TYPE::TYPE_WHALE, 8} };

@@ -10,7 +10,7 @@ class Physics
 {
 public:
 
-	Physics(std::vector<std::unique_ptr<GameObject>>& a_Objects) : m_GameObjects(a_Objects) {}
+	Physics(std::vector<std::unique_ptr<GameObject>>& a_Objects) : m_GameObjects(a_Objects) { m_Lines = std::vector<std::unique_ptr<LineObject>>(); }
 
 	void Update(float a_Delta);
 
@@ -18,11 +18,12 @@ public:
 	void AddTopLine(std::unique_ptr<LineObject>& a_Line) { m_TopLine = std::move(a_Line); }
 
 	bool GetTouchedTopLine() const { return m_TouchedTopLine; }
+	void CreateContainerLines();
 
 	void Reset();
 	std::vector<std::pair<const BubbleObject*, const BubbleObject*>> m_BubblesToCombine;
-private:
 
+private:
 	bool BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const;
 
 	bool m_TouchedTopLine = false;

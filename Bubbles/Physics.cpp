@@ -89,3 +89,43 @@ bool Physics::BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const
 	}
     return false;
 }
+
+void Physics::CreateContainerLines()
+{
+	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(WINDOW_HEIGHT) - CONTAINER_HEIGHT) / 2.f));
+
+	sf::Vector2f start = basePos;
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	sf::Vector2f end = sf::Vector2f(start.x, (-(basePos.y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	std::unique_ptr<LineObject> temp = std::make_unique<LineObject>(start, end);
+	m_Lines.push_back(std::move(temp));
+
+	sf::Vector2f pos1 = basePos;
+	pos1.x += CONTAINER_WIDTH;
+	start = pos1;
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	end = sf::Vector2f(start.x, (-(pos1.y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	temp = std::make_unique<LineObject>(start, end);
+	m_Lines.push_back(std::move(temp));
+
+	sf::Vector2f pos2 = basePos;
+	pos2.y += CONTAINER_HEIGHT;
+	start = pos2;
+	start.x /= PIXEL_TO_METER;
+	start.y /= PIXEL_TO_METER;
+	start.y *= -1;
+	end = sf::Vector2f((pos2.x + CONTAINER_WIDTH) / PIXEL_TO_METER, start.y);
+	temp = std::make_unique<LineObject>(start, end);
+	m_Lines.push_back(std::move(temp));
+
+	sf::Vector2f start1 = start;
+	start1.y += (CONTAINER_HEIGHT / PIXEL_TO_METER);
+	start1.y += 1;
+	sf::Vector2f end1 = sf::Vector2f(start1.x + (CONTAINER_WIDTH / PIXEL_TO_METER), start1.y);
+	temp = std::make_unique<LineObject>(start1, end1);
+	m_TopLine = std::move(temp);
+}

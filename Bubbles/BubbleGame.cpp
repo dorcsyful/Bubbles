@@ -15,14 +15,8 @@ void BubbleGame::Initialize()
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects());
 	m_Save = std::make_unique<Save>();
 
-	auto lines = m_Rendering->ConvertToLine();
-	for(auto& lineObject : lines)
-	{
-		m_Physics->AddLine(lineObject);
-	}
+	m_Physics->CreateContainerLines();
 
-	std::unique_ptr<LineObject> topLine = m_Rendering->ConvertTopLine();
-	m_Physics->AddTopLine(topLine);
 	m_Rendering->UpdateHighScores(m_Save->GetScores());
 }
 

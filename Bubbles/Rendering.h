@@ -33,9 +33,6 @@ public:
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores);
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 
-	std::vector<std::unique_ptr<LineObject>> ConvertToLine() const;
-	std::unique_ptr<LineObject> ConvertTopLine() const;
-
 	void Reset();
 
 private:
@@ -46,7 +43,6 @@ private:
 
 	void LoadBackground();
 	void LoadBubbleTextures();
-	void CreateContainerLines();
 	void CreatePointer();
 	void CreateTitleSprite();
 	void CreateGameOverSprite();
@@ -62,7 +58,8 @@ private:
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
-	std::vector<std::unique_ptr<sf::RectangleShape>> m_Container;
+	std::unique_ptr<sf::Texture> m_ContainerTexture;
+	std::unique_ptr<sf::RectangleShape> m_Container;
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
 	EBUBBLE_TYPE m_ActiveBubble;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
