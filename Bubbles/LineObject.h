@@ -18,6 +18,9 @@ public:
 		m_InverseMass = 0;
 		m_Inertia = 0;
 		m_InverseInertia = 0;
+		m_Restitution = 0.2f;
+		m_DynamicFriction = 0.3f;
+		m_StaticFriction = 0.3f;
 	}
 
 	sf::Vector2f GetStart() const { return m_StartPoint; }

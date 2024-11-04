@@ -13,10 +13,12 @@ void Physics::Update(float a_Delta)
 
 		//Check for game over and return immediately if it is
 		std::unique_ptr<CollisionManifold> manifold = std::make_unique<CollisionManifold>(object1, m_TopLine.get());
-		if (m_GameObjects[i]->GetType() == EOBJECT_TYPE::TYPE_CIRCLE) {
-
+		if (m_GameObjects[i]->GetType() == EOBJECT_TYPE::TYPE_CIRCLE)
+		{
 			m_TouchedTopLine = CollisionDetection::CircleLineCheck(*static_cast<BubbleObject*>(m_GameObjects[i].get()), *m_TopLine, manifold);
-			if (m_TouchedTopLine) return;
+			if (m_TouchedTopLine){
+				return;
+			}
 		}
 
 		for (const auto& line : m_Lines) {
@@ -51,7 +53,6 @@ void Physics::Update(float a_Delta)
 			}
 		}
 	}
-
 	// Integrate forces
 	for (unsigned int i = 0; i < m_GameObjects.size(); ++i)
 		m_GameObjects[i]->IntegrateForces(a_Delta);
@@ -70,7 +71,7 @@ void Physics::Update(float a_Delta)
         m_GameObjects[i]->Integrate(a_Delta);
 
     for (unsigned int i = 0; i < m_Manifolds.size(); ++i)
-        m_Manifolds[i]->PositionalCorrection();
+        m_Manifolds[i]->FixFinalPenetrations();
 }
 
 void Physics::Reset()
@@ -122,9 +123,10 @@ void Physics::CreateContainerLines()
 	temp = std::make_unique<LineObject>(start, end);
 	m_Lines.push_back(std::move(temp));
 
-	sf::Vector2f start1 = start;
-	start1.y += (CONTAINER_HEIGHT / PIXEL_TO_METER);
-	start1.y += 1;
+	sf::Vector2f start1 = sf::Vector2f((static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(WINDOW_HEIGHT) - CONTAINER_HEIGHT) / 2.f));
+	start1.y /= PIXEL_TO_METER;
+	start1.x /= PIXEL_TO_METER;
+	start1.y *= -1;
 	sf::Vector2f end1 = sf::Vector2f(start1.x + (CONTAINER_WIDTH / PIXEL_TO_METER), start1.y);
 	temp = std::make_unique<LineObject>(start1, end1);
 	m_TopLine = std::move(temp);

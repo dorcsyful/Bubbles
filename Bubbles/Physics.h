@@ -18,6 +18,7 @@ public:
 	void AddTopLine(std::unique_ptr<LineObject>& a_Line) { m_TopLine = std::move(a_Line); }
 
 	bool GetTouchedTopLine() const { return m_TouchedTopLine; }
+	float GetTopLineHeight() const { return m_TopLine->GetPosition().y; }
 	void CreateContainerLines();
 
 	void Reset();

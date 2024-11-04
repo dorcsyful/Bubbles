@@ -43,10 +43,8 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 {
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(m_CurrentBubble);
 	sf::Vector2f temp = a_Start;
-	temp.x /= PIXEL_TO_METER;
-	temp.y /= PIXEL_TO_METER;
-	temp.y += bubble_sizes.at(m_CurrentBubble);
-	temp.y *= -1.f;
+	temp.y -= bubble_sizes.at(m_CurrentBubble) + 0.001f;
+
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
 	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);

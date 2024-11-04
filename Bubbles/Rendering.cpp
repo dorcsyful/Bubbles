@@ -26,6 +26,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 void Rendering::PlayDraw() const
 {
 	m_Window->draw(*m_Container);
+	m_Window->draw(*m_Line);
+
 	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
 	for (auto& element : m_RenderedBubbles)
 	{
@@ -116,7 +118,6 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 	a_NewSprite->SetRotation(a_Rotation);
 }
 
-
 void Rendering::MovePointerLine(const float a_X) const
 {
 	sf::Vector2f temp = m_Line->getPosition();
@@ -148,7 +149,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores)
 
 void Rendering::Reset()
 {
-	m_ActiveBubble = EBUBBLE_TYPE::TYPE_BLUE;
+	m_ActiveBubble = EBUBBLE_TYPE::TYPE_CLAM;
 	m_ScoreText->setString("Score:\n 0");
 }
 
@@ -177,7 +178,7 @@ void Rendering::LoadBackground()
 	m_ContainerTexture->setRepeated(true);
 	m_Container = std::make_unique<sf::RectangleShape>();
 	m_Container->setTexture(m_ContainerTexture.get());
-	m_Container->setSize(sf::Vector2f(m_ContainerTexture->getSize().x, m_ContainerTexture->getSize().y));
+	m_Container->setSize(sf::Vector2f(CONTAINER_WIDTH, CONTAINER_HEIGHT));
 	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
 	m_Container->setPosition(basePos);
 }
@@ -185,23 +186,35 @@ void Rendering::LoadBackground()
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_BLUE,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_BLUE]->loadFromFile(BLUE_FILENAME);
+	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CLAM]->loadFromFile(CLAM_FILENAME);
 	
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_YELLOW, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_YELLOW]->loadFromFile(YELLOW_FILENAME);
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CRAB]->loadFromFile(CRAB_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_GREEN,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_GREEN]->loadFromFile(GREEN_FILENAME);
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_FISH,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_FISH]->loadFromFile(FISH_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PINK,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PINK]->loadFromFile(PINK_FILENAME);
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_FROG,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_FROG]->loadFromFile(FROG_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_PURPLE,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_PURPLE]->loadFromFile(PURPLE_FILENAME);
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_JELLY,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_JELLY]->loadFromFile(JELLY_FILENAME);
 
-	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_RED,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_RED]->loadFromFile(RED_FILENAME);
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_KRILL,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_KRILL]->loadFromFile(KRILL_FILENAME);
+
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_SEAL, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SEAL]->loadFromFile(SEAL_FILENAME);
+
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_SHARK, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SHARK]->loadFromFile(SHARK_FILENAME);
+
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SQUID]->loadFromFile(SQUID_FILENAME);
+
+	m_BubbleTextures.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_FILENAME);
 
 	for (auto& current : m_BubbleTextures)
 	{
@@ -210,8 +223,8 @@ void Rendering::LoadBubbleTextures()
 }
 void Rendering::CreatePointer()
 {
-	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
-	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(CONTAINER_LINE_THICKNESS / 2.f, CONTAINER_HEIGHT));
+	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f) - 25);
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, CONTAINER_HEIGHT + 25));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 

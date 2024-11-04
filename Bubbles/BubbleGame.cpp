@@ -120,6 +120,8 @@ void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 void BubbleGame::AddBubble(float a_Delta)
 {
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
+	start.x /= PIXEL_TO_METER;
+	start.y = m_Physics->GetTopLineHeight();
 	std::unique_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
 	CreateWrapper(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
