@@ -117,7 +117,7 @@ void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 	m_Wrapper->AddObject(std::move(a_NewBubble), std::move(newRendered));
 }
 
-void BubbleGame::AddBubble(float a_Delta)
+void BubbleGame::AddBubble() const
 {
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
 	start.x /= PIXEL_TO_METER;
@@ -148,12 +148,12 @@ void BubbleGame::RemoveAtEnd()
 	m_Wrapper->RemoveObjectByIndex(index);
 }
 
-void BubbleGame::PlayInput(float a_Delta)
+void BubbleGame::PlayInput(float a_Delta) const
 {
 	if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 	{
 		m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
-		AddBubble(a_Delta);
+		AddBubble();
 	}
 }
 

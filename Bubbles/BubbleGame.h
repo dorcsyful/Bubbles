@@ -14,7 +14,7 @@ public:
 	void Update();
 	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const;
 
-	void AddBubble(float a_Delta);
+	void AddBubble() const;
 
 	std::unique_ptr<Physics> m_Physics;
 	std::unique_ptr<Rendering> m_Rendering;
@@ -25,7 +25,7 @@ public:
 private:
 	void PlayUpdate(float a_Delta);
 	void RestartGame();
-	void PlayInput(float a_Delta);
+	void PlayInput(float a_Delta) const;
 	void MenuInput();
 	void GameOverAnimationInput();
 	void GameOverInput();

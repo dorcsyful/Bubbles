@@ -18,11 +18,12 @@ public:
 		m_ContainerEdges[1] = m_ContainerEdges[0] + CONTAINER_WIDTH;
 		Move(0);
 		m_Score = 0;
+		m_CombineCombo = 0;
 	}
 
 	void Update(float a_Delta);
 	std::unique_ptr<BubbleObject> CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second);
-
+	unsigned int GetComboScore() const { return m_CombineCombo; }
 	unsigned int GetScore() const { return m_Score; }
 
 	void Move(float a_Direction);
@@ -35,6 +36,7 @@ public:
 	void Reset();
 
 private:
+	unsigned int m_CombineCombo;
 	unsigned int m_Score;
 	std::chrono::time_point<std::chrono::system_clock> m_LastDrop;
 	float m_ContainerEdges[2];

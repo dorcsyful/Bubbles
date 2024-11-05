@@ -51,6 +51,8 @@
 #define NAIL_LENGTH 0.5f
 #define NAIL_WEIGHT 0.5f
 
+#define COMBINE_SCORE_EXTRA 5
+
 #include <map>
 
 enum class EGAME_STATE
@@ -61,7 +63,8 @@ enum class EGAME_STATE
 	STATE_GAME_OVER,
 	STATE_MENU,
 	STATE_LOADING,
-	STATE_HIGH_SCORE
+	STATE_HIGH_SCORE,
+	STATE_EXIT_CONFIRM
 };
 
 enum class EOBJECT_TYPE

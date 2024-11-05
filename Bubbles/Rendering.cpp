@@ -33,8 +33,8 @@ void Rendering::PlayDraw() const
 	{
 		m_Window->draw(*element);
 	}
-	m_Window->draw(*m_ScoreBackground);
-	m_Window->draw(*m_ScoreText);
+	m_Window->draw(*m_Score);
+	//m_Window->draw(*m_ComboText);
 }
 
 void Rendering::MenuDraw() const
@@ -150,7 +150,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores)
 void Rendering::Reset()
 {
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_CLAM;
-	m_ScoreText->setString("Score:\n 0");
+	//m_Score->SetText("Score:\n 0");
 }
 
 void Rendering::LoadBackground()
@@ -310,28 +310,26 @@ void Rendering::CreateMenuButtonSprites()
 
 void Rendering::CreateScoreText()
 {
-	m_ScoreText = std::make_unique<sf::Text>();
-	m_ScoreText->setFont(*m_Font);
-	m_ScoreText->setCharacterSize(50);
-	m_ScoreText->setFillColor(sf::Color::Black);
-	m_ScoreText->setStyle(sf::Text::Bold);
-	m_ScoreText->setString("Score:\n 0");
 	sf::Vector2f position = m_Container->getPosition();
-	position.x = CONTAINER_WIDTH / 4;
+	position.x -= CONTAINER_WIDTH / 4;
 	position.y += 300;
-	m_ScoreText->setPosition(position);
-
 	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
 
-	m_ScoreBackground = std::make_unique<sf::RectangleShape>(sf::Vector2f(200, 100));
-	m_ScoreBackground->setTexture(m_ScoreBackgroundTexture.get());
-	sf::Vector2<float> size = m_ScoreText->getGlobalBounds().getSize();
-	size.x += 40;
-	size.y += 40;
-	m_ScoreBackground->setSize(size);
-	position.x -= 20;
-	m_ScoreBackground->setPosition(position);
+	m_Score = std::make_unique<SpriteWithText>("Score: \n 0", *m_Font, sf::Vector2f(200,130),
+		position, sf::Color::Black, m_ScoreBackgroundTexture.get());
+
+
+	m_ComboText = std::make_unique<sf::Text>();
+	m_ComboText->setFont(*m_Font);
+	m_ComboText->setCharacterSize(50);
+	m_ComboText->setFillColor(sf::Color::Black);
+	m_ComboText->setStyle(sf::Text::Bold);
+	//m_ComboText->setString("Score:\n 0");
+	position = m_Container->getPosition();
+	position.x += CONTAINER_WIDTH / 4;
+	position.y += 300;
+
 }
 
 void Rendering::CreateHighScoreSprites()
