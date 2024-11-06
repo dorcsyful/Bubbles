@@ -31,6 +31,16 @@ public:
 
 	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score)); }
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores);
+	void UpdateCombo(unsigned int a_Combo)
+	{
+		if (a_Combo > 1)
+		{
+			std::string basicString = std::to_string(a_Combo);
+			m_ComboText->setString("Combo:\n +" + basicString);
+		}
+		else
+			m_ComboText->setString("");
+	}
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 
 	void Reset();

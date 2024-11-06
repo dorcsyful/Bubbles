@@ -23,7 +23,9 @@ std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_Firs
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) * 10;
-	m_CombineCombo += COMBINE_SCORE_EXTRA;
+	
+	m_CombineCombo++;
+	m_Score += COMBINE_SCORE_EXTRA;
 	return newBubble;
 }
 

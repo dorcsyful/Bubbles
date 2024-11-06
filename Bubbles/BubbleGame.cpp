@@ -37,12 +37,11 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	}
 
 	m_Rendering->UpdateScore(m_Gameplay->GetScore());
-
+	m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * COMBINE_SCORE_EXTRA);
 	m_Wrapper->Update();
 
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
-
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
 }
 

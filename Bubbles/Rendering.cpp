@@ -34,7 +34,7 @@ void Rendering::PlayDraw() const
 		m_Window->draw(*element);
 	}
 	m_Window->draw(*m_Score);
-	//m_Window->draw(*m_ComboText);
+	m_Window->draw(*m_ComboText);
 }
 
 void Rendering::MenuDraw() const
@@ -325,10 +325,11 @@ void Rendering::CreateScoreText()
 	m_ComboText->setCharacterSize(50);
 	m_ComboText->setFillColor(sf::Color::Black);
 	m_ComboText->setStyle(sf::Text::Bold);
-	//m_ComboText->setString("Score:\n 0");
+	m_ComboText->setString("Combo:\n 0");
 	position = m_Container->getPosition();
-	position.x += CONTAINER_WIDTH / 4;
-	position.y += 300;
+	position.x += CONTAINER_WIDTH;
+	position.y += 100;
+	m_ComboText->setPosition(position);
 
 }
 
