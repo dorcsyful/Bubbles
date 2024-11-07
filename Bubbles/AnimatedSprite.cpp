@@ -1,5 +1,6 @@
 #include "AnimatedSprite.h"
-
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, const int a_FrameCount):
 	m_Texture(a_Texture),
 	m_FrameTime(a_TotalTime),

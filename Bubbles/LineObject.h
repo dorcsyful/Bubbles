@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
 
+#include "BubbleMath.h"
 #include "GameObject.h"
 
 class LineObject : public GameObject

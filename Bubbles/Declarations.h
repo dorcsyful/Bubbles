@@ -1,11 +1,5 @@
 #pragma once
 
-//Base UI
-#define WINDOW_WIDTH 1200
-#define WINDOW_HEIGHT 800
-#define HIGH_SCORE_ITEM_WIDTH 300
-#define	HIGH_SCORE_ITEM_HEIGHT 35
-
 //Files
 #define CLAM_FILENAME "Assets/Shapes/0.png"
 #define CRAB_FILENAME "Assets/Shapes/1.png"
@@ -33,25 +27,10 @@
 #define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
 
 //Gameplay
-#define CONTAINER_WIDTH 400
-#define CONTAINER_HEIGHT 600
-#define POINTER_MOVE_SPEED 100
 #define GRAVITY (-9.81f)
-
-#define PIXEL_TO_METER 100
-#define LOADING_TIME 0.2
-#define LOADING_NUMBER_OF_FRAMES 8
-#define LOADING_FRAME_TIME 0.5f
-
-#define BUBBLE_FRAME_NUMBER 4
-#define BUBBLE_FRAME_TIME 1
-
-#define GAME_OVER_ANIMATION_TOTAL_TIME 10
 
 #define NAIL_LENGTH 0.5f
 #define NAIL_WEIGHT 0.5f
-
-#define COMBINE_SCORE_EXTRA 5
 
 #include <map>
 
@@ -88,11 +67,6 @@ enum class EBUBBLE_TYPE
 	TYPE_SQUID = 8,
 	TYPE_WHALE = 9
 };
-
-static const std::map<EBUBBLE_TYPE, float> bubble_sizes = { {EBUBBLE_TYPE::TYPE_CLAM, 0.4}, {EBUBBLE_TYPE::TYPE_CRAB, 0.45}, {EBUBBLE_TYPE::TYPE_FISH, 0.55},
-												   {EBUBBLE_TYPE::TYPE_FROG, 0.7},{EBUBBLE_TYPE::TYPE_JELLY, 0.80}, {EBUBBLE_TYPE::TYPE_KRILL, 0.9},
-															{EBUBBLE_TYPE::TYPE_SEAL, 1}, {EBUBBLE_TYPE::TYPE_SHARK, 1.1}, {EBUBBLE_TYPE::TYPE_SQUID, 1.2},
-												   {EBUBBLE_TYPE::TYPE_WHALE, 1.3}};
 
 static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_CLAM, 1}, {EBUBBLE_TYPE::TYPE_CRAB, 1.5}, {EBUBBLE_TYPE::TYPE_FISH, 2},
 												   {EBUBBLE_TYPE::TYPE_FROG, 3},{EBUBBLE_TYPE::TYPE_JELLY, 3.5}, {EBUBBLE_TYPE::TYPE_KRILL, 4},

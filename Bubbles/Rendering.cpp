@@ -1,12 +1,12 @@
 #include "Rendering.h"
 
 #include <functional>
-#include <iostream>
 #include <SFML/Window/Event.hpp>
 
 #include "BubbleObject.h"
 #include "Declarations.h"
 #include "LineObject.h"
+#include "Settings.h"
 
 Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper):
 	m_RenderedBubbles(a_Wrapper)
@@ -102,16 +102,17 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 
 void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
 {
-	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),BUBBLE_FRAME_TIME,4);
+	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),Settings::get().GetBubbleFrames(),4);
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= 4;
-	float factorX = bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.x;
-	float factorY = bubble_sizes.at(a_Type) * PIXEL_TO_METER * 2 / size.y;
+	float pixelToMeter = Settings::get().GetPixelToMeter();
+	float factorX = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.x;
+	float factorY = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.y;
 	a_NewSprite->GetSprite()->setScale(factorX, factorY);
 
-	float x = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().x;
-	float y = bubble_sizes.at(a_Type) * PIXEL_TO_METER / a_NewSprite->GetSprite()->getScale().y;
+	float x = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().x;
+	float y = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().y;
 	a_NewSprite->GetSprite()->setOrigin(x, y);
 
 	a_NewSprite->SetPosition(a_Position);
@@ -165,8 +166,9 @@ void Rendering::LoadBackground()
 	m_BackgroundTexture->setRepeated(true);
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
-	sf::Vector2f v = sf::Vector2f(static_cast<float>(m_Window->getSize().x), static_cast<float>(m_Window->getSize().y));
-	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, static_cast<int>(m_Window->getSize().x), static_cast<int>(m_Window->getSize().y)));
+	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
+	sf::Vector2f v = sf::Vector2f(windowSize.x, windowSize.y);
+	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)));
 	m_BackgroundSprite->setSize(v);
 
 	//Container
@@ -178,8 +180,10 @@ void Rendering::LoadBackground()
 	m_ContainerTexture->setRepeated(true);
 	m_Container = std::make_unique<sf::RectangleShape>();
 	m_Container->setTexture(m_ContainerTexture.get());
-	m_Container->setSize(sf::Vector2f(CONTAINER_WIDTH, CONTAINER_HEIGHT));
-	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f));
+	float width = Settings::get().GetContainerWidth();
+	float height = Settings::get().GetContainerHeight();
+	m_Container->setSize(sf::Vector2f(width, height));
+	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
 	m_Container->setPosition(basePos);
 }
 
@@ -223,12 +227,13 @@ void Rendering::LoadBubbleTextures()
 }
 void Rendering::CreatePointer()
 {
-	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) / 2.f) - 25);
-	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, CONTAINER_HEIGHT + 25));
+	float containerHeight = Settings::get().GetContainerHeight();
+	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (Settings::get().GetContainerWidth() / 2.f), ((static_cast<float>(m_Window->getSize().y) - containerHeight) / 2.f) - 25);
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight + 25));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
-	for(int i = 0; i < bubble_sizes.size(); i++)
+	for(size_t i = 0; i < 10; i++)
 	{
 		std::unique_ptr<AnimatedSprite> newSprite;
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
@@ -240,12 +245,14 @@ void Rendering::CreateTitleSprite()
 {
 	m_TitleTexture = std::make_unique<sf::Texture>();
 	m_TitleTexture->loadFromFile(TITLE_FILENAME);
+	sf::Vector2f titleTextureSize = BubbleMath::ToVector2f(m_TitleTexture->getSize());
+
 	m_Title = std::make_unique<sf::RectangleShape>();
 	m_Title = std::make_unique<sf::RectangleShape>();
 	m_Title->setTexture(m_TitleTexture.get());
-	m_Title->setSize(BubbleMath::ToVector2f(m_TitleTexture->getSize()));
-	m_Title->setOrigin(m_TitleTexture->getSize().x / 2.f, m_TitleTexture->getSize().y / 2.f);
-	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f), ((static_cast<float>(m_Window->getSize().y) - CONTAINER_HEIGHT) ));
+	m_Title->setSize(titleTextureSize);
+	m_Title->setOrigin(titleTextureSize.x / 2.f, titleTextureSize.y / 2.f);
+	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f), ((static_cast<float>(m_Window->getSize().y) - Settings::get().GetContainerHeight()) ));
 	m_Title->setPosition(basePos);
 }
 
@@ -295,14 +302,14 @@ void Rendering::CreateMenuButtonSprites()
 	newButton->SetText("Play");
 	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play",std::move(newButton)));
 
-	basePos.y += m_BaseButtonTexture->getSize().y * 1.5f;
+	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.5f;
 	std::unique_ptr<Button> newButton1 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton1->SetText("High Scores");
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton1)));
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), LOADING_FRAME_TIME, LOADING_NUMBER_OF_FRAMES);
+	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), Settings::get().GetLoadTime(), Settings::get().GetLoadingFrames());
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(m_LoadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
@@ -311,7 +318,7 @@ void Rendering::CreateMenuButtonSprites()
 void Rendering::CreateScoreText()
 {
 	sf::Vector2f position = m_Container->getPosition();
-	position.x -= CONTAINER_WIDTH / 4;
+	position.x -= Settings::get().GetContainerWidth() / 4;
 	position.y += 300;
 	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
@@ -327,7 +334,7 @@ void Rendering::CreateScoreText()
 	m_ComboText->setStyle(sf::Text::Bold);
 	m_ComboText->setString("Combo:\n 0");
 	position = m_Container->getPosition();
-	position.x += CONTAINER_WIDTH;
+	position.x += Settings::get().GetContainerWidth();
 	position.y += 100;
 	m_ComboText->setPosition(position);
 
@@ -355,13 +362,14 @@ void Rendering::CreateHighScoreSprites()
 		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
 		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
 
-		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(HIGH_SCORE_ITEM_WIDTH, HIGH_SCORE_ITEM_HEIGHT),
+		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(Settings::get().GetHighScoreItemWidth(), Settings::get().GetHighScoreItemWidth()),
 							basePos, textColor,shapeColor);
-		basePos.y += HIGH_SCORE_ITEM_HEIGHT ;
+		basePos.y += Settings::get().GetHighScoreItemWidth();
 	}
 
-	sf::Vector2f buttonPos = sf::Vector2f(m_BaseButtonTexture->getSize().x / 2, WINDOW_HEIGHT - m_BaseButtonTexture->getSize().y);
+	sf::Vector2f buttonTextureSize = sf::Vector2f(static_cast<float>(m_BaseButtonTexture->getSize().x), static_cast<float>(m_BaseButtonTexture->getSize().y));
+	sf::Vector2f buttonPos = sf::Vector2f(buttonTextureSize.x / 2, Settings::get().GetWindowHeight() - buttonTextureSize.y);
 	m_HSBackButton = std::make_unique<Button>(buttonPos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	m_HSBackButton->SetText("Back");
-	m_HSBackButton->SetScale(sf::Vector2f(0.7, 0.7));
+	m_HSBackButton->SetScale(sf::Vector2f(0.7f, 0.7f));
 }

@@ -3,15 +3,17 @@
 #include <iostream>
 #include <SFML/Window/Keyboard.hpp>
 
+#include "BubbleMath.h"
+
 void Gameplay::Update(float a_Delta)
 {
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D))
 	{
-		Move(POINTER_MOVE_SPEED * a_Delta);
+		Move(Settings::get().GetPointerMoveSpeed() * a_Delta);
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A))
 	{
-		Move(POINTER_MOVE_SPEED * a_Delta * -1.f);
+		Move(Settings::get().GetPointerMoveSpeed() * a_Delta * -1.f);
 	}
 }
 
@@ -19,13 +21,13 @@ std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_Firs
 {
 	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
 	int i = static_cast<int>(a_First->GetBubbleType()) + 1;
-	if (i == bubble_sizes.size()) { i = 0; }
+	if (i == 10) { i = 0; }
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) * 10;
 	
 	m_CombineCombo++;
-	m_Score += COMBINE_SCORE_EXTRA;
+	m_Score += Settings::get().GetComboScore();
 	return newBubble;
 }
 
@@ -33,10 +35,10 @@ void Gameplay::Move(float a_Direction)
 {
 	float temp = m_CurrentPosition + a_Direction;
 
-	float x = m_ContainerEdges[0] + bubble_sizes.at(m_CurrentBubble) * PIXEL_TO_METER;
+	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
 	if (temp < x) temp = x;
 
-	x = m_ContainerEdges[1] - bubble_sizes.at(m_CurrentBubble) * PIXEL_TO_METER;
+	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
 	if (temp > x) temp = x;
 
 	m_CurrentPosition = temp;
@@ -46,7 +48,7 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 {
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(m_CurrentBubble);
 	sf::Vector2f temp = a_Start;
-	temp.y -= bubble_sizes.at(m_CurrentBubble) + 0.001f;
+	temp.y -= Settings::get().BubbleSize(m_CurrentBubble) + 0.001f;
 
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
@@ -62,8 +64,8 @@ void Gameplay::Reset()
 	srand(static_cast<unsigned int>(currentTime));
 	m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-	m_ContainerEdges[0] = (static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f);
-	m_ContainerEdges[1] = m_ContainerEdges[0] + CONTAINER_WIDTH;
+	m_ContainerEdges[0] = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() / 2.f;
+	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 	Move(0);
 	m_Score = 0;
 }

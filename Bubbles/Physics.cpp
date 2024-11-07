@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Settings.h"
+
 void Physics::Update(float a_Delta)
 {
 	m_Manifolds.clear();
@@ -93,41 +95,45 @@ bool Physics::BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const
 
 void Physics::CreateContainerLines()
 {
-	sf::Vector2f basePos = sf::Vector2f((static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(WINDOW_HEIGHT) - CONTAINER_HEIGHT) / 2.f));
+	float containerWidth = Settings::get().GetContainerWidth();
+	float containerHeight = Settings::get().GetContainerHeight();
+	sf::Vector2f basePos = sf::Vector2f(Settings::get().GetWindowWidth() / 2.f - (containerWidth / 2.f), (Settings::get().GetWindowHeight() - containerHeight) / 2.f);
 
 	sf::Vector2f start = basePos;
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
+	float pixelToMeter = Settings::get().GetPixelToMeter();
+	start.x /= pixelToMeter;
+	start.y /= pixelToMeter;
 	start.y *= -1;
-	sf::Vector2f end = sf::Vector2f(start.x, (-(basePos.y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	sf::Vector2f end = sf::Vector2f(start.x, (-(basePos.y + containerHeight) / pixelToMeter));
 	std::unique_ptr<LineObject> temp = std::make_unique<LineObject>(start, end);
 	m_Lines.push_back(std::move(temp));
 
 	sf::Vector2f pos1 = basePos;
-	pos1.x += CONTAINER_WIDTH;
+	pos1.x += containerWidth;
 	start = pos1;
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
+	start.x /= pixelToMeter;
+	start.y /= pixelToMeter;
 	start.y *= -1;
-	end = sf::Vector2f(start.x, (-(pos1.y + CONTAINER_HEIGHT) / PIXEL_TO_METER));
+	end = sf::Vector2f(start.x, (-(pos1.y + containerHeight) / pixelToMeter));
 	temp = std::make_unique<LineObject>(start, end);
 	m_Lines.push_back(std::move(temp));
 
 	sf::Vector2f pos2 = basePos;
-	pos2.y += CONTAINER_HEIGHT;
+	pos2.y += containerHeight;
 	start = pos2;
-	start.x /= PIXEL_TO_METER;
-	start.y /= PIXEL_TO_METER;
+	start.x /= pixelToMeter;
+	start.y /= pixelToMeter;
 	start.y *= -1;
-	end = sf::Vector2f((pos2.x + CONTAINER_WIDTH) / PIXEL_TO_METER, start.y);
+	end = sf::Vector2f((pos2.x + containerWidth) / pixelToMeter, start.y);
 	temp = std::make_unique<LineObject>(start, end);
 	m_Lines.push_back(std::move(temp));
 
-	sf::Vector2f start1 = sf::Vector2f((static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f), ((static_cast<float>(WINDOW_HEIGHT) - CONTAINER_HEIGHT) / 2.f));
-	start1.y /= PIXEL_TO_METER;
-	start1.x /= PIXEL_TO_METER;
+	sf::Vector2f start1 = sf::Vector2f((Settings::get().GetWindowWidth() / 2.f) - containerWidth / 2.f, ((Settings::get().GetWindowHeight() -
+							containerHeight) / 2.f));
+	start1.y /= pixelToMeter;
+	start1.x /= pixelToMeter;
 	start1.y *= -1;
-	sf::Vector2f end1 = sf::Vector2f(start1.x + (CONTAINER_WIDTH / PIXEL_TO_METER), start1.y);
+	sf::Vector2f end1 = sf::Vector2f(start1.x + (containerWidth / pixelToMeter), start1.y);
 	temp = std::make_unique<LineObject>(start1, end1);
 	m_TopLine = std::move(temp);
 }

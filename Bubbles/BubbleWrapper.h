@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
-#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
 #include "NailObject.h"
+#include "Settings.h"
 
 class BubbleWrapper
 {
@@ -20,8 +20,8 @@ public:
 		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
 			sf::Vector2f position = m_GameObjects[i]->GetPosition();
-			position.x *= PIXEL_TO_METER;
-			position.y *= PIXEL_TO_METER;
+			position.x *= Settings::get().GetPixelToMeter();
+			position.y *= Settings::get().GetPixelToMeter();
 			position.y *= -1;
 			m_Rendered[i]->SetPosition(position);
 			m_Rendered[i]->SetRotation(m_GameObjects[i]->GetRotation() * 57.2957795f);

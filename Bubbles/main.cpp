@@ -1,10 +1,8 @@
-#include <SFML/Graphics.hpp>
-
 #include "BubbleGame.h"
-#include "Save.h"
 
 int main()
 {
+    Settings::get().LoadSettings();
     std::unique_ptr<BubbleGame>  bubble_game = std::make_unique<BubbleGame>();
 
     bubble_game->Initialize();

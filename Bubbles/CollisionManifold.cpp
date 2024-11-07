@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "BubbleMath.h"
+
 CollisionManifold::CollisionManifold(GameObject* a_First, GameObject* a_Second)
 {
     m_Penetration = 0;

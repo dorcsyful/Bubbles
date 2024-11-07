@@ -1,12 +1,8 @@
 #pragma once
 #include <chrono>
-#include <iostream>
 #include <memory>
-#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
 
-#include <SFML/Graphics/RenderTarget.hpp>
 class AnimatedSprite : public sf::Drawable
 {
 public:

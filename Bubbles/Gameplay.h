@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "BubbleObject.h"
+#include "Settings.h"
 
 class Gameplay
 {
@@ -14,8 +15,8 @@ public:
 		srand(static_cast<unsigned int>(currentTime));
 		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 		m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-		m_ContainerEdges[0] = (static_cast<float>(WINDOW_WIDTH) / 2.f) - (CONTAINER_WIDTH / 2.f);
-		m_ContainerEdges[1] = m_ContainerEdges[0] + CONTAINER_WIDTH;
+		m_ContainerEdges[0] = (Settings::get().GetWindowWidth() / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
+		m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 		Move(0);
 		m_Score = 0;
 		m_CombineCombo = 0;

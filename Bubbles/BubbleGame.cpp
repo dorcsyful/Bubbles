@@ -10,7 +10,7 @@ void BubbleGame::Initialize()
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 
 	m_State = EGAME_STATE::STATE_MENU;
-	m_Rendering = std::make_unique<Rendering>(WINDOW_WIDTH, WINDOW_HEIGHT, m_Wrapper->GetRendered());
+	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects());
 	m_Save = std::make_unique<Save>();
@@ -37,7 +37,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	}
 
 	m_Rendering->UpdateScore(m_Gameplay->GetScore());
-	m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * COMBINE_SCORE_EXTRA);
+	m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * Settings::get().GetComboScore());
 	m_Wrapper->Update();
 
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
@@ -52,7 +52,7 @@ void BubbleGame::RestartGame()
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, 0.2f, false);
-	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, LOADING_TIME, false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, Settings::get().GetLoadTime(), false);
 }
 
 void BubbleGame::Update()
@@ -108,8 +108,8 @@ void BubbleGame::Update()
 void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 {
 	sf::Vector2f temp = a_NewBubble->GetPosition();
-	temp.x *= PIXEL_TO_METER;
-	temp.y *= PIXEL_TO_METER;
+	temp.x *= Settings::get().GetPixelToMeter();
+	temp.y *= Settings::get().GetPixelToMeter();
 	temp.y *= -1.f;
 	std::unique_ptr<AnimatedSprite> newRendered;
 	m_Rendering->CreateSprite(a_NewBubble->GetBubbleType(), temp, 0, newRendered);
@@ -119,7 +119,7 @@ void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 void BubbleGame::AddBubble() const
 {
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
-	start.x /= PIXEL_TO_METER;
+	start.x /= Settings::get().GetPixelToMeter();
 	start.y = m_Physics->GetTopLineHeight();
 	std::unique_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
 	CreateWrapper(newBubble);
@@ -132,7 +132,7 @@ void BubbleGame::GameOver()
 	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
-	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, GAME_OVER_ANIMATION_TOTAL_TIME / m_Wrapper->GetNumOfObjects(), true);
+	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, Settings::get().GameOverAnimTime() / m_Wrapper->GetNumOfObjects(), true);
 }
 
 void BubbleGame::RemoveAtEnd()
@@ -163,7 +163,7 @@ void BubbleGame::MenuInput()
 	if (buttons.at("Play")->DetectClick(mousePosition))
 	{
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, 0.5f, false);
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, LOADING_TIME, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, Settings::get().GetLoadTime(), false);
 	}
 	if (buttons.at("High_Score")->DetectClick(mousePosition))
 	{
