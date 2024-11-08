@@ -380,9 +380,9 @@ void Rendering::CreateHighScoreSprites()
 		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
 		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
 
-		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(Settings::get().GetHighScoreItemWidth(), Settings::get().GetHighScoreItemWidth()),
+		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(Settings::get().GetHighScoreItemWidth(), Settings::get().GetHighScoreItemHeight()),
 							basePos, textColor,shapeColor);
-		basePos.y += Settings::get().GetHighScoreItemWidth();
+		basePos.y += Settings::get().GetHighScoreItemHeight();
 	}
 
 	sf::Vector2f buttonTextureSize = sf::Vector2f(static_cast<float>(m_BaseButtonTexture->getSize().x), static_cast<float>(m_BaseButtonTexture->getSize().y));
