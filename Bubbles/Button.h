@@ -14,6 +14,7 @@ public:
     void SetScale(const sf::Vector2f& a_Scale) { m_Shape->setScale(a_Scale), m_Text->setScale(a_Scale); }
     void ApplyBaseTexture() const { m_Shape->setTexture(*m_BaseBackGround); }
     bool DetectClick(const sf::Vector2f& a_MousePosition);
+    void ResizeCharacters(unsigned int a_Size);
 
 private:
 	void draw(sf::RenderTarget& a_Target, const sf::RenderStates a_States) const override

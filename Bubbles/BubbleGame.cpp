@@ -169,6 +169,11 @@ void BubbleGame::MenuInput()
 	{
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, 0.5f, false);
 	}
+
+	if (buttons.at("Exit")->DetectClick(mousePosition))
+	{
+		CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, 0.5f, false);
+	}
 }
 
 void BubbleGame::GameOverAnimationInput()

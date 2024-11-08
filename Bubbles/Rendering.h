@@ -30,7 +30,7 @@ public:
 	void ResetButtons() const;
 
 	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score)); }
-	void UpdateHighScores(const std::vector<unsigned int>& a_Scores);
+	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo)
 	{
 		if (a_Combo > 1)
