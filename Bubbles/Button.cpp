@@ -2,6 +2,7 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "Audio.h"
 #include "Helpers.h"
 
 Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture)
@@ -40,6 +41,7 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 	if(!m_IsClicked && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
 		m_Shape->setTexture(*m_ClickedBackground);
+		Audio::getInstance().PlayClick();
 		CallAfterDelay::getInstance().AddFunction([this](){DisableClicked();}, 0.5f, false);
 		return true;
 	}

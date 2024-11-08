@@ -5,6 +5,8 @@
 #include "Helpers.h"
 #include <chrono>
 
+#include "Audio.h"
+
 void BubbleGame::Initialize()
 {
 	m_Wrapper = std::make_unique<BubbleWrapper>();
@@ -132,6 +134,7 @@ void BubbleGame::GameOver()
 	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
+	Audio::getInstance().PlaySadGameOver();
 	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, Settings::get().GameOverAnimTime() / m_Wrapper->GetNumOfObjects(), true);
 }
 
@@ -151,6 +154,8 @@ void BubbleGame::PlayInput(float a_Delta) const
 {
 	if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 	{
+		Audio::getInstance().PlayBubbleDrop();
+
 		m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
 		AddBubble();
 	}

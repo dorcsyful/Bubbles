@@ -26,6 +26,11 @@
 
 #define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
 
+#define AUDIO_BUBBLE_DROP "Assets/Audio/Drop.wav"
+#define AUDIO_BACKGROUND_MUSIC "Assets/Audio/Background.wav"
+#define AUDIO_CLICK "Assets/Audio/Click.wav"
+#define AUDIO_SAD_GAME_OVER "Assets/Audio/SadGameOver.wav"
+
 //Gameplay
 #define GRAVITY (-9.81f)
 
@@ -43,7 +48,8 @@ enum class EGAME_STATE
 	STATE_MENU,
 	STATE_LOADING,
 	STATE_HIGH_SCORE,
-	STATE_EXIT_CONFIRM
+	STATE_EXIT_CONFIRM,
+	STATE_SETTINGS
 };
 
 enum class EOBJECT_TYPE

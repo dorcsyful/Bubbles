@@ -163,7 +163,7 @@ void Rendering::LoadBackground()
 
 	if (!m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME))
 	{
-		throw std::exception("Failed to load background texture");
+		//throw std::exception("Failed to load background texture");
 	}
 	m_BackgroundTexture->setRepeated(true);
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
@@ -177,7 +177,7 @@ void Rendering::LoadBackground()
 	m_ContainerTexture = std::make_unique<sf::Texture>();
 	if(!m_ContainerTexture->loadFromFile(CONTAINER_FILENAME))
 	{
-		throw std::exception("Failed to load container texture");
+		//throw std::exception("Failed to load container texture");
 	}
 	m_ContainerTexture->setRepeated(true);
 	m_Container = std::make_unique<sf::RectangleShape>();

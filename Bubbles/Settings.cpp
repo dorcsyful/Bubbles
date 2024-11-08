@@ -39,6 +39,8 @@ void Settings::LoadSettings()
                 m_HighScoreItemHeight = stof(value);
             if (name == "SIZES")
                 LoadBubbleSizes(value);
+            if (name == "COMBO_EXTRA_SCORE")
+                m_ComboScore = stoi(value);
         }
         file.close();
     }
