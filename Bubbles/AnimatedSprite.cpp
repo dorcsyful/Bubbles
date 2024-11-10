@@ -7,6 +7,7 @@ AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, 
 	m_CurrentFrame(0),
 	m_FrameCount(a_FrameCount)
 {
+	m_FrameTime /= m_FrameCount;
 	m_Sprite = std::make_unique<sf::Sprite>(*m_Texture);
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;

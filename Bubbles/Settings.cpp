@@ -41,6 +41,10 @@ void Settings::LoadSettings()
                 LoadBubbleSizes(value);
             if (name == "COMBO_EXTRA_SCORE")
                 m_ComboScore = stoi(value);
+            if (name == "GAME_OVER_ANIMATION_TOTAL_TIME")
+                m_GameOverAnimationTime = stoi(value);
+            if (name == "BUBBLE_ANIMATION_TOTAL_TIME")
+                m_BubbleAnimationTotalTime = stof(value);
         }
         file.close();
     }

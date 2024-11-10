@@ -26,6 +26,7 @@ public:
     [[nodiscard]] unsigned int GetLoadingFrames() const { return m_LoadingFrames; }
     [[nodiscard]] unsigned int GetBubbleFrames() const { return m_BubbleFrameNumber; }
     [[nodiscard]] unsigned int GameOverAnimTime() const { return m_GameOverAnimationTime; }
+    [[nodiscard]] float GetBubbleAnimationTotalTime() const { return m_BubbleAnimationTotalTime; }
 
     [[nodiscard]] unsigned int GetAddedScore() const { return m_AddedScore; }
     [[nodiscard]] unsigned int GetComboScore() const { return m_ComboScore; }
@@ -49,7 +50,7 @@ private:
     unsigned int m_LoadingFrames = 0;
 
     unsigned int m_BubbleFrameNumber = 0;
-
+    float m_BubbleAnimationTotalTime = 0;
     unsigned m_GameOverAnimationTime = 0;
 
     unsigned int m_AddedScore = 0;

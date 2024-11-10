@@ -52,7 +52,7 @@ void Rendering::GameOverAnimationDraw() const
 	m_Window->draw(*m_Container);
 	for (auto& element : m_RenderedBubbles)
 	{
-		//element->UpdateFrameByTime();
+		element->UpdateFrameByTime();
 		m_Window->draw(*element);
 	}
 
@@ -104,10 +104,10 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 
 void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
 {
-	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),Settings::get().GetBubbleFrames(),4);
+	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),Settings::get().GetBubbleAnimationTotalTime() , Settings::get().GetBubbleFrames());
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
-	size.x /= 4;
+	size.x /= Settings::get().GetBubbleFrames();
 	float pixelToMeter = Settings::get().GetPixelToMeter();
 	float factorX = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.x;
 	float factorY = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.y;
@@ -277,6 +277,7 @@ void Rendering::CreateGameOverSprite()
 	basePos.y += m_GameOver->getSize().y;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton->SetText("Play again");
+	newButton->ResizeCharacters(50);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
 }

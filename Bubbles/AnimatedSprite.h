@@ -16,6 +16,8 @@ public:
 
 	void SetRotation(const float a_Rotation) const { m_Sprite->setRotation(a_Rotation); }
 
+	void SetTotalTime(float a_Time) { m_FrameTime = a_Time; }
+
 	sf::Sprite* GetSprite() const { return m_Sprite.get(); }
 	sf::Vector2f GetPosition() const { return m_Sprite->getPosition(); }
 

@@ -135,19 +135,13 @@ void BubbleGame::GameOver()
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
 	Audio::getInstance().PlaySadGameOver();
-	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, Settings::get().GameOverAnimTime() / m_Wrapper->GetNumOfObjects(), true);
+
+	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, Settings::get().GameOverAnimTime(), false);
 }
 
 void BubbleGame::RemoveAtEnd()
 {
-	if(m_Wrapper->GetNumOfObjects() == 0)
-	{
-		CallAfterDelay::getInstance().RemoveFunction([this](){RemoveAtEnd();});
 		m_State = EGAME_STATE::STATE_GAME_OVER;
-		return;
-	}
-	size_t index = rand() % m_Wrapper->GetNumOfObjects();
-	m_Wrapper->RemoveObjectByIndex(index);
 }
 
 void BubbleGame::PlayInput(float a_Delta) const
