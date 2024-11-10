@@ -2,6 +2,7 @@
 #include <memory>
 #include <SFML/Audio.hpp>
 
+#include "Declarations.h"
 #include "Helpers.h"
 
 class Audio
@@ -15,11 +16,15 @@ public:
 	void Initialize();
 	void PlayClick() const { m_Click->play(); }
 	void PlayBubbleDrop() const { m_BubbleDrop->play(); }
+	void PlayBackgroundMusic() const
+	{
+		m_BackgroundMusic->play();
+	}
 	void PlaySadGameOver() const
 	{
 		m_BackgroundMusic->pause();
-		m_SadGameOver->play();
-		CallAfterDelay::getInstance().AddFunction([this] {m_BackgroundMusic->play(); }, m_SadGameOverBuffer->getDuration().asSeconds(), false);
+		m_SadGameOver->play();	
+		CallAfterDelay::getInstance().AddFunction([this]() {PlayBackgroundMusic(); }, 4, false);
 	}
 
 private:

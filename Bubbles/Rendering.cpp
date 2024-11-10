@@ -303,26 +303,27 @@ void Rendering::CreateMenuButtonSprites()
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton->SetText("Play");
-	newButton->ResizeCharacters(60);
-	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play",std::move(newButton)));
+	newButton->ResizeCharacters(50);
+
+	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play", std::move(newButton)));
 
 	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
 	std::unique_ptr<Button> newButton1 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton1->SetText("High Scores");
-	newButton1->ResizeCharacters(45);
+	newButton1->ResizeCharacters(50);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton1)));
 
 	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
 	std::unique_ptr<Button> newButton3 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton3->SetText("Settings");
-	newButton3->ResizeCharacters(45);
+	newButton3->ResizeCharacters(50);
+
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton3)));
 
 	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
 	std::unique_ptr<Button> newButton2 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get(), m_ClickedButtonTexture.get());
 	newButton2->SetText("Exit");
-	newButton2->ResizeCharacters(60);
-
+	newButton2->ResizeCharacters(50);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Exit", std::move(newButton2)));
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();

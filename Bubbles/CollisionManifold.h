@@ -21,7 +21,7 @@ public:
 
 	void FixFinalPenetrations() const
 	{
-		const float k_slop = 0.05f; // Penetration allowance
+		const float k_slop = 0.001f; // Penetration allowance
 		const float percent = 0.5f; // Penetration percentage to correct
 
 		sf::Vector2f correction = (std::max(m_Penetration - k_slop, 0.0f) / (m_Objects[0]->GetInverseMass() + m_Objects[1]->GetInverseMass())) * m_Normal * percent;

@@ -14,7 +14,7 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 	m_ClickedBackground = a_ClickedTexture;
 
 	m_Shape->setTexture(*m_BaseBackGround);
-	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 2.f, static_cast<float>(m_BaseBackGround->getSize().y) / 2.f);
+	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 2, static_cast<float>(m_BaseBackGround->getSize().y) / 2);
 	m_Shape->setPosition(a_Position);
 
 
@@ -22,18 +22,13 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 	m_Text->setCharacterSize(50);
 	m_Text->setFillColor(sf::Color::Black);
 	m_Text->setStyle(sf::Text::Bold);
+	m_Text->setPosition(a_Position);
+
 }
 
-void Button::SetText(const std::string& a_Text)
+void Button::SetText(const std::string& a_Text) const
 {
 	m_Text->setString(a_Text);
-
-	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
-
-	sf::Vector2f position = m_Shape->getPosition();
-	position.y -= 10;
-	m_Text->setPosition(position);
-
 }
 
 bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
@@ -49,13 +44,13 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 	return false;
 }
 
-void Button::ResizeCharacters(unsigned int a_Size)
+void Button::ResizeCharacters(unsigned int a_Size) const
 {
 	m_Text->setCharacterSize(a_Size);
-	m_Text->setOrigin(m_Text->getLocalBounds().getSize() / 2.f);
+	m_Text->setOrigin(m_Text->getGlobalBounds().getSize() / 2.f + m_Text->getLocalBounds().getPosition());
 
-	sf::Vector2f position = m_Shape->getPosition();
-	position.y -= 10;
-	m_Text->setPosition(position);
+
+	m_Text->setPosition(m_Shape->getPosition());
+
 
 }

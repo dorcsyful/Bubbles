@@ -15,7 +15,7 @@
 #define TITLE_FILENAME "Assets/Menu/Title.png"
 #define BUTTON_FILENAME "Assets/Menu/Button_Base.png"
 #define BUTTON_CLICKED_FILENAME "Assets/Menu/Button_Clicked.png"
-#define FONT_FILENAME "Assets/Menu/Fonts/comic.ttf"
+#define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
