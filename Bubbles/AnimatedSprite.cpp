@@ -45,6 +45,7 @@ bool AnimatedSprite::IsAnimFinished() const
 {
 	if (m_IsLooping) return false;
 	if(m_CurrentFrame == m_FrameCount) return true;
+	return false;
 }
 
 void AnimatedSprite::Draw(sf::RenderTarget& a_Target)
