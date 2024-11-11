@@ -22,9 +22,8 @@ public:
 	}
 	void PlaySadGameOver() const
 	{
-		m_BackgroundMusic->pause();
+		m_BackgroundMusic->stop();
 		m_SadGameOver->play();	
-		CallAfterDelay::getInstance().AddFunction([this]() {PlayBackgroundMusic(); }, 4, false);
 	}
 
 private:

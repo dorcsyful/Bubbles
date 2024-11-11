@@ -11,7 +11,6 @@ void BubbleGame::Initialize()
 {
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 
-	m_State = EGAME_STATE::STATE_MENU;
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects());
@@ -20,6 +19,7 @@ void BubbleGame::Initialize()
 	m_Physics->CreateContainerLines();
 
 	m_Rendering->UpdateHighScores(m_Save->GetScores());
+	GameOver();
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)
@@ -53,8 +53,8 @@ void BubbleGame::RestartGame()
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
-	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, 0.2f, false);
-	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, Settings::get().GetLoadTime(), false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadState", 0.2f, false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 }
 
 void BubbleGame::Update()
@@ -73,7 +73,7 @@ void BubbleGame::Update()
 
 			if (m_State == EGAME_STATE::STATE_PLAY && event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
 			{
-				PlayInput(delta);
+				PlayInput();
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
@@ -92,7 +92,7 @@ void BubbleGame::Update()
 				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
 				if(m_Rendering->GetHSBackButton()->DetectClick(mousePosition))
 				{
-					CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, 0.2f, false);
+					CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"SetMenuState", 0.2f, false);
 				}
 			}
 		}
@@ -135,16 +135,31 @@ void BubbleGame::GameOver()
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
 	Audio::getInstance().PlaySadGameOver();
+	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;
 
-	CallAfterDelay::getInstance().AddFunction([this](){RemoveAtEnd();}, Settings::get().GameOverAnimTime(), false);
+	CallAfterDelay::getInstance().AddFunction([this](){ m_State = EGAME_STATE::STATE_GAME_OVER; }, "SetGameOverState", delay * m_Wrapper->GetNumOfObjects(), false);
+	CallAfterDelay::getInstance().AddFunction([this](){ RemoveAtEnd(); }, "RemoveBubbles" , delay, true);
+	CallAfterDelay::getInstance().AddFunction([this]() { Audio::getInstance().PlayBackgroundMusic(); }, "RestartBackgroundMusic", 4.f, false);
+
 }
 
 void BubbleGame::RemoveAtEnd()
 {
-		m_State = EGAME_STATE::STATE_GAME_OVER;
+	for(size_t i = 0; i < m_Wrapper->GetNumOfObjects(); i++)
+	{
+		AnimatedSprite* shapeByIndex = m_Wrapper->GetShapeByIndex(i);
+		if(!shapeByIndex->IsAnimated())
+		{
+			shapeByIndex->SetAnimate(true, false);
+			return;
+		}
+	}
+
+	CallAfterDelay::getInstance().RemoveFunction("SetGameOverState");
+	m_State = EGAME_STATE::STATE_GAME_OVER;
 }
 
-void BubbleGame::PlayInput(float a_Delta) const
+void BubbleGame::PlayInput() const
 {
 	if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 	{
@@ -161,23 +176,23 @@ void BubbleGame::MenuInput()
 	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
 	if (buttons.at("Play")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, 0.5f, false);
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, Settings::get().GetLoadTime(), false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.2f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 	}
 	if (buttons.at("High_Score")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, 0.5f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, "SetHighScoreState", 0.5f, false);
 	}
 
 	if (buttons.at("Exit")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, 0.5f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, "Exit", 0.5f, false);
 	}
 }
 
 void BubbleGame::GameOverAnimationInput()
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
 		m_State = EGAME_STATE::STATE_GAME_OVER;
 	}

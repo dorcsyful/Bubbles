@@ -25,7 +25,7 @@ public:
 private:
 	void PlayUpdate(float a_Delta);
 	void RestartGame();
-	void PlayInput(float a_Delta) const;
+	void PlayInput() const;
 	void MenuInput();
 	void GameOverAnimationInput();
 	void GameOverInput();

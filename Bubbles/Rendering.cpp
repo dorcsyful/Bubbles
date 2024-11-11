@@ -28,10 +28,10 @@ void Rendering::PlayDraw() const
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Line);
 
-	m_Window->draw(*m_PreviewBubbles.at(m_ActiveBubble));
+	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
-		m_Window->draw(*element);
+		element->Draw(*m_Window);
 	}
 	m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
@@ -52,8 +52,7 @@ void Rendering::GameOverAnimationDraw() const
 	m_Window->draw(*m_Container);
 	for (auto& element : m_RenderedBubbles)
 	{
-		element->UpdateFrameByTime();
-		m_Window->draw(*element);
+		element->Draw(*m_Window);
 	}
 
 	m_Window->draw(*m_GameOver);
@@ -82,8 +81,7 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
-		m_Window->draw(*m_Loading);
-		m_Loading->UpdateFrameByTime();
+		m_Loading->Draw(*m_Window);
 	}
 	if(a_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
 	{
@@ -329,7 +327,7 @@ void Rendering::CreateMenuButtonSprites()
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
-	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), Settings::get().GetLoadTime(), Settings::get().GetLoadingFrames());
+	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), Settings::get().GetLoadTime(), Settings::get().GetLoadingFrames(), true);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(m_LoadingTexture->getSize());
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));

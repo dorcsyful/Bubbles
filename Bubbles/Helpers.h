@@ -12,6 +12,7 @@ class CallAfterDelay {
 		{
 			return m_Id == a_Other.m_Id;
 		}
+		std::string m_Name;
 		int m_Id = 0;
 		bool m_IsRepeating = false;
 		double m_Delay = 0;
@@ -25,10 +26,11 @@ public:
         return instance;
     }
 
-    void AddFunction(const std::function<void()>& a_Function, float a_Delay, bool a_Repeating)
+    void AddFunction(const std::function<void()>& a_Function, std::string a_RefName, float a_Delay, bool a_Repeating)
     {
 	    FunctionData data;
 		data.m_IsRepeating = a_Repeating;
+		data.m_Name = a_RefName;
 		data.m_Function = a_Function;
 		data.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(a_Delay * 1000.f));
 		data.m_Delay = a_Delay;
@@ -50,18 +52,18 @@ public:
 	    {
 		    if (function.m_Id == a_Id)
 		    {
-			    m_Functions.erase(std::remove(m_Functions.begin(), m_Functions.end(), function), m_Functions.end());
+			    std::erase(m_Functions, function);
 		    }
 	    }
     }
 
-	void RemoveFunction(const std::function<void()>& a_Function)
+	void RemoveFunction(std::string a_Name)
 	{
 	    for (auto& function : m_Functions)
 	    {
-		    if ((function.m_Function).target<void()>() == (a_Function).target<void()>())
+			if (function.m_Name == a_Name)
 		    {
-			    m_Functions.erase(std::remove(m_Functions.begin(), m_Functions.end(), function), m_Functions.end());
+			    std::erase(m_Functions, function);
 		    }
 	    }
 	}
