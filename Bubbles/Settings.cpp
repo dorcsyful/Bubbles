@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "Audio.h"
+
 void Settings::LoadSettings()
 {
 	std::ifstream file("Assets/Settings.save");
@@ -45,6 +47,8 @@ void Settings::LoadSettings()
                 m_GameOverAnimationTime = stoi(value);
             if (name == "BUBBLE_ANIMATION_TOTAL_TIME")
                 m_BubbleAnimationTotalTime = stof(value);
+            if (name == "SOUND_ENABLED")
+                m_SoundEnabled = stoi(value);
         }
         file.close();
     }
@@ -66,4 +70,29 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
             temp += a_Length[i];
         }
     }
+}
+
+void Settings::SetSoundEnabled(bool a_Enabled)
+{
+    m_SoundEnabled = a_Enabled;
+    Audio::getInstance().SetAudioActive(a_Enabled);
+
+    std::string isEnabledAsString = a_Enabled ? "1" : "0";
+
+    std::vector<std::string> lines;
+    std::ifstream infile("Assets/Settings.save");
+    std::string line;
+    while (getline(infile, line)) {
+        lines.push_back(line);
+    }
+    infile.close();
+
+    // Modify the last line
+    lines.back() = "SOUND_ENABLED|" + isEnabledAsString;
+
+    std::ofstream outfile("Assets/Settings.save");
+    for (const std::string& nline : lines) {
+        outfile << nline << std::endl;
+    }
+    outfile.close();
 }

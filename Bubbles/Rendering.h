@@ -43,6 +43,7 @@ public:
 			m_ComboText->setString("");
 	}
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
+	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
 
 	void Reset();
 
@@ -66,6 +67,8 @@ private:
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
+	std::unique_ptr<sf::Texture> m_SoundTexture;
+	std::unique_ptr<sf::RectangleShape> m_SoundButton;
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
@@ -93,7 +96,6 @@ private:
 	std::unique_ptr<AnimatedSprite> m_Loading;
 	std::unique_ptr<sf::Texture> m_LoadingTexture;
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
-	std::unique_ptr<sf::Texture> m_ClickedButtonTexture;
 
 	//HighScore
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoreSprites;

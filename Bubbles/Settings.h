@@ -36,6 +36,9 @@ public:
 
     [[nodiscard]] float BubbleSize(const EBUBBLE_TYPE a_Type) const { return m_BubbleSizes.at(a_Type); }
 
+    [[nodiscard]] bool IsSoundEnabled() const { return m_SoundEnabled; }
+    void SetSoundEnabled(bool a_Enabled);
+
 private:
     float m_WindowWidth = 0;
     float m_WindowHeight = 0;
@@ -58,6 +61,7 @@ private:
 
     float m_HighScoreItemWidth = 0;
     float m_HighScoreItemHeight = 0;
+    bool m_SoundEnabled = true;
 
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
 };

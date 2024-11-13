@@ -13,8 +13,7 @@
 #define WHALE_FILENAME "Assets/Shapes/9.png"
 
 #define TITLE_FILENAME "Assets/Menu/Title.png"
-#define BUTTON_FILENAME "Assets/Menu/Button_Base.png"
-#define BUTTON_CLICKED_FILENAME "Assets/Menu/Button_Clicked.png"
+#define BUTTON_FILENAME "Assets/Menu/Button.png"
 #define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 
@@ -30,6 +29,8 @@
 #define AUDIO_BACKGROUND_MUSIC "Assets/Audio/Background.wav"
 #define AUDIO_CLICK "Assets/Audio/Click.wav"
 #define AUDIO_SAD_GAME_OVER "Assets/Audio/SadGameOver.wav"
+
+#define SOUND_FILENAME "Assets/Menu/Sound.png"
 
 //Gameplay
 #define GRAVITY (-9.81f)

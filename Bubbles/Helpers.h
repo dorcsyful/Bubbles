@@ -2,6 +2,7 @@
 #define CALL_AFTER_DELAY_H
 
 #include <functional>
+#include <utility>
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -10,10 +11,9 @@ class CallAfterDelay {
     struct FunctionData {
 		bool operator==(const FunctionData& a_Other) const
 		{
-			return m_Id == a_Other.m_Id;
+			return m_Name == a_Other.m_Name;
 		}
 		std::string m_Name;
-		int m_Id = 0;
 		bool m_IsRepeating = false;
 		double m_Delay = 0;
 		std::function<void()> m_Function;
@@ -30,34 +30,15 @@ public:
     {
 	    FunctionData data;
 		data.m_IsRepeating = a_Repeating;
-		data.m_Name = a_RefName;
-		data.m_Function = a_Function;
+		data.m_Name = std::move(a_RefName);
+	    data.m_Function = a_Function;
 		data.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(a_Delay * 1000.f));
 		data.m_Delay = a_Delay;
 		int temp = rand();
-		for(size_t i = 0; i < m_Functions.size(); i++)
-		{
-			if(m_Functions[i].m_Id == temp)
-			{
-				temp = rand();
-				i = 0;
-			}
-		}
 		m_Functions.push_back(data);
     }
 
-	void RemoveFunction(int a_Id)
-    {
-	    for (auto& function : m_Functions)
-	    {
-		    if (function.m_Id == a_Id)
-		    {
-			    std::erase(m_Functions, function);
-		    }
-	    }
-    }
-
-	void RemoveFunction(std::string a_Name)
+	void RemoveFunction(const std::string& a_Name)
 	{
 	    for (auto& function : m_Functions)
 	    {
@@ -87,7 +68,8 @@ public:
 	    }
 		for (auto& function : markedForDelete)
 		{
-			m_Functions.erase(std::find(m_Functions.begin(),m_Functions.end(), function));
+			auto functionData = std::ranges::find(m_Functions, function);
+			m_Functions.erase(functionData);
 		}
 	
     }

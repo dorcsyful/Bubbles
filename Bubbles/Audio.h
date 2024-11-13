@@ -25,16 +25,28 @@ public:
 		m_BackgroundMusic->stop();
 		m_SadGameOver->play();	
 	}
+	void SetAudioActive(const bool a_Enabled)
+	{
+		float newVolume = a_Enabled ? 100 : 0;
+		m_Click->setVolume(newVolume);
+		m_BubbleDrop->setVolume(newVolume);
+		m_BackgroundMusic->setVolume(newVolume);
+		m_SadGameOver->setVolume(newVolume);
+		m_Enabled = a_Enabled;
+	}
+
+	bool IsAudioEnabled() const { return m_Enabled; }
 
 private:
 
+	bool m_Enabled = true;
 	std::unique_ptr<sf::Sound> m_Click;
 	std::unique_ptr<sf::Sound> m_BubbleDrop;
 	std::unique_ptr<sf::Sound> m_SadGameOver;
+	std::unique_ptr<sf::Music> m_BackgroundMusic;
 
 	std::unique_ptr<sf::SoundBuffer> m_ClickBuffer;
 	std::unique_ptr<sf::SoundBuffer> m_BubbleDropBuffer;
 	std::unique_ptr<sf::SoundBuffer> m_SadGameOverBuffer;
-	std::unique_ptr<sf::Music> m_BackgroundMusic;
 };
 

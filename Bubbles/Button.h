@@ -9,11 +9,12 @@
 class Button : public sf::Drawable
 {
 public:
-    Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture);
+    Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture);
     void SetText(const std::string& a_Text) const;
     void SetScale(const sf::Vector2f& a_Scale) { m_Shape->setScale(a_Scale), m_Text->setScale(a_Scale); }
     void ApplyBaseTexture() const { m_Shape->setTexture(*m_BaseBackGround); }
     bool DetectClick(const sf::Vector2f& a_MousePosition);
+    void DetectHover(const sf::Vector2f& a_MousePosition) const;
     void ResizeCharacters(unsigned int a_Size) const;
 
 private:
@@ -24,12 +25,8 @@ private:
         a_Target.draw(*m_Text, a_States);
     }
 
-    void DisableClicked()
-	{
-		m_IsClicked = false; m_Shape->setTexture(*m_BaseBackGround);
-	}
+    void DisableClicked();
 	sf::Texture* m_BaseBackGround;
-    sf::Texture* m_ClickedBackground;
     std::unique_ptr<sf::Text> m_Text;
     std::unique_ptr<sf::Sprite> m_Shape;
 

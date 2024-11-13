@@ -9,7 +9,9 @@
 
 void BubbleGame::Initialize()
 {
+	m_State = EGAME_STATE::STATE_GAME_OVER;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
+	Settings::get().SetSoundEnabled(Settings::get().IsSoundEnabled());
 
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
@@ -19,7 +21,6 @@ void BubbleGame::Initialize()
 	m_Physics->CreateContainerLines();
 
 	m_Rendering->UpdateHighScores(m_Save->GetScores());
-	GameOver();
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)
@@ -70,6 +71,17 @@ void BubbleGame::Update()
 
 			if (event.type == sf::Event::Closed)
 				m_Rendering->GetWindow()->close();
+
+			if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && 
+				m_Rendering->GetSoundButton()->getGlobalBounds().contains(
+					m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()))))
+			{
+				Settings::get().SetSoundEnabled(!Audio::getInstance().IsAudioEnabled());
+				sf::Vector2i size = static_cast<sf::Vector2i>(m_Rendering->GetSoundButton()->getTexture()->getSize());
+				int left = Audio::getInstance().IsAudioEnabled() ? 0 : size.x/2;
+				m_Rendering->GetSoundButton()->setTextureRect(sf::IntRect(left, 0, size.x /2, size.y));
+
+			}
 
 			if (m_State == EGAME_STATE::STATE_PLAY && event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
 			{
@@ -137,7 +149,8 @@ void BubbleGame::GameOver()
 	Audio::getInstance().PlaySadGameOver();
 	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;
 
-	CallAfterDelay::getInstance().AddFunction([this](){ m_State = EGAME_STATE::STATE_GAME_OVER; }, "SetGameOverState", delay * m_Wrapper->GetNumOfObjects(), false);
+	CallAfterDelay::getInstance().AddFunction([this](){ m_State = EGAME_STATE::STATE_GAME_OVER; CallAfterDelay::getInstance().RemoveFunction("RemoveBubbles"); }, "SetGameOverState", 
+																delay * static_cast<float>(m_Wrapper->GetNumOfObjects()), false);
 	CallAfterDelay::getInstance().AddFunction([this](){ RemoveAtEnd(); }, "RemoveBubbles" , delay, true);
 	CallAfterDelay::getInstance().AddFunction([this]() { Audio::getInstance().PlayBackgroundMusic(); }, "RestartBackgroundMusic", 4.f, false);
 
@@ -156,6 +169,7 @@ void BubbleGame::RemoveAtEnd()
 	}
 
 	CallAfterDelay::getInstance().RemoveFunction("SetGameOverState");
+	CallAfterDelay::getInstance().RemoveFunction("RemoveBubbles");
 	m_State = EGAME_STATE::STATE_GAME_OVER;
 }
 
@@ -200,8 +214,19 @@ void BubbleGame::GameOverAnimationInput()
 
 void BubbleGame::GameOverInput()
 {
-	if (sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow())); m_Rendering->GetMenuButtons().at("PlayAgain")->DetectClick(mousePosition))
+	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+	if ( m_Rendering->GetMenuButtons().at("PlayAgain")->DetectClick(mousePosition))
 	{
 		RestartGame();
+	}
+	if(m_Rendering->GetMenuButtons().at("BackToMenu")->DetectClick(mousePosition))
+	{
+		m_Gameplay->Reset();
+		m_Physics->Reset();
+		m_Rendering->Reset();
+		m_Wrapper->Clear();
+
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
+
 	}
 }

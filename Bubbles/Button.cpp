@@ -4,17 +4,18 @@
 
 #include "Audio.h"
 #include "Helpers.h"
+#include "Settings.h"
 
-Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture, sf::Texture* a_ClickedTexture)
+Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture)
 {
 	m_Text = std::make_unique<sf::Text>();
 	m_Shape = std::make_unique<sf::Sprite>();
 
 	m_BaseBackGround = a_BaseTexture;
-	m_ClickedBackground = a_ClickedTexture;
 
 	m_Shape->setTexture(*m_BaseBackGround);
-	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 2, static_cast<float>(m_BaseBackGround->getSize().y) / 2);
+	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 6 , static_cast<float>(m_BaseBackGround->getSize().y) / 2);
 	m_Shape->setPosition(a_Position);
 
 
@@ -35,13 +36,26 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 {
 	if(!m_IsClicked && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
-		m_Shape->setTexture(*m_ClickedBackground);
 		Audio::getInstance().PlayClick();
-		CallAfterDelay::getInstance().AddFunction([this](){DisableClicked();},"DisableClicked", 0.5f, false);
+		m_Shape->setTextureRect(sf::IntRect(m_BaseBackGround->getSize().x / 3 * 2, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+		CallAfterDelay::getInstance().AddFunction([this]() { DisableClicked(); }, "DisableClicked", Settings::get().GetLoadTime() / 2.f, false);
+
+		m_IsClicked = true;
 		return true;
 	}
 	m_Shape->setTexture(*m_BaseBackGround);
 	return false;
+}
+
+void Button::DetectHover(const sf::Vector2f& a_MousePosition) const
+{
+	if (m_IsClicked) return;
+	if(m_Shape->getGlobalBounds().contains(a_MousePosition))
+	{
+		m_Shape->setTextureRect(sf::IntRect(m_BaseBackGround->getSize().x / 3, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+		return;
+	}
+	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
 }
 
 void Button::ResizeCharacters(unsigned int a_Size) const
@@ -51,6 +65,10 @@ void Button::ResizeCharacters(unsigned int a_Size) const
 
 
 	m_Text->setPosition(m_Shape->getPosition());
+}
 
-
+void Button::DisableClicked()
+{
+	m_IsClicked = false;
+	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
 }
