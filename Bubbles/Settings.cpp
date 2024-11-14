@@ -49,6 +49,8 @@ void Settings::LoadSettings()
                 m_BubbleAnimationTotalTime = stof(value);
             if (name == "SOUND_ENABLED")
                 m_SoundEnabled = stoi(value);
+            if (name == "ANTI_ALIASING")
+                m_AntiAliasingLevel = stoi(value);
         }
         file.close();
     }

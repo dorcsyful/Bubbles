@@ -9,7 +9,7 @@
 
 void BubbleGame::Initialize()
 {
-	m_State = EGAME_STATE::STATE_GAME_OVER;
+	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Settings::get().SetSoundEnabled(Settings::get().IsSoundEnabled());
 
@@ -54,7 +54,7 @@ void BubbleGame::RestartGame()
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
-	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadState", 0.2f, false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadState", 0.1f, false);
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 }
 
@@ -80,7 +80,6 @@ void BubbleGame::Update()
 				sf::Vector2i size = static_cast<sf::Vector2i>(m_Rendering->GetSoundButton()->getTexture()->getSize());
 				int left = Audio::getInstance().IsAudioEnabled() ? 0 : size.x/2;
 				m_Rendering->GetSoundButton()->setTextureRect(sf::IntRect(left, 0, size.x /2, size.y));
-
 			}
 
 			if (m_State == EGAME_STATE::STATE_PLAY && event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
@@ -190,12 +189,12 @@ void BubbleGame::MenuInput()
 	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
 	if (buttons.at("Play")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.2f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 	}
 	if (buttons.at("High_Score")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, "SetHighScoreState", 0.5f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, "SetHighScoreState", 0.1f, false);
 	}
 
 	if (buttons.at("Exit")->DetectClick(mousePosition))

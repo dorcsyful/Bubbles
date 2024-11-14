@@ -38,7 +38,7 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 	{
 		Audio::getInstance().PlayClick();
 		m_Shape->setTextureRect(sf::IntRect(m_BaseBackGround->getSize().x / 3 * 2, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
-		CallAfterDelay::getInstance().AddFunction([this]() { DisableClicked(); }, "DisableClicked", Settings::get().GetLoadTime() / 2.f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { DisableClicked(); }, "DisableClicked", 0.1f, false);
 
 		m_IsClicked = true;
 		return true;

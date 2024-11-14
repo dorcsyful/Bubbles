@@ -12,9 +12,12 @@
 Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper):
 	m_RenderedBubbles(a_Wrapper)
 {
+	sf::ContextSettings context;
+	context.antialiasingLevel = Settings::get().GetAaLevel();
 	m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(a_X, a_Y), "Bubbles!",
-	                                              sf::Style::Titlebar | sf::Style::Close);
+	                                              sf::Style::Titlebar | sf::Style::Close, context);
 	m_Window->setSize(sf::Vector2u(a_X, a_Y));
+
 	LoadBackground();
 	LoadBubbleTextures();
 	CreatePointer();
@@ -46,11 +49,14 @@ void Rendering::MenuDraw() const
 	m_MenuButtons.at("High_Score")->DetectHover(mousePosition);
 	m_MenuButtons.at("Settings")->DetectHover(mousePosition);
 	m_MenuButtons.at("Exit")->DetectHover(mousePosition);
+	m_MenuButtons.at("How to play")->DetectHover(mousePosition);
 
 	m_Window->draw(*m_MenuButtons.at("Play"));
 	m_Window->draw(*m_MenuButtons.at("High_Score"));
 	m_Window->draw(*m_MenuButtons.at("Settings"));
 	m_Window->draw(*m_MenuButtons.at("Exit"));
+	m_Window->draw(*m_MenuButtons.at("How to play"));
+
 }
 
 void Rendering::GameOverAnimationDraw() const
@@ -240,7 +246,7 @@ void Rendering::LoadBubbleTextures()
 
 	for (auto& current : m_BubbleTextures)
 	{
-		current.second->setSmooth(true);
+		current.second->setSmooth(false);
 	}
 }
 
@@ -271,7 +277,7 @@ void Rendering::CreateTitleSprite()
 	m_Title->setTexture(m_TitleTexture.get());
 	m_Title->setSize(titleTextureSize);
 	m_Title->setOrigin(titleTextureSize.x / 2.f, titleTextureSize.y / 2.f);
-	sf::Vector2f basePos = sf::Vector2f(static_cast<float>(m_Window->getSize().x) / 2.f, static_cast<float>(m_Window->getSize().y) - (Settings::get().GetContainerHeight()*1.3f));
+	sf::Vector2f basePos = sf::Vector2f(static_cast<float>(m_Window->getSize().x) / 2.f, static_cast<float>(m_Window->getSize().y) - (Settings::get().GetContainerHeight()));
 	m_Title->setPosition(basePos);
 }
 
@@ -317,35 +323,47 @@ void Rendering::CreateMenuButtonSprites()
 
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 	basePos.y += m_Title->getSize().y + 10;
+	basePos.x -= m_Title->getSize().x / 4;
 	m_BaseButtonTexture = std::make_unique<sf::Texture>();
 	m_BaseButtonTexture->loadFromFile(BUTTON_FILENAME);
-
 	m_MenuButtons = std::map<std::string, std::unique_ptr<Button>>();
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play");
-	newButton->ResizeCharacters(50);
-
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
 	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
-	std::unique_ptr<Button> newButton1 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton1->SetText("High Scores");
-	newButton1->ResizeCharacters(50);
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton1)));
+	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("High Scores");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
-	std::unique_ptr<Button> newButton3 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton3->SetText("Settings");
-	newButton3->ResizeCharacters(50);
+	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("How to play");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("How to play", std::move(newButton)));
 
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton3)));
+	basePos.x += m_Title->getSize().x / 2;
+	basePos.y = m_Title->getPosition().y + m_Title->getSize().y + 10;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Settings");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
-	std::unique_ptr<Button> newButton2 = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton2->SetText("Exit");
-	newButton2->ResizeCharacters(50);
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Exit", std::move(newButton2)));
+	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Exit");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Exit", std::move(newButton)));
+
+
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
@@ -407,9 +425,11 @@ void Rendering::CreateHighScoreSprites()
 		basePos.y += Settings::get().GetHighScoreItemHeight();
 	}
 
-	sf::Vector2f buttonTextureSize = sf::Vector2f(static_cast<float>(m_BaseButtonTexture->getSize().x), static_cast<float>(m_BaseButtonTexture->getSize().y));
+	float x = static_cast<float>(m_BaseButtonTexture->getSize().x);
+	sf::Vector2f buttonTextureSize = sf::Vector2f(x / 2, static_cast<float>(m_BaseButtonTexture->getSize().y));
 	sf::Vector2f buttonPos = sf::Vector2f(buttonTextureSize.x / 2, Settings::get().GetWindowHeight() - buttonTextureSize.y);
 	m_HSBackButton = std::make_unique<Button>(buttonPos, *m_Font, m_BaseButtonTexture.get());
 	m_HSBackButton->SetText("Back");
+	m_HSBackButton->ResizeCharacters(40);
 	m_HSBackButton->SetScale(sf::Vector2f(0.7f, 0.7f));
 }

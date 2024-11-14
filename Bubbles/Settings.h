@@ -34,6 +34,8 @@ public:
     [[nodiscard]] float GetHighScoreItemWidth() const { return m_HighScoreItemWidth; }
     [[nodiscard]] float GetHighScoreItemHeight() const { return m_HighScoreItemHeight; }
 
+    int GetAaLevel() const { return m_AntiAliasingLevel; }
+
     [[nodiscard]] float BubbleSize(const EBUBBLE_TYPE a_Type) const { return m_BubbleSizes.at(a_Type); }
 
     [[nodiscard]] bool IsSoundEnabled() const { return m_SoundEnabled; }
@@ -62,7 +64,7 @@ private:
     float m_HighScoreItemWidth = 0;
     float m_HighScoreItemHeight = 0;
     bool m_SoundEnabled = true;
-
+    int m_AntiAliasingLevel = 0;;
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
 };
 
