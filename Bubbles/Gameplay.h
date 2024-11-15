@@ -32,6 +32,7 @@ public:
 	std::unique_ptr<BubbleObject> Drop(const sf::Vector2f& a_Start);
 	float GetCurrentPosition() const { return m_CurrentPosition; }
 	EBUBBLE_TYPE GetCurrentBubble() const { return m_CurrentBubble; }
+	EBUBBLE_TYPE GetNextBubble() const { return m_NextBubble; }
 	std::chrono::time_point<std::chrono::system_clock> GetLastDrop() const { return m_LastDrop; }
 	void SetLastDrop(const std::chrono::time_point<std::chrono::system_clock>& a_Time) { m_LastDrop = a_Time; }
 

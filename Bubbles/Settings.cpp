@@ -55,6 +55,10 @@ void Settings::LoadSettings()
                 m_DuckWidth = stof(value);
             if (name == "DUCK_HEIGHT")
                 m_DuckHeight = stof(value);
+            if (name == "NEXT_UP_WIDTH")
+                m_NextUpWidth = stof(value);
+            if (name == "NEXT_UP_HEIGHT")
+                m_NextUpHeight = stof(value);
         }
         file.close();
     }
@@ -62,9 +66,8 @@ void Settings::LoadSettings()
 
 void Settings::LoadBubbleSizes(const std::string& a_Length)
 {
-    int lastDelimiter = 0;
     std::string temp;
-    for(int i = 0; i < a_Length.length(); i++)
+    for(size_t i = 0; i < a_Length.length(); i++)
     {
 	    if(a_Length[i] == ',')
 	    {
@@ -98,7 +101,7 @@ void Settings::SetSoundEnabled(bool a_Enabled)
 
     std::ofstream outfile("Assets/Settings.save");
     for (const std::string& nline : lines) {
-        outfile << nline << std::endl;
+        outfile << nline << '\n';
     }
     outfile.close();
 }

@@ -38,6 +38,9 @@ public:
     [[nodiscard]] float GetDuckWidth() const { return m_DuckWidth; }
     [[nodiscard]] float GetDuckHeight() const { return m_DuckHeight; }
 
+    [[nodiscard]] float GetNextUpWidth() const { return m_NextUpWidth; }
+    [[nodiscard]] float GetNextUpHeight() const { return m_NextUpHeight; }
+
     [[nodiscard]] float BubbleSize(const EBUBBLE_TYPE a_Type) const { return m_BubbleSizes.at(a_Type); }
 
     [[nodiscard]] bool IsSoundEnabled() const { return m_SoundEnabled; }
@@ -70,6 +73,10 @@ private:
 
     float m_DuckHeight = 0;
     float m_DuckWidth = 0;
+
+    float m_NextUpWidth = 0;
+    float m_NextUpHeight = 0;
+
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
 };
 

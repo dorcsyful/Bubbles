@@ -21,6 +21,8 @@ void BubbleGame::Initialize()
 	m_Physics->CreateContainerLines();
 
 	m_Rendering->UpdateHighScores(m_Save->GetScores());
+	m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
+
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)
@@ -191,6 +193,7 @@ void BubbleGame::PlayInput(const sf::Event& a_Event) const
 		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 		{
 			AddBubble();
+			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 		}
 	}
 	

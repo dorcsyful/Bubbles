@@ -1,4 +1,6 @@
 #include "Rendering.h"
+
+#include <ranges>
 #include <SFML/Window/Event.hpp>
 
 #include "Audio.h"
@@ -19,14 +21,14 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 
 	LoadBackground();
 	LoadBubbleTextures();
-	//LoadNextUpTextures();
+	LoadNextUpTextures();
 	CreatePointer();
 	CreateMenuSprites();
 	CreateGameOverSprite();
 	CreateScoreText();
 	CreateHighScoreSprites();
 	CreateDuck();
-	//CreateNextUpSprites();
+	CreateNextUpSprites();
 }
 
 void Rendering::PlayDraw() const
@@ -34,7 +36,7 @@ void Rendering::PlayDraw() const
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Line);
 	m_Duck->Draw(*m_Window);
-	//m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
+	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
@@ -275,36 +277,36 @@ void Rendering::LoadBubbleTextures()
 
 void Rendering::LoadNextUpTextures()
 {
-	m_BubbleTextures = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>();
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CLAM]->loadFromFile(CLAM_NEXT_FILENAME);
+	m_NextUpTextures = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>();
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_CLAM]->loadFromFile(CLAM_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CRAB]->loadFromFile(CRAB_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_CRAB]->loadFromFile(CRAB_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_FISH]->loadFromFile(FISH_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_FISH]->loadFromFile(FISH_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_FROG]->loadFromFile(FROG_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_FROG]->loadFromFile(FROG_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_JELLY, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_JELLY]->loadFromFile(JELLY_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_JELLY, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_JELLY]->loadFromFile(JELLY_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_KRILL, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_KRILL]->loadFromFile(KRILL_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_KRILL, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_KRILL]->loadFromFile(KRILL_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SEAL, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SEAL]->loadFromFile(SEAL_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SEAL, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SEAL]->loadFromFile(SEAL_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SHARK, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SHARK]->loadFromFile(SHARK_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SHARK, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SHARK]->loadFromFile(SHARK_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SQUID]->loadFromFile(SQUID_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SQUID]->loadFromFile(SQUID_NEXT_FILENAME);
 
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_NEXT_FILENAME);
 }
 
 void Rendering::CreatePointer()
@@ -521,8 +523,13 @@ void Rendering::CreateNextUpSprites()
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_SQUID))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_WHALE))));
 
-	for (auto& current : m_NextUpBubbles)
+	sf::Vector2f size = BubbleMath::ToVector2f(m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CLAM)->getSize());
+	float factorX = Settings::get().GetNextUpWidth() / size.x;
+	float factorY = Settings::get().GetNextUpHeight() / size.y;
+
+	for (auto& val : m_NextUpBubbles | std::views::values)
 	{
-		current.second->setPosition(m_Window->getSize().x / 3 * 2, m_Window->getSize().y / 2);
+		val->setScale(factorX, factorY);
+		val->setPosition(static_cast<float>(m_Window->getSize().x) / 3 * 2.1f, static_cast<float>(m_Window->getSize().y) / 3);
 	}
 }
