@@ -86,9 +86,9 @@ void BubbleGame::Update()
 				m_Rendering->GetSoundButton()->setTextureRect(sf::IntRect(left, 0, size.x /2, size.y));
 			}
 
-			if (m_State == EGAME_STATE::STATE_PLAY && event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Space)
+			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
-				PlayInput();
+				PlayInput(event);
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
@@ -135,6 +135,12 @@ void BubbleGame::CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const
 
 void BubbleGame::AddBubble() const
 {
+	Audio::getInstance().PlayBubbleDrop();
+	m_Rendering->GetDuck()->SetAnimate(false, false);
+	m_Rendering->GetDuck()->SetFrame(2);
+	CallAfterDelay::getInstance().AddFunction([this] { m_Rendering->GetDuck()->SetAnimate(true, true); }, "EnableDuckAnimate", 0.5f, false);
+	m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
+
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
 	start.x /= Settings::get().GetPixelToMeter();
 	start.y = m_Physics->GetTopLineHeight();
@@ -178,17 +184,26 @@ void BubbleGame::RemoveAtEnd()
 	m_State = EGAME_STATE::STATE_GAME_OVER;
 }
 
-void BubbleGame::PlayInput() const
+void BubbleGame::PlayInput(const sf::Event& a_Event) const
 {
-	if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
+	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Space)
 	{
-		Audio::getInstance().PlayBubbleDrop();
-		m_Rendering->GetDuck()->SetAnimate(false, false);
-		m_Rendering->GetDuck()->SetFrame(2);
-		CallAfterDelay::getInstance().AddFunction([this]{ m_Rendering->GetDuck()->SetAnimate(true, true); }, "EnableDuckAnimate", 0.5f,false);
-		m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
-		AddBubble();
+		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
+		{
+			AddBubble();
+		}
 	}
+	
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CLAM);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num2) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FISH);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num3) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FROG);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num4) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_JELLY);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num5) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_KRILL);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num6) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SEAL);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num7) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SHARK);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num8) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SQUID);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
 }
 
 void BubbleGame::MenuInput()

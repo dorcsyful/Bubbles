@@ -1,5 +1,7 @@
 #include "Save.h"
 
+#include "FilePaths.h"
+
 Save::Save()
 {
     if (!DoesSaveFileExist())

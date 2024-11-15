@@ -171,6 +171,7 @@
     <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="CollisionManifold.h" />
     <ClInclude Include="Declarations.h" />
+    <ClInclude Include="FilePaths.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Helpers.h" />

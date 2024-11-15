@@ -1,38 +1,4 @@
 #pragma once
-
-//Files
-#define CLAM_FILENAME "Assets/Shapes/0.png"
-#define CRAB_FILENAME "Assets/Shapes/1.png"
-#define FISH_FILENAME "Assets/Shapes/2.png"
-#define FROG_FILENAME "Assets/Shapes/3.png"
-#define JELLY_FILENAME "Assets/Shapes/4.png"
-#define KRILL_FILENAME "Assets/Shapes/5.png"
-#define SEAL_FILENAME "Assets/Shapes/6.png"
-#define SHARK_FILENAME "Assets/Shapes/7.png"
-#define SQUID_FILENAME "Assets/Shapes/8.png"
-#define WHALE_FILENAME "Assets/Shapes/9.png"
-
-#define TITLE_FILENAME "Assets/Menu/Title.png"
-#define BUTTON_FILENAME "Assets/Menu/Button.png"
-#define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
-#define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
-
-#define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
-#define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
-#define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
-#define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
-#define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
-#define DUCK_FILENAME "Assets/Other/Duck.png"
-
-#define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
-
-#define AUDIO_BUBBLE_DROP "Assets/Audio/Drop.wav"
-#define AUDIO_BACKGROUND_MUSIC "Assets/Audio/Background.wav"
-#define AUDIO_CLICK "Assets/Audio/Click.wav"
-#define AUDIO_SAD_GAME_OVER "Assets/Audio/SadGameOver.wav"
-
-#define SOUND_FILENAME "Assets/Menu/Sound.png"
-
 //Gameplay
 #define GRAVITY (-9.81f)
 

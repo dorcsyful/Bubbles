@@ -15,6 +15,13 @@ void Gameplay::Update(float a_Delta)
 	{
 		Move(Settings::get().GetPointerMoveSpeed() * a_Delta * -1.f);
 	}
+
+}
+
+void Gameplay::CheatNextBubble(EBUBBLE_TYPE a_ToDrop)
+{
+	std::cout << (int)a_ToDrop;
+	m_CurrentBubble = a_ToDrop;
 }
 
 std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second)

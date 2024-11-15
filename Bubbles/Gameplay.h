@@ -23,6 +23,7 @@ public:
 	}
 
 	void Update(float a_Delta);
+	void CheatNextBubble(EBUBBLE_TYPE a_ToDrop);
 	std::unique_ptr<BubbleObject> CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second);
 	unsigned int GetComboScore() const { return m_CombineCombo; }
 	unsigned int GetScore() const { return m_Score; }

@@ -32,9 +32,9 @@ public:
 
 	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score)); }
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
-	void UpdateCombo(unsigned int a_Combo)
+	void UpdateCombo(unsigned int a_Combo) const
 	{
-		if (a_Combo > 1)
+		if (a_Combo > 2)
 		{
 			std::string basicString = std::to_string(a_Combo);
 			m_ComboText->setString("Combo:\n +" + basicString);
@@ -42,6 +42,7 @@ public:
 		else
 			m_ComboText->setString("");
 	}
+	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
@@ -57,6 +58,8 @@ private:
 
 	void LoadBackground();
 	void LoadBubbleTextures();
+	void LoadNextUpTextures();
+
 	void CreatePointer();
 	void CreateTitleSprite();
 	void CreateGameOverSprite();
@@ -65,6 +68,7 @@ private:
 	void CreateScoreText();
 	void CreateHighScoreSprites();
 	void CreateDuck();
+	void CreateNextUpSprites();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -78,8 +82,11 @@ private:
 	std::unique_ptr<sf::Texture> m_ContainerTexture;
 	std::unique_ptr<sf::RectangleShape> m_Container;
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
+	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_NextUpTextures;
 	EBUBBLE_TYPE m_ActiveBubble;
+	EBUBBLE_TYPE m_ActiveNextUp;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
+	std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Sprite>> m_NextUpBubbles;
 	std::unique_ptr<sf::RectangleShape> m_Line;
 	std::unique_ptr<sf::Texture> m_DuckTexture;
 	std::unique_ptr<AnimatedSprite> m_Duck;
