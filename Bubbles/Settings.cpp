@@ -51,6 +51,10 @@ void Settings::LoadSettings()
                 m_SoundEnabled = stoi(value);
             if (name == "ANTI_ALIASING")
                 m_AntiAliasingLevel = stoi(value);
+            if (name == "DUCK_WIDTH")
+                m_DuckWidth = stof(value);
+            if (name == "DUCK_HEIGHT")
+                m_DuckHeight = stof(value);
         }
         file.close();
     }

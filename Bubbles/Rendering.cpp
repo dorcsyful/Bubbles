@@ -25,12 +25,14 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateGameOverSprite();
 	CreateScoreText();
 	CreateHighScoreSprites();
+	CreateDuck();
 }
 
 void Rendering::PlayDraw() const
 {
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Line);
+	m_Duck->Draw(*m_Window);
 
 	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
@@ -62,6 +64,7 @@ void Rendering::MenuDraw() const
 void Rendering::GameOverAnimationDraw() const
 {
 	m_Window->draw(*m_Container);
+	m_Duck->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
 		element->Draw(*m_Window);
@@ -78,6 +81,16 @@ void Rendering::HighScoreDraw() const
 	{
 		m_Window->draw(*(m_HighScoreSprites[i]));
 	}
+}
+
+void Rendering::GameOverDraw() const
+{
+	m_Window->draw(*m_GameOver);
+	m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_Window->draw(*m_MenuButtons.at("BackToMenu"));
+	m_Window->draw(*m_MenuButtons.at("PlayAgain"));
+	m_Duck->Draw(*m_Window);
 }
 
 void Rendering::Draw(const EGAME_STATE a_State) const
@@ -101,11 +114,7 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	}
 	if(a_State == EGAME_STATE::STATE_GAME_OVER)
 	{
-		m_Window->draw(*m_GameOver);
-		m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-		m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-		m_Window->draw(*m_MenuButtons.at("BackToMenu"));
-		m_Window->draw(*m_MenuButtons.at("PlayAgain"));
+		GameOverDraw();
 	}
 	if(a_State == EGAME_STATE::STATE_HIGH_SCORE)
 	{
@@ -139,6 +148,24 @@ void Rendering::MovePointerLine(const float a_X) const
 	sf::Vector2f temp = m_Line->getPosition();
 	temp.x = a_X;
 	m_Line->setPosition(temp);
+	temp.y -= 15;
+	if(a_X == m_Duck->GetPosition().x)
+	{
+		m_Duck->SetAnimate(false, false);
+	}
+	else
+	{
+		m_Duck->SetAnimate(true, true);
+	}
+	if (a_X > m_Duck->GetPosition().x)
+	{
+		m_Duck->GetSprite()->setScale(-0.355f, m_Duck->GetSprite()->getScale().y);
+	}
+	if(a_X <m_Duck->GetPosition().x)
+	{
+		m_Duck->GetSprite()->setScale(0.355f, m_Duck->GetSprite()->getScale().y);
+	}
+	m_Duck->SetPosition(temp);
 }
 
 void Rendering::MovePreviewBubble(const EBUBBLE_TYPE a_NewPreview)
@@ -196,7 +223,7 @@ void Rendering::LoadBackground()
 	m_Container = std::make_unique<sf::RectangleShape>();
 	m_Container->setTexture(m_ContainerTexture.get());
 	float width = Settings::get().GetContainerWidth();
-	float height = Settings::get().GetContainerHeight();
+	float height = Settings::get().GetContainerHeight() ;
 	m_Container->setSize(sf::Vector2f(width, height));
 	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
 	m_Container->setPosition(basePos);
@@ -253,8 +280,8 @@ void Rendering::LoadBubbleTextures()
 void Rendering::CreatePointer()
 {
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (Settings::get().GetContainerWidth() / 2.f), ((static_cast<float>(m_Window->getSize().y) - containerHeight) / 2.f) - 25);
-	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight + 25));
+	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (Settings::get().GetContainerWidth() / 2.f), ((static_cast<float>(m_Window->getSize().y) - containerHeight) / 2.f));
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight - 5));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
@@ -432,4 +459,20 @@ void Rendering::CreateHighScoreSprites()
 	m_HSBackButton->SetText("Back");
 	m_HSBackButton->ResizeCharacters(40);
 	m_HSBackButton->SetScale(sf::Vector2f(0.7f, 0.7f));
+}
+
+void Rendering::CreateDuck()
+{
+	m_DuckTexture = std::make_unique<sf::Texture>();
+	m_DuckTexture->loadFromFile(DUCK_FILENAME);
+
+	m_Duck = std::make_unique<AnimatedSprite>(m_DuckTexture.get(), 1, 4, true, true);
+	m_Duck->SetFrame(0);
+	m_Duck->UpdateFrameToAnimate(2);
+	float factorX = Settings::get().GetDuckWidth() / (m_DuckTexture->getSize().x / 4);
+	float factorY = Settings::get().GetDuckHeight() / (m_DuckTexture->getSize().y);
+	m_Duck->GetSprite()->setScale(factorX, factorY);
+	float x = Settings::get().GetDuckWidth() * 2.f;
+	float y = Settings::get().GetDuckHeight() * 2.f;
+	m_Duck->GetSprite()->setOrigin(x, y);
 }

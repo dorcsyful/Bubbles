@@ -8,6 +8,7 @@ AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, 
 	m_FrameCount(a_FrameCount)
 {
 	m_FrameTime /= m_FrameCount;
+	m_FramesToAnimate = m_FrameCount;
 	m_Sprite = std::make_unique<sf::Sprite>(*m_Texture);
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;
@@ -20,7 +21,7 @@ AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, 
 void AnimatedSprite::SetNextFrame(const std::chrono::steady_clock::time_point a_Now)
 {
 	m_CurrentFrame++;
-	if (m_CurrentFrame >= m_FrameCount)
+	if (m_CurrentFrame >= m_FramesToAnimate)
 	{
 		if (!m_IsLooping) return;
 		m_CurrentFrame = 0;
@@ -41,10 +42,18 @@ void AnimatedSprite::UpdateFrameByTime()
 	}
 }
 
+void AnimatedSprite::SetFrame(int a_Frame)
+{
+	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
+	size.x /= m_FrameCount;
+	m_Sprite->setTextureRect(sf::IntRect(size.x * a_Frame, 0, size.x, size.y));
+
+}
+
 bool AnimatedSprite::IsAnimFinished() const
 {
 	if (m_IsLooping) return false;
-	if(m_CurrentFrame == m_FrameCount) return true;
+	if(m_CurrentFrame == m_FramesToAnimate) return true;
 	return false;
 }
 

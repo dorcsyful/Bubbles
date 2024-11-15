@@ -22,6 +22,7 @@
 #define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
 #define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
 #define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
+#define DUCK_FILENAME "Assets/Other/Duck.png"
 
 #define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
 

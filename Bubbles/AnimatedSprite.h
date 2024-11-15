@@ -1,8 +1,8 @@
 #pragma once
 #include <chrono>
+#include <iostream>
 #include <memory>
 #include <SFML/Graphics/Sprite.hpp>
-
 class AnimatedSprite
 {
 public:
@@ -11,7 +11,7 @@ public:
 	void SetNextFrame(const std::chrono::steady_clock::time_point a_Now);
 
 	void UpdateFrameByTime();
-
+	void SetFrame(int a_Frame);
 	void SetPosition(const sf::Vector2f& a_Position) const { m_Sprite->setPosition(a_Position); }
 
 	void SetRotation(const float a_Rotation) const { m_Sprite->setRotation(a_Rotation); }
@@ -21,7 +21,7 @@ public:
 	void SetAnimate(bool a_Enable, bool a_Loop) { m_Animate = a_Enable; m_IsLooping = a_Loop; }
 	bool IsAnimated() const { return m_Animate; }
 	bool IsAnimFinished() const;
-
+	void UpdateFrameToAnimate(int a_Number) { m_FramesToAnimate = a_Number; }
 	sf::Sprite* GetSprite() const { return m_Sprite.get(); }
 	sf::Vector2f GetPosition() const { return m_Sprite->getPosition(); }
 
@@ -34,6 +34,7 @@ private:
 	sf::Texture* m_Texture;
 	float m_FrameTime;
 	int m_CurrentFrame;
+	int m_FramesToAnimate;
 	int m_FrameCount;
 	bool m_IsLooping;
 	std::chrono::time_point<std::chrono::steady_clock> m_LastSwitch;

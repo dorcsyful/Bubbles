@@ -46,6 +46,8 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) { GameOver(); }
+
 }
 
 void BubbleGame::RestartGame()
@@ -54,6 +56,8 @@ void BubbleGame::RestartGame()
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
+	m_Rendering->GetDuck()->SetFrame(0);
+	//m_Rendering->GetDuck()->SetAnimate(true, true);
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadState", 0.1f, false);
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 }
@@ -147,7 +151,9 @@ void BubbleGame::GameOver()
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
 	Audio::getInstance().PlaySadGameOver();
 	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;
-
+	m_Rendering->GetDuck()->SetAnimate(false, false);
+	m_Rendering->GetDuck()->SetFrame(3);
+	CallAfterDelay::getInstance().RemoveFunction("EnableDuckAnimate");
 	CallAfterDelay::getInstance().AddFunction([this](){ m_State = EGAME_STATE::STATE_GAME_OVER; CallAfterDelay::getInstance().RemoveFunction("RemoveBubbles"); }, "SetGameOverState", 
 																delay * static_cast<float>(m_Wrapper->GetNumOfObjects()), false);
 	CallAfterDelay::getInstance().AddFunction([this](){ RemoveAtEnd(); }, "RemoveBubbles" , delay, true);
@@ -177,7 +183,9 @@ void BubbleGame::PlayInput() const
 	if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 	{
 		Audio::getInstance().PlayBubbleDrop();
-
+		m_Rendering->GetDuck()->SetAnimate(false, false);
+		m_Rendering->GetDuck()->SetFrame(2);
+		CallAfterDelay::getInstance().AddFunction([this]{ m_Rendering->GetDuck()->SetAnimate(true, true); }, "EnableDuckAnimate", 0.5f,false);
 		m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
 		AddBubble();
 	}

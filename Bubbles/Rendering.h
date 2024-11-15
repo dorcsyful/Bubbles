@@ -44,6 +44,7 @@ public:
 	}
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
+	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
 
 	void Reset();
 
@@ -52,6 +53,7 @@ private:
 	void MenuDraw() const;
 	void GameOverAnimationDraw() const;
 	void HighScoreDraw() const;
+	void GameOverDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -62,6 +64,7 @@ private:
 	void CreateMenuButtonSprites();
 	void CreateScoreText();
 	void CreateHighScoreSprites();
+	void CreateDuck();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -78,6 +81,8 @@ private:
 	EBUBBLE_TYPE m_ActiveBubble;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
 	std::unique_ptr<sf::RectangleShape> m_Line;
+	std::unique_ptr<sf::Texture> m_DuckTexture;
+	std::unique_ptr<AnimatedSprite> m_Duck;
 
 	//Play mode UI
 	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;

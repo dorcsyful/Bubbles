@@ -18,6 +18,7 @@ public:
     [[nodiscard]] float GetWindowHeight() const { return m_WindowHeight; }
     [[nodiscard]] float GetContainerWidth() const { return m_ContainerWidth; }
     [[nodiscard]] float GetContainerHeight() const { return m_ContainerHeight; }
+    [[nodiscard]] int GetAaLevel() const { return m_AntiAliasingLevel; }
 
     [[nodiscard]] float GetPointerMoveSpeed() const { return m_PointerMoveSpeed; }
     [[nodiscard]] float GetPixelToMeter() const { return m_PixelToMeter; }
@@ -34,7 +35,8 @@ public:
     [[nodiscard]] float GetHighScoreItemWidth() const { return m_HighScoreItemWidth; }
     [[nodiscard]] float GetHighScoreItemHeight() const { return m_HighScoreItemHeight; }
 
-    int GetAaLevel() const { return m_AntiAliasingLevel; }
+    [[nodiscard]] float GetDuckWidth() const { return m_DuckWidth; }
+    [[nodiscard]] float GetDuckHeight() const { return m_DuckHeight; }
 
     [[nodiscard]] float BubbleSize(const EBUBBLE_TYPE a_Type) const { return m_BubbleSizes.at(a_Type); }
 
@@ -64,7 +66,10 @@ private:
     float m_HighScoreItemWidth = 0;
     float m_HighScoreItemHeight = 0;
     bool m_SoundEnabled = true;
-    int m_AntiAliasingLevel = 0;;
+    int m_AntiAliasingLevel = 0;
+
+    float m_DuckHeight = 0;
+    float m_DuckWidth = 0;
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
 };
 
