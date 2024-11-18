@@ -73,6 +73,7 @@ void Gameplay::Reset()
 	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 	m_ContainerEdges[0] = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() / 2.f;
 	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
+	m_CurrentPosition = 0;
 	Move(0);
 	m_Score = 0;
 }

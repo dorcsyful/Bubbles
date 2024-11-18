@@ -203,8 +203,10 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 
 void Rendering::Reset()
 {
+	m_Line->setPosition(0, m_Line->getPosition().y);
+	m_Duck->SetPosition(sf::Vector2f(0, m_Duck->GetPosition().y));
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
-	//m_Score->SetText("Score:\n 0");
+	m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(sf::Vector2f(0, m_PreviewBubbles.at(m_ActiveBubble)->GetPosition().y));
 }
 
 void Rendering::LoadBackground()
@@ -221,7 +223,6 @@ void Rendering::LoadBackground()
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
 	sf::Vector2f v = sf::Vector2f(windowSize.x, windowSize.y);
-	//m_BackgroundSprite->setTextureRect(sf::IntRect(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)));
 	m_BackgroundSprite->setSize(v);
 
 	//Container
