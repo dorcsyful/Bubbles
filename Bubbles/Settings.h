@@ -18,7 +18,10 @@ public:
     [[nodiscard]] float GetWindowHeight() const { return m_WindowHeight; }
     [[nodiscard]] float GetContainerWidth() const { return m_ContainerWidth; }
     [[nodiscard]] float GetContainerHeight() const { return m_ContainerHeight; }
-    [[nodiscard]] int GetAaLevel() const { return m_AntiAliasingLevel; }
+    [[nodiscard]] float GetFrameWidth() const { return m_FrameWidth; }
+    [[nodiscard]] float GetFrameHeight() const { return m_FrameHeight; }
+
+	[[nodiscard]] int GetAaLevel() const { return m_AntiAliasingLevel; }
 
     [[nodiscard]] float GetPointerMoveSpeed() const { return m_PointerMoveSpeed; }
     [[nodiscard]] float GetPixelToMeter() const { return m_PixelToMeter; }
@@ -51,6 +54,8 @@ private:
     float m_WindowHeight = 0;
     float m_ContainerWidth = 0;
     float m_ContainerHeight = 0;
+    float m_FrameWidth = 0;
+    float m_FrameHeight = 0;
 
     float m_PointerMoveSpeed = 0;
 

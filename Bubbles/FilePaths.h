@@ -1,6 +1,6 @@
 #pragma once
 //Files
-#define CLAM_FILENAME "Assets/Shapes/0.png"
+#define STAR_FILENAME "Assets/Shapes/0.png"
 #define CRAB_FILENAME "Assets/Shapes/1.png"
 #define FISH_FILENAME "Assets/Shapes/2.png"
 #define FROG_FILENAME "Assets/Shapes/3.png"
@@ -11,7 +11,7 @@
 #define SQUID_FILENAME "Assets/Shapes/8.png"
 #define WHALE_FILENAME "Assets/Shapes/9.png"
 
-#define CLAM_NEXT_FILENAME "Assets/Shapes/NextUp/0.png"
+#define STAR_NEXT_FILENAME "Assets/Shapes/NextUp/0.png"
 #define CRAB_NEXT_FILENAME "Assets/Shapes/NextUp/1.png"
 #define FISH_NEXT_FILENAME "Assets/Shapes/NextUp/2.png"
 #define FROG_NEXT_FILENAME "Assets/Shapes/NextUp/3.png"
@@ -29,6 +29,7 @@
 
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
 #define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
+#define FRAME_FILENAME "Assets/Other/ContainerFrame.png"
 #define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
 #define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
 #define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"

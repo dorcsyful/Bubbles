@@ -30,7 +30,7 @@ enum class EOBJECT_TYPE
 
 enum class EBUBBLE_TYPE
 {
-	TYPE_CLAM = 0,
+	TYPE_STAR = 0,
 	TYPE_CRAB = 1,
 	TYPE_FISH = 2,
 	TYPE_FROG = 3,
@@ -42,7 +42,7 @@ enum class EBUBBLE_TYPE
 	TYPE_WHALE = 9
 };
 
-static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_CLAM, 1}, {EBUBBLE_TYPE::TYPE_CRAB, 1.5}, {EBUBBLE_TYPE::TYPE_FISH, 2},
+static const std::map<EBUBBLE_TYPE, float> bubble_weights = { {EBUBBLE_TYPE::TYPE_STAR, 1}, {EBUBBLE_TYPE::TYPE_CRAB, 1.5}, {EBUBBLE_TYPE::TYPE_FISH, 2},
 												   {EBUBBLE_TYPE::TYPE_FROG, 3},{EBUBBLE_TYPE::TYPE_JELLY, 3.5}, {EBUBBLE_TYPE::TYPE_KRILL, 4},
 															{EBUBBLE_TYPE::TYPE_SEAL, 5}, {EBUBBLE_TYPE::TYPE_SHARK, 6}, {EBUBBLE_TYPE::TYPE_SQUID, 7},
 												   {EBUBBLE_TYPE::TYPE_WHALE, 8} };

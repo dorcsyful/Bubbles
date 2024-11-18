@@ -33,9 +33,12 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 
 void Rendering::PlayDraw() const
 {
+
 	m_Window->draw(*m_Container);
-	m_Window->draw(*m_Line);
+	m_Window->draw(*m_Frame);
 	m_Duck->Draw(*m_Window);
+
+	m_Window->draw(*m_Line);
 	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
@@ -66,8 +69,11 @@ void Rendering::MenuDraw() const
 
 void Rendering::GameOverAnimationDraw() const
 {
+
 	m_Window->draw(*m_Container);
+	m_Window->draw(*m_Frame);
 	m_Duck->Draw(*m_Window);
+
 	for (auto& element : m_RenderedBubbles)
 	{
 		element->Draw(*m_Window);
@@ -151,7 +157,6 @@ void Rendering::MovePointerLine(const float a_X) const
 	sf::Vector2f temp = m_Line->getPosition();
 	temp.x = a_X;
 	m_Line->setPosition(temp);
-	temp.y -= 15;
 	if(a_X == m_Duck->GetPosition().x)
 	{
 		m_Duck->SetAnimate(false, false);
@@ -195,7 +200,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 
 void Rendering::Reset()
 {
-	m_ActiveBubble = EBUBBLE_TYPE::TYPE_CLAM;
+	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
 	//m_Score->SetText("Score:\n 0");
 }
 
@@ -213,7 +218,7 @@ void Rendering::LoadBackground()
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
 	sf::Vector2f v = sf::Vector2f(windowSize.x, windowSize.y);
-	m_BackgroundSprite->setTextureRect(sf::IntRect(0, 600, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)));
+	//m_BackgroundSprite->setTextureRect(sf::IntRect(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)));
 	m_BackgroundSprite->setSize(v);
 
 	//Container
@@ -231,6 +236,16 @@ void Rendering::LoadBackground()
 	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
 	m_Container->setPosition(basePos);
 
+	m_FrameTexture = std::make_unique<sf::Texture>();
+	m_FrameTexture->loadFromFile(FRAME_FILENAME);
+	m_Frame = std::make_unique<sf::RectangleShape>();
+	m_Frame->setTexture(m_FrameTexture.get());
+	m_Frame->setSize(sf::Vector2f(Settings::get().GetFrameWidth(), Settings::get().GetFrameHeight()));
+	m_Frame->setOrigin(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f);
+	sf::Vector2f position = m_Container->getGlobalBounds().getPosition();
+	sf::Vector2f size = m_Container->getGlobalBounds().getSize();
+	m_Frame->setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f -15);
+
 	m_SoundTexture = std::make_unique<sf::Texture>();
 	m_SoundTexture->loadFromFile(SOUND_FILENAME);
 	m_SoundButton = std::make_unique<sf::RectangleShape>();
@@ -244,8 +259,8 @@ void Rendering::LoadBackground()
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
-	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM,std::make_unique<sf::Texture>()));
-	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CLAM]->loadFromFile(CLAM_FILENAME);
+	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_STAR,std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_STAR]->loadFromFile(STAR_FILENAME);
 	
 	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_CRAB]->loadFromFile(CRAB_FILENAME);
@@ -278,8 +293,8 @@ void Rendering::LoadBubbleTextures()
 void Rendering::LoadNextUpTextures()
 {
 	m_NextUpTextures = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>();
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_CLAM]->loadFromFile(CLAM_NEXT_FILENAME);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_STAR, std::make_unique<sf::Texture>()));
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_STAR]->loadFromFile(STAR_NEXT_FILENAME);
 
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_CRAB]->loadFromFile(CRAB_NEXT_FILENAME);
@@ -512,7 +527,7 @@ void Rendering::CreateDuck()
 void Rendering::CreateNextUpSprites()
 {
 	m_NextUpBubbles = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Sprite>>();
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_CLAM, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CLAM))));
+	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_STAR, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CRAB))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FISH))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FROG))));
@@ -523,7 +538,7 @@ void Rendering::CreateNextUpSprites()
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_SQUID))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_WHALE))));
 
-	sf::Vector2f size = BubbleMath::ToVector2f(m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CLAM)->getSize());
+	sf::Vector2f size = BubbleMath::ToVector2f(m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR)->getSize());
 	float factorX = Settings::get().GetNextUpWidth() / size.x;
 	float factorY = Settings::get().GetNextUpHeight() / size.y;
 

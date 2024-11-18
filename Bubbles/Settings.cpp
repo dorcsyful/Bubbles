@@ -59,6 +59,10 @@ void Settings::LoadSettings()
                 m_NextUpWidth = stof(value);
             if (name == "NEXT_UP_HEIGHT")
                 m_NextUpHeight = stof(value);
+            if (name == "CONTAINER_FRAME_WIDTH")
+                m_FrameWidth = stof(value);
+            if (name == "CONTAINER_FRAME_HEIGHT")
+                m_FrameHeight = stof(value);
         }
         file.close();
     }
@@ -91,13 +95,21 @@ void Settings::SetSoundEnabled(bool a_Enabled)
     std::vector<std::string> lines;
     std::ifstream infile("Assets/Settings.save");
     std::string line;
+    int index{};
+    int counter = 0;
     while (getline(infile, line)) {
+        if(line.starts_with("SOUND_ENABLED|"))
+        {
+            index = counter;
+            if (&line[line.length() - 1] == isEnabledAsString.c_str()) return;
+        }
         lines.push_back(line);
+        counter++;
     }
     infile.close();
 
     // Modify the last line
-    lines.back() = "SOUND_ENABLED|" + isEnabledAsString;
+    lines[index] = "SOUND_ENABLED|" + isEnabledAsString;
 
     std::ofstream outfile("Assets/Settings.save");
     for (const std::string& nline : lines) {

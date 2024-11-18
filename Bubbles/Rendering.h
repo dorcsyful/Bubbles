@@ -81,12 +81,16 @@ private:
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
 	std::unique_ptr<sf::Texture> m_ContainerTexture;
 	std::unique_ptr<sf::RectangleShape> m_Container;
+	std::unique_ptr<sf::Texture> m_FrameTexture;
+	std::unique_ptr<sf::RectangleShape> m_Frame;
+
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_NextUpTextures;
 	EBUBBLE_TYPE m_ActiveBubble;
 	EBUBBLE_TYPE m_ActiveNextUp;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Sprite>> m_NextUpBubbles;
+
 	std::unique_ptr<sf::RectangleShape> m_Line;
 	std::unique_ptr<sf::Texture> m_DuckTexture;
 	std::unique_ptr<AnimatedSprite> m_Duck;
