@@ -69,6 +69,7 @@ private:
 	void CreateHighScoreSprites();
 	void CreateDuck();
 	void CreateNextUpSprites();
+	void CreatePlayModeButtons();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 

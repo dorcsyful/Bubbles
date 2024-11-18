@@ -29,6 +29,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateHighScoreSprites();
 	CreateDuck();
 	CreateNextUpSprites();
+	CreatePlayModeButtons();
 }
 
 void Rendering::PlayDraw() const
@@ -45,6 +46,8 @@ void Rendering::PlayDraw() const
 	{
 		element->Draw(*m_Window);
 	}
+	m_Window->draw(*m_MenuButtons.at("Back to menu"));
+	m_Window->draw(*m_MenuButtons.at("Restart"));
 	m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
 }
@@ -157,7 +160,7 @@ void Rendering::MovePointerLine(const float a_X) const
 	sf::Vector2f temp = m_Line->getPosition();
 	temp.x = a_X;
 	m_Line->setPosition(temp);
-	if(a_X == m_Duck->GetPosition().x)
+	if(a_X == m_Duck->GetPosition().x)  // NOLINT(clang-diagnostic-float-equal)
 	{
 		m_Duck->SetAnimate(false, false);
 	}
@@ -547,4 +550,23 @@ void Rendering::CreateNextUpSprites()
 		val->setScale(factorX, factorY);
 		val->setPosition(static_cast<float>(m_Window->getSize().x) / 3 * 2.1f, static_cast<float>(m_Window->getSize().y) / 3);
 	}
+}
+
+void Rendering::CreatePlayModeButtons()
+{
+	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
+	basePos.x = m_Window->getSize().x / 10;
+	basePos.y -= 50;
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Back to menu");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Back to menu", std::move(newButton)));
+
+	basePos.x += 160;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Restart");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 }

@@ -196,7 +196,19 @@ void BubbleGame::PlayInput(const sf::Event& a_Event) const
 			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 		}
 	}
-	
+
+	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
+	if (buttons.at("Back to menu")->DetectClick(mousePosition))
+	{
+		m_Gameplay->Reset();
+		m_Physics->Reset();
+		m_Rendering->Reset();
+		m_Wrapper->Clear();
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
+	}
+
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num2) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FISH);
