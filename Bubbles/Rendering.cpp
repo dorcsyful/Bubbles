@@ -34,6 +34,9 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 
 void Rendering::PlayDraw() const
 {
+	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
+	m_MenuButtons.at("Back to menu")->DetectHover(mousePosition);
+	m_MenuButtons.at("Restart")->DetectHover(mousePosition);
 
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Frame);

@@ -56,6 +56,7 @@ public:
 	    {
 		    if (std::chrono::steady_clock::now() > function.m_TargetTime)
 		    {
+				if(function.m_Name.empty()) continue;
 			    function.m_Function();
 				if (!function.m_IsRepeating) {
 					markedForDelete.push_back(function);
