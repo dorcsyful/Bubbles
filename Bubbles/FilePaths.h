@@ -26,6 +26,7 @@
 #define BUTTON_FILENAME "Assets/Menu/Button.png"
 #define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
+#define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
 
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
 #define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
@@ -43,3 +44,7 @@
 #define AUDIO_SAD_GAME_OVER "Assets/Audio/SadGameOver.wav"
 
 #define SOUND_FILENAME "Assets/Menu/Sound.png"
+
+#define CONFIRM_EXIT_GAME "Exit the game?"
+#define CONFIRM_RESTART "Restart game?"
+#define CONFIRM_BACK_TO_MENU "Go back to menu? \n (all progress will be lost)"

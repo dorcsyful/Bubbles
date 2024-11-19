@@ -29,10 +29,12 @@ private:
 	void MenuInput();
 	void GameOverAnimationInput();
 	void GameOverInput();
+	void ConfirmInput();
 
 	void GameOver();
 
 	void RemoveAtEnd();
+	void BackToMenu();
 
 
 	std::unique_ptr<BubbleWrapper> m_Wrapper;

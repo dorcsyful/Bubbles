@@ -30,6 +30,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateDuck();
 	CreateNextUpSprites();
 	CreatePlayModeButtons();
+	CreateConfirmationWindow();
 }
 
 void Rendering::PlayDraw() const
@@ -71,6 +72,7 @@ void Rendering::MenuDraw() const
 	m_Window->draw(*m_MenuButtons.at("Exit"));
 	m_Window->draw(*m_MenuButtons.at("How to play"));
 
+
 }
 
 void Rendering::GameOverAnimationDraw() const
@@ -108,6 +110,18 @@ void Rendering::GameOverDraw() const
 	//m_Duck->Draw(*m_Window);
 }
 
+void Rendering::ConfirmationDraw() const
+{
+	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
+	m_MenuButtons.at("ConfirmConfirm")->DetectHover(mousePosition);
+	m_MenuButtons.at("CancelConfirm")->DetectHover(mousePosition);
+
+	m_Window->draw(*m_ConfirmationWindow);
+	m_Window->draw(*m_ConfirmationText);
+	m_Window->draw(*m_MenuButtons.at("ConfirmConfirm"));
+	m_Window->draw(*m_MenuButtons.at("CancelConfirm"));
+}
+
 void Rendering::Draw(const EGAME_STATE a_State) const
 {
 	m_Window->clear();
@@ -134,6 +148,16 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	if(a_State == EGAME_STATE::STATE_HIGH_SCORE)
 	{
 		HighScoreDraw();
+	}
+	if(a_State == EGAME_STATE::STATE_MENU_CONFIRM || a_State == EGAME_STATE::STATE_RESTART_CONFIRM)
+	{
+		PlayDraw();
+		ConfirmationDraw();
+	}
+	if(a_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+	{
+		MenuDraw();
+		ConfirmationDraw();
 	}
 
 	m_Window->display();
@@ -204,12 +228,33 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 	}
 }
 
+void Rendering::UpdateConfirmText(EGAME_STATE a_NewState)
+{
+	if(a_NewState == EGAME_STATE::STATE_EXIT_CONFIRM)
+	{
+		m_ConfirmationText->setString(CONFIRM_EXIT_GAME);
+	}
+	if(a_NewState == EGAME_STATE::STATE_MENU_CONFIRM)
+	{
+		m_ConfirmationText->setString(CONFIRM_BACK_TO_MENU);
+	}
+	if(a_NewState == EGAME_STATE::STATE_RESTART_CONFIRM)
+	{
+		m_ConfirmationText->setString(CONFIRM_RESTART);
+	}
+	sf::FloatRect localBounds = m_ConfirmationText->getLocalBounds();
+	sf::Vector2f position = localBounds.getPosition();
+	m_ConfirmationText->setOrigin(position.x + localBounds.width / 2, position.y + localBounds.height / 2);
+	m_ConfirmationText->setPosition(m_ConfirmationWindow->getPosition());
+
+}
+
 void Rendering::Reset()
 {
-	m_Line->setPosition(0, m_Line->getPosition().y);
-	m_Duck->SetPosition(sf::Vector2f(0, m_Duck->GetPosition().y));
+	/*m_Line->setPosition(0, m_Line->getPosition().y);
+	m_Duck->SetPosition(sf::Vector2f(0, m_Duck->GetPosition().y));*/
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
-	m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(sf::Vector2f(0, m_PreviewBubbles.at(m_ActiveBubble)->GetPosition().y));
+	//m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(sf::Vector2f(0, m_PreviewBubbles.at(m_ActiveBubble)->GetPosition().y));
 }
 
 void Rendering::LoadBackground()
@@ -559,7 +604,7 @@ void Rendering::CreateNextUpSprites()
 void Rendering::CreatePlayModeButtons()
 {
 	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
-	basePos.x = m_Window->getSize().x / 10;
+	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
 	basePos.y -= 50;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Back to menu");
@@ -573,4 +618,44 @@ void Rendering::CreatePlayModeButtons()
 	newButton->ResizeCharacters(40);
 	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
+}
+
+void Rendering::CreateConfirmationWindow()
+{
+	m_ConfirmationTexture = std::make_unique<sf::Texture>();
+	m_ConfirmationTexture->loadFromFile(CONFIRM_FILENAME);
+
+	m_ConfirmationWindow = std::make_unique<sf::RectangleShape>();
+	m_ConfirmationWindow->setTexture(m_ConfirmationTexture.get());
+	m_ConfirmationWindow->setSize(sf::Vector2f(Settings::get().GetConfirmationWidth(), Settings::get().GetConfirmationHeight()));
+	m_ConfirmationWindow->setOrigin(m_ConfirmationWindow->getSize().x / 2, m_ConfirmationWindow->getSize().y / 3);
+
+	sf::Vector2f size = BubbleMath::ToVector2f(m_Window->getSize());
+	m_ConfirmationWindow->setPosition(size.x/ 2, size.y / 2);
+
+	sf::Vector2f basePos = m_ConfirmationWindow->getGlobalBounds().getPosition();
+	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 4;
+	basePos.y += m_ConfirmationWindow->getGlobalBounds().height / 1.3f;
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Yes");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.6f, 0.6f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ConfirmConfirm", std::move(newButton)));
+
+	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 2;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("No");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.6f, 0.6f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("CancelConfirm", std::move(newButton)));
+
+	m_ConfirmationText = std::make_unique<sf::Text>();
+	m_ConfirmationText->setFont(*m_Font);
+	m_ConfirmationText->setFillColor(sf::Color::Black);
+	m_ConfirmationText->setString(CONFIRM_EXIT_GAME);
+	m_ConfirmationText->setOrigin(m_ConfirmationText->getLocalBounds().getPosition().x + m_ConfirmationText->getLocalBounds().width / 2,
+		m_ConfirmationText->getLocalBounds().getPosition().y + m_ConfirmationText->getLocalBounds().height / 2);
+	m_ConfirmationText->setPosition(m_ConfirmationWindow->getPosition());
+
+
 }

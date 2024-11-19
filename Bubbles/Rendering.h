@@ -43,6 +43,7 @@ public:
 			m_ComboText->setString("");
 	}
 	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
+	void UpdateConfirmText(EGAME_STATE a_NewState);
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
@@ -55,6 +56,7 @@ private:
 	void GameOverAnimationDraw() const;
 	void HighScoreDraw() const;
 	void GameOverDraw() const;
+	void ConfirmationDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -70,6 +72,7 @@ private:
 	void CreateDuck();
 	void CreateNextUpSprites();
 	void CreatePlayModeButtons();
+	void CreateConfirmationWindow();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -119,5 +122,10 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
 	std::unique_ptr<sf::Texture> m_HighScoreTexture;
 	std::unique_ptr<Button> m_HSBackButton;
+
+	//Confirm
+	std::unique_ptr<sf::RectangleShape> m_ConfirmationWindow;
+	std::unique_ptr<sf::Texture> m_ConfirmationTexture;
+	std::unique_ptr<sf::Text> m_ConfirmationText;
 };
 

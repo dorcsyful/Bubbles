@@ -112,6 +112,11 @@ void BubbleGame::Update()
 					CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"SetMenuState", 0.2f, false);
 				}
 			}
+			else if(m_State == EGAME_STATE::STATE_MENU_CONFIRM || m_State == EGAME_STATE::STATE_RESTART_CONFIRM
+				|| m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+			{
+				ConfirmInput();
+			}
 		}
 
 		if (m_State == EGAME_STATE::STATE_PLAY)
@@ -186,6 +191,18 @@ void BubbleGame::RemoveAtEnd()
 	m_State = EGAME_STATE::STATE_GAME_OVER;
 }
 
+void BubbleGame::BackToMenu()
+{
+	m_Rendering->Reset();
+		
+	m_Gameplay->Reset();
+	m_Physics->Reset();
+	m_Wrapper->Clear();
+
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
+}
+
 void BubbleGame::PlayInput(const sf::Event& a_Event)
 {
 	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Space)
@@ -201,18 +218,16 @@ void BubbleGame::PlayInput(const sf::Event& a_Event)
 	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
 	if (buttons.at("Back to menu")->DetectClick(mousePosition))
 	{
-		m_Rendering->Reset();
-		
-		m_Gameplay->Reset();
-		m_Physics->Reset();
-		m_Wrapper->Clear();
-
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_MENU_CONFIRM); },
+			"SetConfirmState1", 0.1f, false);
+		//BackToMenu();
 	}
 	if(buttons.at("Restart")->DetectClick(mousePosition))
 	{
-		RestartGame();
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_RESTART_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_RESTART_CONFIRM); },
+			"SetConfirmState2", 0.1f, false);
+
+		//RestartGame();
 	}
 
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
@@ -243,7 +258,7 @@ void BubbleGame::MenuInput()
 
 	if (buttons.at("Exit")->DetectClick(mousePosition))
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, "Exit", 0.5f, false);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_EXIT_CONFIRM; }, "Exit", 0.1f, false);
 	}
 }
 
@@ -271,5 +286,40 @@ void BubbleGame::GameOverInput()
 
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
 
+	}
+}
+
+void BubbleGame::ConfirmInput()
+{
+	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+	if (m_Rendering->GetMenuButtons().at("ConfirmConfirm")->DetectClick(mousePosition))
+	{
+		if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, "Exit", 0.2f, false);
+		}
+		if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { RestartGame(); }, "Restart", 0.2f, false);
+		}
+		if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { BackToMenu(); }, "BackToMenu", 0.2f, false);
+		}
+	}
+	if (m_Rendering->GetMenuButtons().at("CancelConfirm")->DetectClick(mousePosition))
+	{
+		if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
+		}
+		if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
+		}
+		if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
+		}
 	}
 }

@@ -63,6 +63,10 @@ void Settings::LoadSettings()
                 m_FrameWidth = stof(value);
             if (name == "CONTAINER_FRAME_HEIGHT")
                 m_FrameHeight = stof(value);
+            if (name == "CONFIRMATION_WIDTH")
+                m_ConfirmationWidth = stof(value);
+            if (name == "CONFIRMATION_HEIGHT")
+                m_ConfirmationHeight = stof(value);
         }
         file.close();
     }
