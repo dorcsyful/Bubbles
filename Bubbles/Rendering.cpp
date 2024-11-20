@@ -249,12 +249,24 @@ void Rendering::UpdateConfirmText(EGAME_STATE a_NewState)
 
 }
 
+void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos)
+{
+	sf::FloatRect textBounds = m_ComboText->getLocalBounds();
+	sf::FloatRect rectBounds = m_Container->getGlobalBounds();
+
+	// Adjust coordinate to fit within rectangle bounds
+	sf::Vector2f adjustedCoord = a_NewPos;
+	adjustedCoord.x = std::max(rectBounds.left, std::min(rectBounds.left + rectBounds.width - textBounds.width, adjustedCoord.x));
+	adjustedCoord.y = std::max(rectBounds.top, std::min(rectBounds.top + rectBounds.height - textBounds.height, adjustedCoord.y));
+
+	// Position the text
+	m_ComboText->setPosition(adjustedCoord);
+
+}
+
 void Rendering::Reset()
 {
-	/*m_Line->setPosition(0, m_Line->getPosition().y);
-	m_Duck->SetPosition(sf::Vector2f(0, m_Duck->GetPosition().y));*/
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
-	//m_PreviewBubbles.at(m_ActiveBubble)->SetPosition(sf::Vector2f(0, m_PreviewBubbles.at(m_ActiveBubble)->GetPosition().y));
 }
 
 void Rendering::LoadBackground()
@@ -517,6 +529,7 @@ void Rendering::CreateScoreText()
 	m_ComboText->setFillColor(sf::Color::Black);
 	m_ComboText->setStyle(sf::Text::Bold);
 	m_ComboText->setString("Combo:\n 0");
+	m_ComboText->setOrigin(m_ComboText->getGlobalBounds().getPosition().y + m_ComboText->getGlobalBounds().height, 0);
 	position = m_Container->getPosition();
 	position.x += Settings::get().GetContainerWidth();
 	position.y += 100;

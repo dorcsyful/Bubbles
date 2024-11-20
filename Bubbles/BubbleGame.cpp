@@ -32,19 +32,21 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
 	{
-		auto combined = m_Gameplay->CombineBubble(m_Physics->m_BubblesToCombine[i].first, m_Physics->m_BubblesToCombine[i].second);
+		const BubbleObject* bubble1 = m_Physics->m_BubblesToCombine[i].first;
+		auto bubble2 = m_Physics->m_BubblesToCombine[i].second;
+		m_ComboTextPositions.insert(std::pair<int, sf::Vector2f>(i + 1, BubbleMath::Lerp(bubble1->GetPosition(),bubble2->GetPosition(), 0.5f)));
 
-		m_Wrapper->RemoveObjectByPointer(m_Physics->m_BubblesToCombine[i].first);
-		m_Wrapper->RemoveObjectByPointer(m_Physics->m_BubblesToCombine[i].second);
+		auto combined = m_Gameplay->CombineBubble(bubble1, bubble2);
+
+		m_Wrapper->RemoveObjectByPointer(bubble1);
+		m_Wrapper->RemoveObjectByPointer(bubble2);
 
 		CreateWrapper(combined);
 
 	}
 
-	m_Rendering->UpdateScore(m_Gameplay->GetScore());
-	m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * Settings::get().GetComboScore());
 	m_Wrapper->Update();
-
+	NextComboText();
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
@@ -59,7 +61,6 @@ void BubbleGame::RestartGame()
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
 	m_Rendering->GetDuck()->SetFrame(0);
-	//m_Rendering->GetDuck()->SetAnimate(true, true);
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadState", 0.1f, false);
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
 }
@@ -203,12 +204,38 @@ void BubbleGame::BackToMenu()
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
 }
 
+void BubbleGame::NextComboText()
+{
+	if (m_ComboTextPositions.empty())
+	{
+		m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * Settings::get().GetComboScore());
+		return;
+	}
+	auto dist = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - m_NextComboMove).count();
+	std::cout << dist/1000.f << "\n";
+	m_Rendering->UpScaleComboText(dist / 1000.f);
+
+	if (std::chrono::steady_clock::now() > m_NextComboMove)
+	{
+		sf::Vector2f position = m_ComboTextPositions.begin()->second;
+		position.x *= Settings::get().GetPixelToMeter();
+		position.y *= Settings::get().GetPixelToMeter();
+		position.y *= -1;
+		m_Rendering->UpdateComboPosition(position);
+		m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * m_ComboTextPositions.begin()->first);
+
+		m_NextComboMove = std::chrono::steady_clock::now() + std::chrono::milliseconds(static_cast<long>(500.f));
+		m_ComboTextPositions.erase(m_ComboTextPositions.begin());
+	}
+}
+
 void BubbleGame::PlayInput(const sf::Event& a_Event)
 {
 	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Space)
 	{
 		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 		{
+			m_ComboTextPositions.clear();
 			AddBubble();
 			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 		}

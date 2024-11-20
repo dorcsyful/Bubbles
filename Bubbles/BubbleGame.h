@@ -36,6 +36,10 @@ private:
 	void RemoveAtEnd();
 	void BackToMenu();
 
+	void NextComboText();
+
+	std::map<int, sf::Vector2f> m_ComboTextPositions;
+	std::chrono::time_point<std::chrono::steady_clock> m_NextComboMove;
 
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
 	std::unique_ptr<Save> m_Save;

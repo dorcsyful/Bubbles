@@ -20,7 +20,6 @@ void Gameplay::Update(float a_Delta)
 
 void Gameplay::CheatNextBubble(EBUBBLE_TYPE a_ToDrop)
 {
-	std::cout << (int)a_ToDrop;
 	m_CurrentBubble = a_ToDrop;
 }
 
