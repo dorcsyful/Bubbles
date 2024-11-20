@@ -40,9 +40,11 @@ public:
 			m_ComboText->setString("Combo:\n +" + basicString);
 		}
 		else
+		{
 			m_ComboText->setString("");
+		}
 	}
-	void UpScaleComboText(float a_Amount) { m_ComboText->setScale(m_ComboText->getScale().x * a_Amount, m_ComboText->getScale().y * a_Amount); }
+	void UpScaleComboText(float a_Amount) const { m_ComboText->setScale(a_Amount, a_Amount); }
 	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
 	void UpdateConfirmText(EGAME_STATE a_NewState);
 	void UpdateComboPosition(const sf::Vector2f& a_NewPos);

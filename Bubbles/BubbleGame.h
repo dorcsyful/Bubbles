@@ -38,8 +38,8 @@ private:
 
 	void NextComboText();
 
-	std::map<int, sf::Vector2f> m_ComboTextPositions;
-	std::chrono::time_point<std::chrono::steady_clock> m_NextComboMove;
+	sf::Vector2f m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
+	sf::Clock m_ScaleTimer;
 
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
 	std::unique_ptr<Save> m_Save;

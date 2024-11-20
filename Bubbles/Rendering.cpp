@@ -525,7 +525,7 @@ void Rendering::CreateScoreText()
 
 	m_ComboText = std::make_unique<sf::Text>();
 	m_ComboText->setFont(*m_Font);
-	m_ComboText->setCharacterSize(50);
+	m_ComboText->setCharacterSize(40);
 	m_ComboText->setFillColor(sf::Color::Black);
 	m_ComboText->setStyle(sf::Text::Bold);
 	m_ComboText->setString("Combo:\n 0");

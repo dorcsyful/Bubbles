@@ -34,13 +34,22 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	{
 		const BubbleObject* bubble1 = m_Physics->m_BubblesToCombine[i].first;
 		auto bubble2 = m_Physics->m_BubblesToCombine[i].second;
-		m_ComboTextPositions.insert(std::pair<int, sf::Vector2f>(i + 1, BubbleMath::Lerp(bubble1->GetPosition(),bubble2->GetPosition(), 0.5f)));
+
+		m_ComboTextPositions = BubbleMath::Lerp(bubble1->GetPosition(),bubble2->GetPosition(), 0.5f);
+		m_ComboTextPositions.x *= Settings::get().GetPixelToMeter();
+		m_ComboTextPositions.y *= Settings::get().GetPixelToMeter();
+		m_ComboTextPositions.y *= -1;
+		m_Rendering->UpdateComboPosition(m_ComboTextPositions);
+
+		m_Rendering->UpScaleComboText(0.5);
+		m_ScaleTimer = sf::Clock();
 
 		auto combined = m_Gameplay->CombineBubble(bubble1, bubble2);
+		unsigned combo = Settings::get().GetComboScore() * m_Gameplay->GetComboScore();
+		m_Rendering->UpdateCombo(combo);
 
 		m_Wrapper->RemoveObjectByPointer(bubble1);
 		m_Wrapper->RemoveObjectByPointer(bubble2);
-
 		CreateWrapper(combined);
 
 	}
@@ -206,26 +215,26 @@ void BubbleGame::BackToMenu()
 
 void BubbleGame::NextComboText()
 {
-	if (m_ComboTextPositions.empty())
+	if (m_ComboTextPositions == sf::Vector2f(INFINITY, INFINITY))
 	{
-		m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * Settings::get().GetComboScore());
+		m_Rendering->UpdateCombo(0);
+		m_Rendering->UpScaleComboText(0.5);
+
 		return;
 	}
-	auto dist = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - m_NextComboMove).count();
-	std::cout << dist/1000.f << "\n";
-	m_Rendering->UpScaleComboText(dist / 1000.f);
 
-	if (std::chrono::steady_clock::now() > m_NextComboMove)
+	float initialScale = 0.5f;
+	float targetScale = 1.0f;
+
+	float elapsedTime = m_ScaleTimer.getElapsedTime().asSeconds();
+	float scaleFactor = std::clamp(initialScale + (targetScale - initialScale) * (elapsedTime / 1),0.5f,1.f);
+	m_Rendering->UpScaleComboText(scaleFactor);
+	std::cout << scaleFactor << "\n";
+	if (elapsedTime >= 1)
 	{
-		sf::Vector2f position = m_ComboTextPositions.begin()->second;
-		position.x *= Settings::get().GetPixelToMeter();
-		position.y *= Settings::get().GetPixelToMeter();
-		position.y *= -1;
-		m_Rendering->UpdateComboPosition(position);
-		m_Rendering->UpdateCombo(m_Gameplay->GetComboScore() * m_ComboTextPositions.begin()->first);
-
-		m_NextComboMove = std::chrono::steady_clock::now() + std::chrono::milliseconds(static_cast<long>(500.f));
-		m_ComboTextPositions.erase(m_ComboTextPositions.begin());
+		m_ScaleTimer = sf::Clock();
+		m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
+		m_Rendering->UpdateCombo(0);
 	}
 }
 
@@ -235,7 +244,7 @@ void BubbleGame::PlayInput(const sf::Event& a_Event)
 	{
 		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 		{
-			m_ComboTextPositions.clear();
+			m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 			AddBubble();
 			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 		}
