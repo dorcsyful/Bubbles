@@ -15,6 +15,7 @@ public:
 	SpriteWithText(const std::string& a_Text, const sf::Font& a_Font, const sf::Vector2f& a_Size, const sf::Vector2f& a_Position, const sf::Color& a_TextColor = sf::Color::Black, const sf::Texture* a_BackgroundTexture = nullptr);
 
 	void SetText(const std::string& a_Text);
+	std::string GetText() const { return m_Text->getString(); }
 
 private:
 

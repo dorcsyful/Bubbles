@@ -30,7 +30,7 @@ public:
 	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
 
-	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score)); }
+	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score) + "High Score : \n " + m_HighScoreSprites[0]->GetText()); }
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
 	{

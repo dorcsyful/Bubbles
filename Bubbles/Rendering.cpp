@@ -25,8 +25,9 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreatePointer();
 	CreateMenuSprites();
 	CreateGameOverSprite();
-	CreateScoreText();
 	CreateHighScoreSprites();
+
+	CreateScoreText();
 	CreateDuck();
 	CreateNextUpSprites();
 	CreatePlayModeButtons();
@@ -226,6 +227,8 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 	{
 		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
 	}
+	m_Score->SetText("Score: \n 0 \n High Score: \n " + m_HighScoreSprites[0]->GetText());
+
 }
 
 void Rendering::UpdateConfirmText(EGAME_STATE a_NewState)
@@ -519,7 +522,7 @@ void Rendering::CreateScoreText()
 	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
 
-	m_Score = std::make_unique<SpriteWithText>("Score: \n 0", *m_Font, sf::Vector2f(200,130),
+	m_Score = std::make_unique<SpriteWithText>("Score: \n 0 \n High Score: \n " + m_HighScoreSprites[0]->GetText(), *m_Font, sf::Vector2f(200, 170),
 		position, sf::Color::Black, m_ScoreBackgroundTexture.get());
 
 
