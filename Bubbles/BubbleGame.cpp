@@ -56,6 +56,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 	m_Wrapper->Update();
 	NextComboText();
+	m_Rendering->UpdateScore(m_Gameplay->GetScore());
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
@@ -229,7 +230,6 @@ void BubbleGame::NextComboText()
 	float elapsedTime = m_ScaleTimer.getElapsedTime().asSeconds();
 	float scaleFactor = std::clamp(initialScale + (targetScale - initialScale) * (elapsedTime / 1),0.5f,1.f);
 	m_Rendering->UpScaleComboText(scaleFactor);
-	std::cout << scaleFactor << "\n";
 	if (elapsedTime >= 1)
 	{
 		m_ScaleTimer = sf::Clock();

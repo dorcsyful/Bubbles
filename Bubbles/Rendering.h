@@ -30,11 +30,14 @@ public:
 	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
 
-	void UpdateScore(const unsigned int a_Score) const { m_Score->SetText("Score: \n" + std::to_string(a_Score) + "High Score : \n " + m_HighScoreSprites[0]->GetText()); }
+	void UpdateScore(const unsigned int a_Score) const
+	{
+		m_Score->SetText("Score: \n" + std::to_string(a_Score) + "\nHigh Score : \n " + m_HighScoreSprites[0]->GetText());
+	}
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
 	{
-		if (a_Combo > 2)
+		if (a_Combo > 5)
 		{
 			std::string basicString = std::to_string(a_Combo);
 			m_ComboText->setString("Combo:\n +" + basicString);
@@ -111,6 +114,7 @@ private:
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;
 	std::unique_ptr<sf::Texture> m_GameOverTexture;
+	std::unique_ptr<SpriteWithText> m_GOScoreSprite;
 
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;

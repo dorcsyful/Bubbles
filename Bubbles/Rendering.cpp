@@ -24,10 +24,11 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	LoadNextUpTextures();
 	CreatePointer();
 	CreateMenuSprites();
-	CreateGameOverSprite();
 	CreateHighScoreSprites();
 
 	CreateScoreText();
+	CreateGameOverSprite();
+
 	CreateDuck();
 	CreateNextUpSprites();
 	CreatePlayModeButtons();
@@ -106,6 +107,7 @@ void Rendering::GameOverDraw() const
 	m_Window->draw(*m_GameOver);
 	m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_Window->draw(*m_GOScoreSprite);
 	m_Window->draw(*m_MenuButtons.at("BackToMenu"));
 	m_Window->draw(*m_MenuButtons.at("PlayAgain"));
 	//m_Duck->Draw(*m_Window);
@@ -436,8 +438,16 @@ void Rendering::CreateGameOverSprite()
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 4));
 
+
+
 	basePos = m_GameOver->getPosition();
 	basePos.y += m_GameOver->getSize().y;
+	auto size = m_GameOver->getSize();
+	size.x /= 5;
+	m_GOScoreSprite = std::make_unique<SpriteWithText>(m_Score->GetText(), *m_Font, size,basePos,sf::Color::Black,m_ScoreBackgroundTexture.get());
+
+	basePos.y += size.y * 1.1f;
+
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
 	newButton->ResizeCharacters(50);
