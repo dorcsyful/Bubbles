@@ -25,14 +25,16 @@ public:
 		m_BackgroundMusic->stop();
 		m_SadGameOver->play();	
 	}
-	void SetAudioActive(const bool a_Enabled)
+	void SetEffectsVolume(const float a_Volume) const
 	{
-		float newVolume = a_Enabled ? 100 : 0;
-		m_Click->setVolume(newVolume);
-		m_BubbleDrop->setVolume(newVolume);
-		m_BackgroundMusic->setVolume(newVolume);
-		m_SadGameOver->setVolume(newVolume);
-		m_Enabled = a_Enabled;
+		m_Click->setVolume(a_Volume);
+		m_BubbleDrop->setVolume(a_Volume);
+		m_SadGameOver->setVolume(a_Volume);
+	}
+
+	void SetMusicVolume(const float a_Volume) const
+	{
+		m_BackgroundMusic->setVolume(a_Volume);
 	}
 
 	bool IsAudioEnabled() const { return m_Enabled; }

@@ -11,7 +11,7 @@ void BubbleGame::Initialize()
 {
 	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
-	Settings::get().SetSoundEnabled(Settings::get().IsSoundEnabled());
+	//Settings::get().SetSoundEnabled(Settings::get().IsSoundEnabled());
 
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
@@ -88,16 +88,6 @@ void BubbleGame::Update()
 
 			if (event.type == sf::Event::Closed)
 				m_Rendering->GetWindow()->close();
-
-			if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && 
-				m_Rendering->GetSoundButton()->getGlobalBounds().contains(
-					m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()))))
-			{
-				Settings::get().SetSoundEnabled(!Audio::getInstance().IsAudioEnabled());
-				sf::Vector2i size = static_cast<sf::Vector2i>(m_Rendering->GetSoundButton()->getTexture()->getSize());
-				int left = Audio::getInstance().IsAudioEnabled() ? 0 : size.x/2;
-				m_Rendering->GetSoundButton()->setTextureRect(sf::IntRect(left, 0, size.x /2, size.y));
-			}
 
 			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
@@ -373,5 +363,14 @@ void BubbleGame::SettingsInput()
 {
 	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
 
-	m_Rendering->GetMusicSlider()->DetectClick(mousePosition);
+	m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition);
+	m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition);
+	if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
+	{
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"ApplySettings", 0.1f, false);
+	}
+	if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
+	{
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
+	}
 }

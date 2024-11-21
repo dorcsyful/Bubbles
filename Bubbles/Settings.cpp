@@ -47,8 +47,10 @@ void Settings::LoadSettings()
                 m_GameOverAnimationTime = stoi(value);
             if (name == "BUBBLE_ANIMATION_TOTAL_TIME")
                 m_BubbleAnimationTotalTime = stof(value);
-            if (name == "SOUND_ENABLED")
-                m_SoundEnabled = stoi(value);
+            if (name == "MUSIC_VOLUME")
+                m_MusicVolume = stof(value);
+            if (name == "EFFECT_VOLUME")
+                m_EffectVolume = stof(value);
             if (name == "ANTI_ALIASING")
                 m_AntiAliasingLevel = stoi(value);
             if (name == "DUCK_WIDTH")
@@ -89,23 +91,29 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
     }
 }
 
-void Settings::SetSoundEnabled(bool a_Enabled)
+void Settings::SetSoundEnabled(float a_Music, float a_Effects)
 {
-    m_SoundEnabled = a_Enabled;
-    Audio::getInstance().SetAudioActive(a_Enabled);
+    m_MusicVolume = a_Music;
+    Audio::getInstance().SetMusicVolume(a_Music);
+    Audio::getInstance().SetEffectsVolume(a_Effects);
 
-    std::string isEnabledAsString = a_Enabled ? "1" : "0";
+    std::string musicVolumeAsString = std::to_string(a_Music);
+    std::string effectsVolumeAsString = std::to_string(a_Effects);
 
     std::vector<std::string> lines;
     std::ifstream infile("Assets/Settings.save");
     std::string line;
-    int index{};
+    int musicLineIndex = INFINITY;
+    int effectsLineIndex = INFINITY;
     int counter = 0;
     while (getline(infile, line)) {
-        if(line.starts_with("SOUND_ENABLED|"))
+        if(line.starts_with("MUSIC_VOLUME|"))
         {
-            index = counter;
-            if (&line[line.length() - 1] == isEnabledAsString.c_str()) return;
+            musicLineIndex = counter;
+        }
+        if (line.starts_with("EFFECT_VOLUME|"))
+        {
+            effectsLineIndex = counter;
         }
         lines.push_back(line);
         counter++;
@@ -113,7 +121,8 @@ void Settings::SetSoundEnabled(bool a_Enabled)
     infile.close();
 
     // Modify the last line
-    lines[index] = "SOUND_ENABLED|" + isEnabledAsString;
+    lines[musicLineIndex] = "MUSIC_VOLUME|" + musicVolumeAsString;
+    lines[effectsLineIndex] = "EFFECT_VOLUME|" + effectsVolumeAsString;
 
     std::ofstream outfile("Assets/Settings.save");
     for (const std::string& nline : lines) {

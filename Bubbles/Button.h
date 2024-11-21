@@ -16,7 +16,7 @@ public:
     bool DetectClick(const sf::Vector2f& a_MousePosition);
     void DetectHover(const sf::Vector2f& a_MousePosition) const;
     void ResizeCharacters(unsigned int a_Size) const;
-
+    sf::Vector2f GetPosition() const { return m_Shape->getPosition(); }
 private:
 	void draw(sf::RenderTarget& a_Target, const sf::RenderStates a_States) const override
 	{

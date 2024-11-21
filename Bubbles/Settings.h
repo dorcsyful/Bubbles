@@ -49,8 +49,9 @@ public:
 
     [[nodiscard]] float BubbleSize(const EBUBBLE_TYPE a_Type) const { return m_BubbleSizes.at(a_Type); }
 
-    [[nodiscard]] bool IsSoundEnabled() const { return m_SoundEnabled; }
-    void SetSoundEnabled(bool a_Enabled);
+    [[nodiscard]] float GetMusicVolume() const { return m_MusicVolume; }
+    [[nodiscard]] float GetSoundEffectsVolume() const { return m_EffectVolume; }
+    void SetSoundEnabled(float a_Music, float a_Effects);
 
 private:
     float m_WindowWidth = 0;
@@ -78,7 +79,8 @@ private:
 
     float m_HighScoreItemWidth = 0;
     float m_HighScoreItemHeight = 0;
-    bool m_SoundEnabled = true;
+    float m_MusicVolume = 100;
+    float m_EffectVolume = 100;
     int m_AntiAliasingLevel = 0;
 
     float m_DuckHeight = 0;

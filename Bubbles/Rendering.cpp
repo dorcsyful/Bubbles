@@ -128,8 +128,23 @@ void Rendering::ConfirmationDraw() const
 
 void Rendering::SettingsDraw() const
 {
-	m_MusicSlider->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-	m_Window->draw(*m_MusicSlider);
+	for (auto& current : m_SettingSliders)
+	{
+		current->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+		m_Window->draw(*current);
+	}
+	for(auto& current : m_SettingsText)
+	{
+		m_Window->draw(*current);
+
+	}
+
+	m_MenuButtons.at("ApplySettings")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_MenuButtons.at("Revert")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_Window->draw(*m_MenuButtons.at("ApplySettings"));
+	m_Window->draw(*m_MenuButtons.at("Revert"));
+
+	m_Window->draw(*m_SettingsTitle);
 }
 
 void Rendering::Draw(const EGAME_STATE a_State) const
@@ -137,7 +152,6 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	m_Window->clear();
 
 	m_Window->draw(*m_BackgroundSprite);
-	m_Window->draw(*m_SoundButton);
 	if (a_State == EGAME_STATE::STATE_PLAY)
 	{
 		PlayDraw();
@@ -244,7 +258,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 
 }
 
-void Rendering::UpdateConfirmText(EGAME_STATE a_NewState)
+void Rendering::UpdateConfirmText(EGAME_STATE a_NewState) const
 {
 	if(a_NewState == EGAME_STATE::STATE_EXIT_CONFIRM)
 	{
@@ -265,7 +279,7 @@ void Rendering::UpdateConfirmText(EGAME_STATE a_NewState)
 
 }
 
-void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos)
+void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 {
 	sf::FloatRect textBounds = m_ComboText->getLocalBounds();
 	sf::FloatRect rectBounds = m_Container->getGlobalBounds();
@@ -326,14 +340,6 @@ void Rendering::LoadBackground()
 	sf::Vector2f size = m_Container->getGlobalBounds().getSize();
 	m_Frame->setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f -15);
 
-	m_SoundTexture = std::make_unique<sf::Texture>();
-	m_SoundTexture->loadFromFile(SOUND_FILENAME);
-	m_SoundButton = std::make_unique<sf::RectangleShape>();
-	m_SoundButton->setTexture(m_SoundTexture.get());
-	sf::Vector2i vector2U = sf::Vector2i(static_cast<int>(m_SoundTexture->getSize().x), static_cast<int>(m_SoundTexture->getSize().y));
-	int left = Audio::getInstance().IsAudioEnabled() ? 0 : vector2U.x / 2;
-	m_SoundButton->setTextureRect(sf::IntRect(left, 0, vector2U.x / 2, vector2U.y));
-	m_SoundButton->setSize(sf::Vector2f(static_cast<float>(vector2U.x) / 2.f, static_cast<float>(vector2U.y)) / 5.f);
 }
 
 void Rendering::LoadBubbleTextures()
@@ -699,11 +705,55 @@ void Rendering::CreateConfirmationWindow()
 
 void Rendering::CreateSettings()
 {
-	sf::Vector2f position = m_Title->getPosition();
+	m_SettingSliders = std::vector<std::unique_ptr<Slider>>();
+	m_SettingsText = std::vector<std::unique_ptr<sf::Text>>();
+	m_SettingsTexture = std::make_unique<sf::Texture>();
+	m_SettingsTexture->loadFromFile(SETTINGS_FILENAME);
+
+	m_SettingsTitle = std::make_unique<sf::RectangleShape>();
+	m_SettingsTitle->setTexture(m_SettingsTexture.get());
+	m_SettingsTitle->setSize(m_Title->getSize());
+	m_SettingsTitle->setOrigin(m_SettingsTitle->getSize().x / 2, m_SettingsTitle->getSize().y / 2);
+	m_SettingsTitle->setPosition(m_Title->getPosition());
+
+	sf::Vector2f position = sf::Vector2f(m_SettingsTitle->getPosition().x, m_MenuButtons.at("Play")->GetPosition().y);
 	sf::Vector2f size = sf::Vector2f(m_Title->getSize().x / 2, m_Title->getSize().y / 10);
 	sf::Color baseColor = sf::Color(42, 112, 145, 255);
 	sf::Color hoverColor = sf::Color(188, 236, 244, 255);
 	sf::Color clickedColor = sf::Color(209, 226, 231, 255);
 	sf::Color sliderColor = sf::Color(128, 128, 128, 255);
-	m_MusicSlider = std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor);
+	m_SettingSliders.push_back(std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor));
+	position.y += 100;
+	m_SettingSliders.push_back(std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor));
+
+	m_SettingsText.push_back(std::make_unique<sf::Text>("Music volume:", *m_Font));
+	sf::Vector2f origin = sf::Vector2f(0, static_cast<float>(m_SettingsText[0]->getCharacterSize()) / 1.5f);
+	sf::Vector2f textPosition = sf::Vector2f(m_SettingsTitle->getPosition().x - m_SettingsTitle->getSize().x / 2, position.y - 100);
+
+	m_SettingsText[0]->setOrigin(origin);
+	m_SettingsText[0]->setPosition(textPosition);
+	m_SettingsText[0]->setFillColor(sf::Color::Black);
+
+	textPosition.y = position.y;
+	m_SettingsText.push_back(std::make_unique<sf::Text>("Sound effects:", *m_Font));
+	m_SettingsText[1]->setOrigin(origin);
+	m_SettingsText[1]->setPosition(textPosition);
+	m_SettingsText[1]->setFillColor(sf::Color::Black);
+
+	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
+	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
+	basePos.y -= 50;
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Apply");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
+
+	basePos.x += 160;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Revert");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
+
 }

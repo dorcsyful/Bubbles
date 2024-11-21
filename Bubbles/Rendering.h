@@ -50,11 +50,10 @@ public:
 	}
 	void UpScaleComboText(float a_Amount) const { m_ComboText->setScale(a_Amount, a_Amount); }
 	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
-	void UpdateConfirmText(EGAME_STATE a_NewState);
-	void UpdateComboPosition(const sf::Vector2f& a_NewPos);
+	void UpdateConfirmText(EGAME_STATE a_NewState) const;
+	void UpdateComboPosition(const sf::Vector2f& a_NewPos) const;
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
-	std::unique_ptr<Slider>& GetMusicSlider() { return m_MusicSlider; }
-	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
+	std::unique_ptr<Slider>& GetSettingSlider(int a_Id) { return m_SettingSliders[a_Id]; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
 
 	void Reset();
@@ -89,8 +88,6 @@ private:
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
-	std::unique_ptr<sf::Texture> m_SoundTexture;
-	std::unique_ptr<sf::RectangleShape> m_SoundButton;
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
@@ -141,6 +138,9 @@ private:
 	std::unique_ptr<sf::Text> m_ConfirmationText;
 
 	//Settings
-	std::unique_ptr<Slider> m_MusicSlider;
+	std::unique_ptr<sf::RectangleShape> m_SettingsTitle;
+	std::unique_ptr<sf::Texture> m_SettingsTexture;
+	std::vector<std::unique_ptr<sf::Text>> m_SettingsText;
+	std::vector<std::unique_ptr<Slider>> m_SettingSliders;
 };
 
