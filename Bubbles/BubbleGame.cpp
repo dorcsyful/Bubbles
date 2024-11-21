@@ -128,6 +128,11 @@ void BubbleGame::Update()
 			{
 				ConfirmInput();
 			}
+			else if(m_State == EGAME_STATE::STATE_SETTINGS)
+			{
+				SettingsInput();
+			}
+			
 		}
 
 		if (m_State == EGAME_STATE::STATE_PLAY)
@@ -296,6 +301,10 @@ void BubbleGame::MenuInput()
 	{
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_EXIT_CONFIRM; }, "Exit", 0.1f, false);
 	}
+	if (buttons.at("Settings")->DetectClick(mousePosition))
+	{
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "SetSettingState", 0.1f, false);
+	}
 }
 
 void BubbleGame::GameOverAnimationInput()
@@ -358,4 +367,11 @@ void BubbleGame::ConfirmInput()
 			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
 		}
 	}
+}
+
+void BubbleGame::SettingsInput()
+{
+	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+
+	m_Rendering->GetMusicSlider()->DetectClick(mousePosition);
 }

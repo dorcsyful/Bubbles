@@ -33,6 +33,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateNextUpSprites();
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
+	CreateSettings();
 }
 
 void Rendering::PlayDraw() const
@@ -125,6 +126,12 @@ void Rendering::ConfirmationDraw() const
 	m_Window->draw(*m_MenuButtons.at("CancelConfirm"));
 }
 
+void Rendering::SettingsDraw() const
+{
+	m_MusicSlider->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_Window->draw(*m_MusicSlider);
+}
+
 void Rendering::Draw(const EGAME_STATE a_State) const
 {
 	m_Window->clear();
@@ -161,6 +168,10 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	{
 		MenuDraw();
 		ConfirmationDraw();
+	}
+	if(a_State == EGAME_STATE::STATE_SETTINGS)
+	{
+		SettingsDraw();
 	}
 
 	m_Window->display();
@@ -684,4 +695,15 @@ void Rendering::CreateConfirmationWindow()
 	m_ConfirmationText->setPosition(m_ConfirmationWindow->getPosition());
 
 
+}
+
+void Rendering::CreateSettings()
+{
+	sf::Vector2f position = m_Title->getPosition();
+	sf::Vector2f size = sf::Vector2f(m_Title->getSize().x / 2, m_Title->getSize().y / 10);
+	sf::Color baseColor = sf::Color(42, 112, 145, 255);
+	sf::Color hoverColor = sf::Color(188, 236, 244, 255);
+	sf::Color clickedColor = sf::Color(209, 226, 231, 255);
+	sf::Color sliderColor = sf::Color(128, 128, 128, 255);
+	m_MusicSlider = std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor);
 }

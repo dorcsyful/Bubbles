@@ -158,6 +158,7 @@
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="Save.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="SpriteWithText.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="SpriteWithText.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

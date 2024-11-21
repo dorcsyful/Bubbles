@@ -8,6 +8,7 @@
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
 #include "Button.h"
+#include "Slider.h"
 #include "SpriteWithText.h"
 
 class LineObject;
@@ -52,6 +53,7 @@ public:
 	void UpdateConfirmText(EGAME_STATE a_NewState);
 	void UpdateComboPosition(const sf::Vector2f& a_NewPos);
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
+	std::unique_ptr<Slider>& GetMusicSlider() { return m_MusicSlider; }
 	std::unique_ptr<sf::RectangleShape>& GetSoundButton() { return m_SoundButton; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
 
@@ -64,6 +66,7 @@ private:
 	void HighScoreDraw() const;
 	void GameOverDraw() const;
 	void ConfirmationDraw() const;
+	void SettingsDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -80,6 +83,7 @@ private:
 	void CreateNextUpSprites();
 	void CreatePlayModeButtons();
 	void CreateConfirmationWindow();
+	void CreateSettings();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -135,5 +139,8 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_ConfirmationWindow;
 	std::unique_ptr<sf::Texture> m_ConfirmationTexture;
 	std::unique_ptr<sf::Text> m_ConfirmationText;
+
+	//Settings
+	std::unique_ptr<Slider> m_MusicSlider;
 };
 

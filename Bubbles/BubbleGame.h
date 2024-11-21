@@ -30,6 +30,7 @@ private:
 	void GameOverAnimationInput();
 	void GameOverInput();
 	void ConfirmInput();
+	void SettingsInput();
 
 	void GameOver();
 
