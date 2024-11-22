@@ -69,6 +69,8 @@ void Settings::LoadSettings()
                 m_ConfirmationWidth = stof(value);
             if (name == "CONFIRMATION_HEIGHT")
                 m_ConfirmationHeight = stof(value);
+            if (name == "FULLSCREEN")
+                m_FullScreen = value == "YES";
         }
         file.close();
     }

@@ -15,9 +15,18 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 {
 	sf::ContextSettings context;
 	context.antialiasingLevel = Settings::get().GetAaLevel();
-	m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(a_X, a_Y), "Bubbles!",
-	                                              sf::Style::Titlebar | sf::Style::Close, context);
-	m_Window->setSize(sf::Vector2u(a_X, a_Y));
+	if(Settings::get().IsFullscreen())
+	{
+		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bubbles!",
+													 sf::Style::Fullscreen, context);
+	}
+	else
+	{
+		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight()), "Bubbles!",
+			sf::Style::Default, context);
+
+	}
+	//m_Window->setSize(sf::Vector2u(a_X, a_Y));
 
 	LoadBackground();
 	LoadBubbleTextures();
@@ -312,7 +321,7 @@ void Rendering::LoadBackground()
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
-	sf::Vector2f v = sf::Vector2f(windowSize.x, windowSize.y);
+	sf::Vector2f v = sf::Vector2f(1920, 1080);
 	m_BackgroundSprite->setSize(v);
 
 	//Container

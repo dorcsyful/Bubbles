@@ -22,7 +22,7 @@ public:
     [[nodiscard]] float GetFrameHeight() const { return m_FrameHeight; }
     [[nodiscard]] float GetConfirmationWidth() const { return m_ConfirmationWidth; }
     [[nodiscard]] float GetConfirmationHeight() const { return m_ConfirmationHeight; }
-
+    [[nodiscard]] bool IsFullscreen() const { return m_FullScreen; }
 
 	[[nodiscard]] int GetAaLevel() const { return m_AntiAliasingLevel; }
 
@@ -54,6 +54,8 @@ public:
     void SetSoundEnabled(float a_Music, float a_Effects);
 
 private:
+    bool m_FullScreen = false;
+
     float m_WindowWidth = 0;
     float m_WindowHeight = 0;
     float m_ContainerWidth = 0;
