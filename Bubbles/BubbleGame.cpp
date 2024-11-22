@@ -11,7 +11,8 @@ void BubbleGame::Initialize()
 {
 	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
-	//Settings::get().SetSoundEnabled(Settings::get().IsSoundEnabled());
+	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
+	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
 
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>();
@@ -22,7 +23,8 @@ void BubbleGame::Initialize()
 
 	m_Rendering->UpdateHighScores(m_Save->GetScores());
 	m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
-
+	m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
+	m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)
@@ -363,10 +365,17 @@ void BubbleGame::SettingsInput()
 {
 	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
 
-	m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition);
-	m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition);
+	if(m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition))
+	{
+		Audio::getInstance().SetMusicVolume(m_Rendering->GetSettingSlider(0)->GetSliderValue());
+	}
+	if (m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition))
+	{
+		Audio::getInstance().SetEffectsVolume(m_Rendering->GetSettingSlider(1)->GetSliderValue());
+	}
 	if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
 	{
+		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"ApplySettings", 0.1f, false);
 	}
 	if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))

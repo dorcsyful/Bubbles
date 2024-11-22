@@ -10,8 +10,10 @@ public:
 
 	void DetectHover(const sf::Vector2f& a_MousePosition) const;
 	bool DetectClick(const sf::Vector2f& a_MousePosition);
-	void Move(const sf::Vector2f& a_MousePosition);
 	sf::Vector2f GetSliderPosition() const { return m_Slider->getPosition(); }
+	float GetSliderValue();
+	void SetSliderValue(float a_NewVolume);
+
 private:
 	void draw(sf::RenderTarget& a_Target, const sf::RenderStates a_States) const override;
 

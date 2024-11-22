@@ -1,6 +1,9 @@
 #include "Slider.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Mouse.hpp>
+
+#include "Audio.h"
+#include "BubbleMath.h"
 #include "Helpers.h"
 
 Slider::Slider(const sf::Vector2f& a_Position, const sf::Vector2f& a_Size, const sf::Color& a_BaseColor,
@@ -53,6 +56,23 @@ bool Slider::DetectClick(const sf::Vector2f& a_MousePosition)
 	m_Pointer->setFillColor(m_Color[0]);
 	m_IsClicked = false;
 	return false;
+}
+
+float Slider::GetSliderValue()
+{
+	float x1 = (m_Pointer->getPosition().x - (m_Slider->getPosition().x));
+	float width = m_Slider->getGlobalBounds().width - m_Pointer->getGlobalBounds().width;
+	float x = std::floorf((x1 / width) * 100);
+	return x;
+}
+
+void Slider::SetSliderValue(float a_NewVolume)
+{
+	float x = a_NewVolume / 100;
+	auto start = m_Slider->getPosition();
+	sf::Vector2f end(start.x + m_Slider->getGlobalBounds().width - m_Pointer->getSize().x / 2.f, start.y);
+	float width =  BubbleMath::Lerp(start, end, x).x;
+	m_Pointer->setPosition(width, start.y);
 }
 
 void Slider::draw(sf::RenderTarget& a_Target, const sf::RenderStates a_States) const
