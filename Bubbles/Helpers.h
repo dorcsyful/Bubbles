@@ -35,6 +35,13 @@ public:
 		data.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(a_Delay * 1000.f));
 		data.m_Delay = a_Delay;
 		int temp = rand();
+		for(int i = 0; i < m_Functions.size(); i++)
+		{
+			if(m_Functions[i].m_Name == a_RefName)
+			{
+				throw new std::exception("Function with this already exists!");
+			}
+		}
 		m_Functions.push_back(data);
     }
 
@@ -51,28 +58,21 @@ public:
 
     void LoopThroughFunctions()
     {
-		std::vector<FunctionData> markedForDelete;
-	    for (auto& function : m_Functions)
+	    for (int i = static_cast<int>(m_Functions.size()) - 1; i >= 0; i--)
 	    {
-		    if (std::chrono::steady_clock::now() > function.m_TargetTime)
+		    if (std::chrono::steady_clock::now() > m_Functions[i].m_TargetTime)
 		    {
-				if(function.m_Name.empty()) continue;
-			    function.m_Function();
-				if (!function.m_IsRepeating) {
-					markedForDelete.push_back(function);
+				if(m_Functions[i].m_Name.empty()) continue;
+				m_Functions[i].m_Function();
+				if (!m_Functions[i].m_IsRepeating) {
+					m_Functions.erase(std::find(m_Functions.begin(),m_Functions.end(),m_Functions[i]));
 				}
 				else
 				{
-					function.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(function.m_Delay * 1000.f));
+					m_Functions[i].m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(m_Functions[i].m_Delay * 1000.f));
 				}
 		    }
 	    }
-		for (auto& function : markedForDelete)
-		{
-			auto functionData = std::ranges::find(m_Functions, function);
-			m_Functions.erase(functionData);
-		}
-	
     }
 
 private:

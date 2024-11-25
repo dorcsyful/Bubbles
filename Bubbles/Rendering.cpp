@@ -304,7 +304,6 @@ void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 
 }
 
-
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
@@ -447,7 +446,7 @@ void Rendering::CreateTitleSprite()
 	m_Title->setTexture(m_TitleTexture.get());
 	m_Title->setSize(titleTextureSize);
 	m_Title->setOrigin(titleTextureSize.x / 2.f, titleTextureSize.y / 2.f);
-	sf::Vector2f basePos = sf::Vector2f(static_cast<float>(m_Window->getSize().x) / 2.f, static_cast<float>(m_Window->getSize().y) - (Settings::get().GetContainerHeight()));
+	sf::Vector2f basePos = sf::Vector2f(static_cast<float>(m_Window->getSize().x) / 2.f, static_cast<float>(m_Window->getSize().y) / 4);
 	m_Title->setPosition(basePos);
 }
 

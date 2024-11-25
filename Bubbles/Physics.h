@@ -10,7 +10,9 @@ class Physics
 {
 public:
 
-	Physics(std::vector<std::unique_ptr<GameObject>>& a_Objects) : m_GameObjects(a_Objects) { m_Lines = std::vector<std::unique_ptr<LineObject>>(); }
+	Physics(std::vector<std::unique_ptr<GameObject>>& a_Objects, float a_WindowWidth, float a_WindowHeight) :
+	m_GameObjects(a_Objects), m_WindowWidth(a_WindowWidth), m_WindowHeight(a_WindowHeight)
+	{ m_Lines = std::vector<std::unique_ptr<LineObject>>(); }
 
 	void Update(float a_Delta);
 
@@ -33,5 +35,8 @@ private:
 	std::vector<std::unique_ptr<LineObject>> m_Lines;
 	std::vector<std::unique_ptr<GameObject>>& m_GameObjects;
 	std::vector<std::unique_ptr<CollisionManifold>> m_Manifolds;
+
+	float m_WindowWidth;
+	float m_WindowHeight;
 };
 

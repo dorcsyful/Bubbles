@@ -1,5 +1,3 @@
-#include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 #include "Audio.h"
 #include "BubbleGame.h"
 

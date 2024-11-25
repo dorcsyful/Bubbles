@@ -10,12 +10,12 @@
 class Gameplay
 {
 public:
-	Gameplay() {
+	Gameplay(float a_WindowWidth) {
 		time_t currentTime = time(nullptr);
 		srand(static_cast<unsigned int>(currentTime));
 		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 		m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-		m_ContainerEdges[0] = (Settings::get().GetWindowWidth() / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
+		m_ContainerEdges[0] = (a_WindowWidth / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
 		m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 		Move(0);
 		m_Score = 0;
@@ -35,8 +35,8 @@ public:
 	EBUBBLE_TYPE GetNextBubble() const { return m_NextBubble; }
 	std::chrono::time_point<std::chrono::system_clock> GetLastDrop() const { return m_LastDrop; }
 	void SetLastDrop(const std::chrono::time_point<std::chrono::system_clock>& a_Time) { m_LastDrop = a_Time; }
-
-	void Reset();
+	
+	void Reset(float a_WindowWidth);
 
 private:
 	unsigned int m_CombineCombo;

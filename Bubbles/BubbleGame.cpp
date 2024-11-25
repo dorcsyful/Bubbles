@@ -15,8 +15,8 @@ void BubbleGame::Initialize()
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
 
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
-	m_Gameplay = std::make_unique<Gameplay>();
-	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects());
+	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetWindow()->getSize().x);
+	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
 	m_Save = std::make_unique<Save>();
 
 	m_Physics->CreateContainerLines();
@@ -68,7 +68,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 void BubbleGame::RestartGame()
 {
-	m_Gameplay->Reset();
+	m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
@@ -203,7 +203,7 @@ void BubbleGame::BackToMenu()
 {
 	m_Rendering->Reset();
 		
-	m_Gameplay->Reset();
+	m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
 	m_Physics->Reset();
 	m_Wrapper->Clear();
 
@@ -316,7 +316,7 @@ void BubbleGame::GameOverInput()
 	}
 	if(m_Rendering->GetMenuButtons().at("BackToMenu")->DetectClick(mousePosition))
 	{
-		m_Gameplay->Reset();
+		m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
 		m_Physics->Reset();
 		m_Rendering->Reset();
 		m_Wrapper->Clear();

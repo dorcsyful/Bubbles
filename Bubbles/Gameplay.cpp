@@ -64,13 +64,13 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 	return newBubble;
 }
 
-void Gameplay::Reset()
+void Gameplay::Reset(float a_WindowWidth)
 {
 	time_t currentTime = time(nullptr);
 	srand(static_cast<unsigned int>(currentTime));
 	m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
 	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-	m_ContainerEdges[0] = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() / 2.f;
+	m_ContainerEdges[0] = a_WindowWidth / 2.f - Settings::get().GetContainerWidth() / 2.f;
 	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 	m_CurrentPosition = 0;
 	Move(0);
