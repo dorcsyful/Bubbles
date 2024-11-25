@@ -382,4 +382,8 @@ void BubbleGame::SettingsInput()
 	{
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
 	}
+	if(m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition))
+	{
+		std::cout << "Clicked";
+	}
 }

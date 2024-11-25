@@ -97,7 +97,7 @@ void Physics::CreateContainerLines()
 {
 	float containerWidth = Settings::get().GetContainerWidth();
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f basePos = sf::Vector2f(Settings::get().GetWindowWidth() / 2.f - (containerWidth / 2.f), (Settings::get().GetWindowHeight() - containerHeight) / 2.f);
+	sf::Vector2f basePos = sf::Vector2f(m_WindowWidth / 2.f - (containerWidth / 2.f), (m_WindowHeight - containerHeight) / 2.f);
 
 	sf::Vector2f start = basePos;
 	float pixelToMeter = Settings::get().GetPixelToMeter();

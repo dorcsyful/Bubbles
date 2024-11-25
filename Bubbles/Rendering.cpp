@@ -150,6 +150,8 @@ void Rendering::SettingsDraw() const
 
 	m_MenuButtons.at("ApplySettings")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("Revert")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_FullscreenCheckbox->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_Window->draw(*m_FullscreenCheckbox);
 	m_Window->draw(*m_MenuButtons.at("ApplySettings"));
 	m_Window->draw(*m_MenuButtons.at("Revert"));
 
@@ -462,7 +464,7 @@ void Rendering::CreateGameOverSprite()
 	m_GameOver->setOrigin(basePos.x / 2, basePos.y / 2);
 
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
-	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 4));
+	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 2.5f));
 
 
 
@@ -748,6 +750,18 @@ void Rendering::CreateSettings()
 	m_SettingsText[1]->setOrigin(origin);
 	m_SettingsText[1]->setPosition(textPosition);
 	m_SettingsText[1]->setFillColor(sf::Color::Black);
+
+	position.y += 100;
+	position.x += size.x / 2;
+	m_CheckboxTexture = std::make_unique<sf::Texture>();
+	m_CheckboxTexture->loadFromFile(CHECKBOX_FILENAME);
+	textPosition.y = position.y;
+	m_SettingsText.push_back(std::make_unique<sf::Text>("Fullscreen:", *m_Font));
+	m_SettingsText[2]->setOrigin(origin);
+	m_SettingsText[2]->setPosition(textPosition);
+	m_SettingsText[2]->setFillColor(sf::Color::Black);
+
+	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50);
 
 	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;

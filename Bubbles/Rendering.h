@@ -8,6 +8,7 @@
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
 #include "Button.h"
+#include "Checkbox.h"
 #include "Slider.h"
 #include "SpriteWithText.h"
 
@@ -55,6 +56,7 @@ public:
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 	std::unique_ptr<Slider>& GetSettingSlider(int a_Id) { return m_SettingSliders[a_Id]; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
+	std::unique_ptr<Checkbox>& GetFullscreenCheckbox() { return m_FullscreenCheckbox; }
 
 	void Reset();
 
@@ -142,5 +144,7 @@ private:
 	std::unique_ptr<sf::Texture> m_SettingsTexture;
 	std::vector<std::unique_ptr<sf::Text>> m_SettingsText;
 	std::vector<std::unique_ptr<Slider>> m_SettingSliders;
+	std::unique_ptr<sf::Texture> m_CheckboxTexture;
+	std::unique_ptr<Checkbox> m_FullscreenCheckbox;
 };
 

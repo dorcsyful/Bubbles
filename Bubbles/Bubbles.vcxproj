@@ -148,6 +148,7 @@
     <ClCompile Include="BubbleGame.cpp" />
     <ClCompile Include="BubbleObject.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Checkbox.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gameplay.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="BubbleGame.h" />
     <ClInclude Include="BubbleWrapper.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Checkbox.h" />
     <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="CollisionManifold.h" />
     <ClInclude Include="Declarations.h" />

@@ -28,6 +28,7 @@
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
 #define SETTINGS_FILENAME "Assets/Menu/Settings.png"
+#define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"
 
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
 #define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
