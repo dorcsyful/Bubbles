@@ -221,6 +221,7 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 
 void Rendering::MovePointerLine(const float a_X) const
 {
+
 	sf::Vector2f temp = m_Line->getPosition();
 	temp.x = a_X;
 	m_Line->setPosition(temp);
@@ -234,11 +235,11 @@ void Rendering::MovePointerLine(const float a_X) const
 	}
 	if (a_X > m_Duck->GetPosition().x)
 	{
-		m_Duck->GetSprite()->setScale(-0.355f, m_Duck->GetSprite()->getScale().y);
+		m_Duck->GetSprite()->setScale(-abs(m_Duck->GetSprite()->getScale().x), m_Duck->GetSprite()->getScale().y);
 	}
 	if(a_X <m_Duck->GetPosition().x)
 	{
-		m_Duck->GetSprite()->setScale(0.355f, m_Duck->GetSprite()->getScale().y);
+		m_Duck->GetSprite()->setScale(abs(m_Duck->GetSprite()->getScale().x), m_Duck->GetSprite()->getScale().y);
 	}
 	m_Duck->SetPosition(temp);
 }
@@ -303,53 +304,6 @@ void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 
 }
 
-void Rendering::Reset()
-{
-	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
-}
-
-void Rendering::LoadBackground()
-{
-	//Game Background
-	m_BackgroundTexture = std::make_unique<sf::Texture>();
-
-	if (!m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME))
-	{
-		//throw std::exception("Failed to load background texture");
-	}
-	m_BackgroundTexture->setRepeated(true);
-	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
-	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
-	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
-	sf::Vector2f v = sf::Vector2f(1920, 1080);
-	m_BackgroundSprite->setSize(v);
-
-	//Container
-	m_ContainerTexture = std::make_unique<sf::Texture>();
-	if(!m_ContainerTexture->loadFromFile(CONTAINER_FILENAME))
-	{
-		//throw std::exception("Failed to load container texture");
-	}
-	m_ContainerTexture->setRepeated(false);
-	m_Container = std::make_unique<sf::RectangleShape>();
-	m_Container->setTexture(m_ContainerTexture.get());
-	float width = Settings::get().GetContainerWidth();
-	float height = Settings::get().GetContainerHeight() ;
-	m_Container->setSize(sf::Vector2f(width, height));
-	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
-	m_Container->setPosition(basePos);
-
-	m_FrameTexture = std::make_unique<sf::Texture>();
-	m_FrameTexture->loadFromFile(FRAME_FILENAME);
-	m_Frame = std::make_unique<sf::RectangleShape>();
-	m_Frame->setTexture(m_FrameTexture.get());
-	m_Frame->setSize(sf::Vector2f(Settings::get().GetFrameWidth(), Settings::get().GetFrameHeight()));
-	m_Frame->setOrigin(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f);
-	sf::Vector2f position = m_Container->getGlobalBounds().getPosition();
-	sf::Vector2f size = m_Container->getGlobalBounds().getSize();
-	m_Frame->setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f -15);
-
-}
 
 void Rendering::LoadBubbleTextures()
 {
@@ -417,6 +371,53 @@ void Rendering::LoadNextUpTextures()
 
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_NEXT_FILENAME);
+}
+void Rendering::Reset()
+{
+	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
+}
+
+void Rendering::LoadBackground()
+{
+	//Game Background
+	m_BackgroundTexture = std::make_unique<sf::Texture>();
+
+	if (!m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME))
+	{
+		//throw std::exception("Failed to load background texture");
+	}
+	m_BackgroundTexture->setRepeated(true);
+	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
+	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
+	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
+	sf::Vector2f v = sf::Vector2f(1920, 1080);
+	m_BackgroundSprite->setSize(windowSize);
+
+	//Container
+	m_ContainerTexture = std::make_unique<sf::Texture>();
+	if(!m_ContainerTexture->loadFromFile(CONTAINER_FILENAME))
+	{
+		//throw std::exception("Failed to load container texture");
+	}
+	m_ContainerTexture->setRepeated(false);
+	m_Container = std::make_unique<sf::RectangleShape>();
+	m_Container->setTexture(m_ContainerTexture.get());
+	float width = Settings::get().GetContainerWidth();
+	float height = Settings::get().GetContainerHeight() ;
+	m_Container->setSize(sf::Vector2f(width, height));
+	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
+	m_Container->setPosition(basePos);
+
+	m_FrameTexture = std::make_unique<sf::Texture>();
+	m_FrameTexture->loadFromFile(FRAME_FILENAME);
+	m_Frame = std::make_unique<sf::RectangleShape>();
+	m_Frame->setTexture(m_FrameTexture.get());
+	m_Frame->setSize(sf::Vector2f(Settings::get().GetFrameWidth(), Settings::get().GetFrameHeight()));
+	m_Frame->setOrigin(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f);
+	sf::Vector2f position = m_Container->getGlobalBounds().getPosition();
+	sf::Vector2f size = m_Container->getGlobalBounds().getSize();
+	m_Frame->setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f -15);
+
 }
 
 void Rendering::CreatePointer()
@@ -623,8 +624,8 @@ void Rendering::CreateDuck()
 	float factorX = Settings::get().GetDuckWidth() / (static_cast<float>(m_DuckTexture->getSize().x) / 4);
 	float factorY = Settings::get().GetDuckHeight() / static_cast<float>(m_DuckTexture->getSize().y);
 	m_Duck->GetSprite()->setScale(factorX, factorY);
-	float x = Settings::get().GetDuckWidth() * 2.f;
-	float y = Settings::get().GetDuckHeight() * 2.f;
+	float x = Settings::get().GetDuckWidth() * 4.f;
+	float y = Settings::get().GetDuckHeight() * 4.f;
 	m_Duck->GetSprite()->setOrigin(x, y);
 }
 
