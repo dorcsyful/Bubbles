@@ -84,6 +84,7 @@ private:
 	void CreateNextUpSprites();
 	void CreatePlayModeButtons();
 	void CreateConfirmationWindow();
+	void CreateSettingsButtons();
 	void CreateSettings();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;

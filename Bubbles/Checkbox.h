@@ -9,9 +9,10 @@ class Checkbox : public sf::Drawable
 public:
 	Checkbox(const std::unique_ptr<sf::Texture>& a_Texture, const sf::Vector2f& a_Position, float a_Width);
 
+	void SetEnableCheckbox(bool a_Enable);
 	bool DetectClick(const sf::Vector2f& a_MousePosition);
 	void DetectHover(const sf::Vector2f& a_MousePosition) const;
-
+	bool IsChecked() const { return m_IsChecked; }
 private:
 	void draw(sf::RenderTarget& a_Target, const sf::RenderStates a_States) const override
 	{

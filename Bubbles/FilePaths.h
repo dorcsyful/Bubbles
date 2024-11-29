@@ -50,3 +50,4 @@
 #define CONFIRM_EXIT_GAME "Exit the game?"
 #define CONFIRM_RESTART "Restart game?"
 #define CONFIRM_BACK_TO_MENU "       Go back to menu? \n (all progress will be lost)"
+#define CONFIRM_SETTING_RESTART "Please restart for these changes \n to take effect"

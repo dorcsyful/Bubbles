@@ -71,6 +71,14 @@ void Settings::LoadSettings()
                 m_ConfirmationHeight = stof(value);
             if (name == "FULLSCREEN")
                 m_FullScreen = value == "YES";
+            if (name == "MENU_BUTTON_WIDTH")
+                m_MenuButtonWidth = stof(value);
+            if (name == "MENU_BUTTON_HEIGHT")
+                m_MenuButtonHeight = stof(value);
+            if (name == "REGULAR_BUTTON_WIDTH")
+                m_ButtonWidth = stof(value);
+            if (name == "REGULAR_BUTTON_HEIGHT")
+                m_ButtonHeight = stof(value);
         }
         file.close();
     }
@@ -99,8 +107,8 @@ void Settings::SetSoundEnabled(float a_Music, float a_Effects)
     Audio::getInstance().SetMusicVolume(a_Music);
     Audio::getInstance().SetEffectsVolume(a_Effects);
 
-    std::string musicVolumeAsString = std::to_string(a_Music);
-    std::string effectsVolumeAsString = std::to_string(a_Effects);
+    std::string musicVolumeAsString = std::to_string(std::min(a_Music, 100.f));
+    std::string effectsVolumeAsString = std::to_string(std::min(a_Effects, 100.f));
 
     std::vector<std::string> lines;
     std::ifstream infile("Assets/Settings.save");

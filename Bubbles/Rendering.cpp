@@ -22,11 +22,11 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	}
 	else
 	{
-		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight()), "Bubbles!",
+		sf::Vector2u size = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
+		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(size.x, size.y), "Bubbles!",
 			sf::Style::Default, context);
 
 	}
-	//m_Window->setSize(sf::Vector2u(a_X, a_Y));
 
 	LoadBackground();
 	LoadBubbleTextures();
@@ -198,6 +198,11 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	{
 		SettingsDraw();
 	}
+	if(a_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+	{
+		SettingsDraw();
+		ConfirmationDraw();
+	}
 
 	m_Window->display();
 }
@@ -283,6 +288,10 @@ void Rendering::UpdateConfirmText(EGAME_STATE a_NewState) const
 	if(a_NewState == EGAME_STATE::STATE_RESTART_CONFIRM)
 	{
 		m_ConfirmationText->setString(CONFIRM_RESTART);
+	}
+	if(a_NewState == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+	{
+		m_ConfirmationText->setString(CONFIRM_SETTING_RESTART);
 	}
 	sf::FloatRect localBounds = m_ConfirmationText->getLocalBounds();
 	sf::Vector2f position = localBounds.getPosition();
@@ -373,6 +382,7 @@ void Rendering::LoadNextUpTextures()
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_NEXT_FILENAME);
 }
+
 void Rendering::Reset()
 {
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
@@ -391,7 +401,6 @@ void Rendering::LoadBackground()
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
-	sf::Vector2f v = sf::Vector2f(1920, 1080);
 	m_BackgroundSprite->setSize(windowSize);
 
 	//Container
@@ -466,8 +475,6 @@ void Rendering::CreateGameOverSprite()
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 2.5f));
 
-
-
 	basePos = m_GameOver->getPosition();
 	basePos.y += m_GameOver->getSize().y;
 	auto size = m_GameOver->getSize();
@@ -475,16 +482,19 @@ void Rendering::CreateGameOverSprite()
 	m_GOScoreSprite = std::make_unique<SpriteWithText>(m_Score->GetText(), *m_Font, size,basePos,sf::Color::Black,m_ScoreBackgroundTexture.get());
 
 	basePos.y += size.y * 1.1f;
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.7f), Settings::get().GetMenuButtonHeight() / m_BaseButtonTexture->getSize().y);
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
-	newButton->ResizeCharacters(50);
+	newButton->ResizeCharacters(45);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.2f;
+	basePos.y += Settings::get().GetMenuButtonHeight();
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Back to menu");
 	newButton->ResizeCharacters(45);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("BackToMenu", std::move(newButton)));
 
 }
@@ -506,40 +516,41 @@ void Rendering::CreateMenuButtonSprites()
 	m_BaseButtonTexture = std::make_unique<sf::Texture>();
 	m_BaseButtonTexture->loadFromFile(BUTTON_FILENAME);
 	m_MenuButtons = std::map<std::string, std::unique_ptr<Button>>();
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.f), Settings::get().GetMenuButtonHeight() / m_BaseButtonTexture->getSize().y);
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	newButton->ResizeCharacters(38);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("High Scores");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	newButton->ResizeCharacters(38);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("How to play");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	newButton->ResizeCharacters(38);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("How to play", std::move(newButton)));
 
 	basePos.x += m_Title->getSize().x / 2;
 	basePos.y = m_Title->getPosition().y + m_Title->getSize().y + 10;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Settings");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	newButton->ResizeCharacters(38);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton)));
 
-	basePos.y += static_cast<float>(m_BaseButtonTexture->getSize().y) * 1.1f;
+	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Exit");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.85f, 0.85f));
+	newButton->ResizeCharacters(38);
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Exit", std::move(newButton)));
 
 
@@ -607,11 +618,15 @@ void Rendering::CreateHighScoreSprites()
 
 	float x = static_cast<float>(m_BaseButtonTexture->getSize().x);
 	sf::Vector2f buttonTextureSize = sf::Vector2f(x / 2, static_cast<float>(m_BaseButtonTexture->getSize().y));
-	sf::Vector2f buttonPos = sf::Vector2f(buttonTextureSize.x / 2, Settings::get().GetWindowHeight() - buttonTextureSize.y);
-	m_HSBackButton = std::make_unique<Button>(buttonPos, *m_Font, m_BaseButtonTexture.get());
+	basePos = BubbleMath::ToVector2f(m_Window->getSize());
+	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
+	basePos.y -= m_Window->getSize().y / 10;
+	m_HSBackButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	m_HSBackButton->SetText("Back");
 	m_HSBackButton->ResizeCharacters(40);
-	m_HSBackButton->SetScale(sf::Vector2f(0.7f, 0.7f));
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.5f), Settings::get().GetButtonHeight() / m_BaseButtonTexture->getSize().y);
+
+	m_HSBackButton->SetScale(buttonScale);
 }
 
 void Rendering::CreateDuck()
@@ -651,7 +666,7 @@ void Rendering::CreateNextUpSprites()
 	for (auto& val : m_NextUpBubbles | std::views::values)
 	{
 		val->setScale(factorX, factorY);
-		val->setPosition(static_cast<float>(m_Window->getSize().x) / 3 * 2.1f, static_cast<float>(m_Window->getSize().y) / 3);
+		val->setPosition(m_Container->getSize().x * 1.1f + m_Container->getPosition().x, m_Container->getPosition().y + m_Container->getSize().y / 2.f);
 	}
 }
 
@@ -659,18 +674,20 @@ void Rendering::CreatePlayModeButtons()
 {
 	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
-	basePos.y -= 50;
+	basePos.y -= m_Window->getSize().y / 10;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton->SetText("Back to menu");
+	newButton->SetText("Menu");
 	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.f), Settings::get().GetButtonHeight() / (m_BaseButtonTexture->getSize().y));
+
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Back to menu", std::move(newButton)));
 
-	basePos.x += 160;
+	basePos.x += Settings::get().GetMenuButtonWidth() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Restart");
 	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
+	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 }
 
@@ -687,20 +704,21 @@ void Rendering::CreateConfirmationWindow()
 	sf::Vector2f size = BubbleMath::ToVector2f(m_Window->getSize());
 	m_ConfirmationWindow->setPosition(size.x/ 2, size.y / 2);
 
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.1f), Settings::get().GetButtonHeight() / m_BaseButtonTexture->getSize().y);
 	sf::Vector2f basePos = m_ConfirmationWindow->getGlobalBounds().getPosition();
 	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 4;
 	basePos.y += m_ConfirmationWindow->getGlobalBounds().height / 1.3f;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Yes");
 	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.6f, 0.6f));
+	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ConfirmConfirm", std::move(newButton)));
 
 	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 2;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("No");
 	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.6f, 0.6f));
+	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("CancelConfirm", std::move(newButton)));
 
 	m_ConfirmationText = std::make_unique<sf::Text>();
@@ -714,8 +732,31 @@ void Rendering::CreateConfirmationWindow()
 
 }
 
+void Rendering::CreateSettingsButtons()
+{
+
+	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
+	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
+	basePos.y -= m_Window->getSize().y / 10;
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Apply");
+	newButton->ResizeCharacters(40);
+	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.f), Settings::get().GetButtonHeight() / (m_BaseButtonTexture->getSize().y));
+
+	newButton->SetScale(buttonScale);
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
+
+	basePos.x += Settings::get().GetMenuButtonWidth() * 1.1f;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton->SetText("Revert");
+	newButton->ResizeCharacters(40);
+	newButton->SetScale(buttonScale);
+	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
+}
+
 void Rendering::CreateSettings()
 {
+
 	m_SettingSliders = std::vector<std::unique_ptr<Slider>>();
 	m_SettingsText = std::vector<std::unique_ptr<sf::Text>>();
 	m_SettingsTexture = std::make_unique<sf::Texture>();
@@ -762,21 +803,9 @@ void Rendering::CreateSettings()
 	m_SettingsText[2]->setFillColor(sf::Color::Black);
 
 	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50);
+	m_FullscreenCheckbox->SetEnableCheckbox(Settings::get().IsFullscreen());
 
-	sf::Vector2f basePos = BubbleMath::ToVector2f(m_Window->getSize());
-	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
-	basePos.y -= 50;
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton->SetText("Apply");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
-
-	basePos.x += 160;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton->SetText("Revert");
-	newButton->ResizeCharacters(40);
-	newButton->SetScale(sf::Vector2f(0.5f, 0.5f));
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
+	CreateSettingsButtons();
 
 }
+

@@ -20,6 +20,15 @@ Checkbox::Checkbox(const std::unique_ptr<sf::Texture>& a_Texture, const sf::Vect
 	m_IsHovered = false;
 }
 
+void Checkbox::SetEnableCheckbox(bool a_Enable)
+{
+	m_IsChecked = a_Enable;
+	auto vector2U = sf::Vector2i(m_Sprite->getTexture()->getSize());
+	int rect = m_IsChecked ? 1 : 0;
+
+	m_Sprite->setTextureRect(sf::IntRect(vector2U.x / 4 * rect, 0, vector2U.x / 4, vector2U.y));
+}
+
 bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 {
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Sprite->getGlobalBounds().contains(a_MousePosition))
@@ -31,6 +40,7 @@ bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 		                                     x / 4, static_cast<int>(m_Sprite->getTexture()->getSize().y)));
 
 		m_IsChecked = !m_IsChecked;
+		std::cout << std::to_string(m_IsChecked) << std::endl;
 		return true;
 	}
 	return false;
@@ -38,7 +48,7 @@ bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 
 void Checkbox::DetectHover(const sf::Vector2f& a_MousePosition) const
 {
-	int rect = m_IsChecked ? 2 : 3;
+	int rect = m_IsChecked ? 3 : 2;
 	sf::Vector2i vector2U = sf::Vector2i(m_Sprite->getTexture()->getSize());
 
 	if (m_Sprite->getGlobalBounds().contains(a_MousePosition))
@@ -46,5 +56,6 @@ void Checkbox::DetectHover(const sf::Vector2f& a_MousePosition) const
 		m_Sprite->setTextureRect(sf::IntRect(vector2U.x / 4 * rect, 0, vector2U.x / 4, vector2U.y));
 		return;
 	}
-	m_Sprite->setTextureRect(sf::IntRect(vector2U.x / 4 * (rect - 2), 0, vector2U.x / 4, vector2U.y));
+	rect = m_IsChecked ? 1 : 0;
+	m_Sprite->setTextureRect(sf::IntRect(vector2U.x / 4 * (rect), 0, vector2U.x / 4, vector2U.y));
 }

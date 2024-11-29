@@ -27,14 +27,14 @@ public:
 	}
 	void SetEffectsVolume(const float a_Volume) const
 	{
-		m_Click->setVolume(a_Volume);
-		m_BubbleDrop->setVolume(a_Volume);
-		m_SadGameOver->setVolume(a_Volume);
+		m_Click->setVolume(std::min(a_Volume, 100.f));
+		m_BubbleDrop->setVolume(std::min(a_Volume, 100.f));
+		m_SadGameOver->setVolume(std::min(a_Volume, 100.f));
 	}
 
 	void SetMusicVolume(const float a_Volume) const
 	{
-		m_BackgroundMusic->setVolume(a_Volume);
+		m_BackgroundMusic->setVolume(std::min(a_Volume, 100.f));
 	}
 
 	bool IsAudioEnabled() const { return m_Enabled; }

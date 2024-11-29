@@ -23,6 +23,7 @@ public:
     [[nodiscard]] float GetConfirmationWidth() const { return m_ConfirmationWidth; }
     [[nodiscard]] float GetConfirmationHeight() const { return m_ConfirmationHeight; }
     [[nodiscard]] bool IsFullscreen() const { return m_FullScreen; }
+    void SetFullscreen(const bool a_Fullscreen) { m_FullScreen = a_Fullscreen; }
 
 	[[nodiscard]] int GetAaLevel() const { return m_AntiAliasingLevel; }
 
@@ -53,6 +54,11 @@ public:
     [[nodiscard]] float GetSoundEffectsVolume() const { return m_EffectVolume; }
     void SetSoundEnabled(float a_Music, float a_Effects);
 
+    [[nodiscard]] float GetMenuButtonWidth() const { return m_MenuButtonWidth; }
+    [[nodiscard]] float GetMenuButtonHeight() const { return m_MenuButtonHeight; }
+    [[nodiscard]] float GetButtonHeight() const { return m_ButtonHeight; }
+    [[nodiscard]] float GetButtonWidth() const { return m_ButtonWidth; }
+
 private:
     bool m_FullScreen = false;
 
@@ -64,6 +70,11 @@ private:
     float m_FrameHeight = 0;
     float m_ConfirmationWidth = 0;
     float m_ConfirmationHeight = 0;
+
+    float m_MenuButtonWidth = 0;
+    float m_MenuButtonHeight = 0;
+    float m_ButtonWidth = 0;
+    float m_ButtonHeight = 0;
 
     float m_PointerMoveSpeed = 0;
 

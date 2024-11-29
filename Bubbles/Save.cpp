@@ -28,6 +28,34 @@ bool Save::SaveIfHighScore(unsigned a_Score)
     return false;
 }
 
+void Save::UpdateSettings(bool a_Fullscreen)
+{
+    std::vector<std::string> lines;
+    std::ifstream infile("Assets/Settings.save");
+    std::string line;
+    int i;
+    int counter = 0;
+    while (getline(infile, line)) {
+        if (line.starts_with("FULLSCREEN|"))
+        {
+            i = counter;
+        }
+        lines.push_back(line);
+        counter++;
+    }
+    infile.close();
+
+    // Modify the last line
+    std::string asString = a_Fullscreen ? "YES" : "NO";
+    lines[i] = "FULLSCREEN|" + asString;
+
+    std::ofstream outfile("Assets/Settings.save");
+    for (const std::string& nline : lines) {
+        outfile << nline << '\n';
+    }
+    outfile.close();
+}
+
 uint64_t Save::CalculateHash(const Data& a_Data)
 {
     std::hash<unsigned int> intHash;

@@ -9,6 +9,7 @@
 
 void BubbleGame::Initialize()
 {
+	CallAfterDelay::getInstance().ClearQueue();
 	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
@@ -82,6 +83,10 @@ void BubbleGame::Update()
 	sf::Clock dtClock;
 	while(m_Rendering->GetWindow()->isOpen())
 	{
+		if(m_State == EGAME_STATE::STATE_START)
+		{
+			Initialize();
+		}
 		float delta = dtClock.restart().asSeconds();
 
 		sf::Event event;
@@ -116,7 +121,7 @@ void BubbleGame::Update()
 				}
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU_CONFIRM || m_State == EGAME_STATE::STATE_RESTART_CONFIRM
-				|| m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+				|| m_State == EGAME_STATE::STATE_EXIT_CONFIRM || m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
 			{
 				ConfirmInput();
 			}
@@ -343,6 +348,10 @@ void BubbleGame::ConfirmInput()
 		{
 			CallAfterDelay::getInstance().AddFunction([this]() { BackToMenu(); }, "BackToMenu", 0.2f, false);
 		}
+		if (m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_START; }, "RestartGame", 0.2f, false);
+		}
 	}
 	if (m_Rendering->GetMenuButtons().at("CancelConfirm")->DetectClick(mousePosition))
 	{
@@ -357,6 +366,10 @@ void BubbleGame::ConfirmInput()
 		if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
 		{
 			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
+		}
+		if(m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "BackToSettings", 0.2f, false);
 		}
 	}
 }
@@ -376,14 +389,21 @@ void BubbleGame::SettingsInput()
 	if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
 	{
 		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"ApplySettings", 0.1f, false);
+		m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+
+		if(m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
+		{
+			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+			m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
+		}
+		else
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"ApplySettings", 0.1f, false);
 	}
 	if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
 	{
 		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
 	}
-	if(m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition))
-	{
-		std::cout << "Clicked";
-	}
+
+	m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
 }

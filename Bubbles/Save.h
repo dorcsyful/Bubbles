@@ -30,6 +30,8 @@ public:
         return temp;
     }
 
+    void UpdateSettings(bool a_Fullscreen);
+
 private:
 
     // Structure to store data

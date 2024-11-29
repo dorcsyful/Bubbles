@@ -26,6 +26,11 @@ public:
         return instance;
     }
 
+	void ClearQueue()
+    {
+		m_Functions.clear();
+    }
+
     void AddFunction(const std::function<void()>& a_Function, std::string a_RefName, float a_Delay, bool a_Repeating)
     {
 	    FunctionData data;
