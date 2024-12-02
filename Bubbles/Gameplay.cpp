@@ -58,7 +58,11 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
-	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+	int next = rand() % 10;
+	if (next == 8) { next = 10; }
+	else if (next == 9) { next = 11; }
+	else { next = rand() % 3; }
+	m_NextBubble = static_cast<EBUBBLE_TYPE>(next);
 	Move(0);
 	m_CombineCombo = 0;
 	return newBubble;
