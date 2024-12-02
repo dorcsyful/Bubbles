@@ -79,6 +79,10 @@ void Settings::LoadSettings()
                 m_ButtonWidth = stof(value);
             if (name == "REGULAR_BUTTON_HEIGHT")
                 m_ButtonHeight = stof(value);
+            if (name == "TITLE_WIDTH")
+                m_TitleWidth = stof(value);
+            if(name == "TITLE_HEIGHT")
+                m_TitleHeight = stof(value);
         }
         file.close();
     }

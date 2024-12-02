@@ -172,7 +172,6 @@ void BubbleGame::AddBubble() const
 
 void BubbleGame::GameOver()
 {
-	std::cout << "GameOver \n";
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
 	Audio::getInstance().PlaySadGameOver();

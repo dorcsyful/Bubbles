@@ -4,7 +4,6 @@
 
 #include "Audio.h"
 #include "BubbleMath.h"
-#include "Settings.h"
 
 Checkbox::Checkbox(const std::unique_ptr<sf::Texture>& a_Texture, const sf::Vector2f& a_Position, float a_Width)
 {
@@ -40,7 +39,6 @@ bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 		                                     x / 4, static_cast<int>(m_Sprite->getTexture()->getSize().y)));
 
 		m_IsChecked = !m_IsChecked;
-		std::cout << std::to_string(m_IsChecked) << std::endl;
 		return true;
 	}
 	return false;

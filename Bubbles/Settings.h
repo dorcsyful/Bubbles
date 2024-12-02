@@ -59,6 +59,9 @@ public:
     [[nodiscard]] float GetButtonHeight() const { return m_ButtonHeight; }
     [[nodiscard]] float GetButtonWidth() const { return m_ButtonWidth; }
 
+    [[nodiscard]] float GetTitleWidth() const { return m_TitleWidth; }
+    [[nodiscard]] float GetTitleHeight() const { return m_TitleHeight; }
+
 private:
     bool m_FullScreen = false;
 
@@ -70,7 +73,8 @@ private:
     float m_FrameHeight = 0;
     float m_ConfirmationWidth = 0;
     float m_ConfirmationHeight = 0;
-
+    float m_TitleWidth = 0;
+    float m_TitleHeight = 0;
     float m_MenuButtonWidth = 0;
     float m_MenuButtonHeight = 0;
     float m_ButtonWidth = 0;
