@@ -27,7 +27,7 @@ std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_Firs
 {
 	sf::Vector2f center = BubbleMath::Lerp(a_First->GetPosition(), a_Second->GetPosition(), 0.5f);
 	int i = static_cast<int>(a_First->GetBubbleType()) + 1;
-	if (i == 10) { i = 0; }
+	if (i >= 10) { i = 0; }
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) * 10;

@@ -277,6 +277,8 @@ void BubbleGame::PlayInput(const sf::Event& a_Event)
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num7) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SHARK);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num8) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SQUID);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Q) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_BATH_BOMB);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::W) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
 }
 
 void BubbleGame::MenuInput()

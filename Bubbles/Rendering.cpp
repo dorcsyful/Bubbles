@@ -376,6 +376,12 @@ void Rendering::LoadBubbleTextures()
 
 	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
 	m_BubbleTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_FILENAME);
+
+	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_BATH_BOMB]->loadFromFile(BATH_BOMB_FILENAME);
+
+	m_BubbleTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SPIKY_BOMB, std::make_unique<sf::Texture>()));
+	m_BubbleTextures[EBUBBLE_TYPE::TYPE_SPIKY_BOMB]->loadFromFile(SPIKY_BOMB_FILENAME);
 }
 
 void Rendering::LoadNextUpTextures()
@@ -471,11 +477,11 @@ void Rendering::CreatePointer()
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
-	for(size_t i = 0; i < 10; i++)
+	for(size_t i = 0; i < 12; i++)
 	{
 		std::unique_ptr<AnimatedSprite> newSprite;
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
-		m_PreviewBubbles.insert(std::pair<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>>(static_cast<EBUBBLE_TYPE>(i), std::move(newSprite)));
+		m_PreviewBubbles.insert(std::pair(static_cast<EBUBBLE_TYPE>(i), std::move(newSprite)));
 	}
 }
 

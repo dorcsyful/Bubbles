@@ -40,7 +40,8 @@ void Physics::Update(float a_Delta)
 				if(CollisionDetection::CircleCircleCheck(*bubble1, *bubble2, manifold))
 				{
 					m_Manifolds.emplace_back(std::move(manifold));
-					if(bubble1->GetBubbleType() == bubble2->GetBubbleType())
+					if(bubble1->GetBubbleType() == bubble2->GetBubbleType() || 
+						(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB))
 					{
 						if(!BubbleAlreadyInCombineList(bubble1) && !BubbleAlreadyInCombineList(bubble2))
 						{

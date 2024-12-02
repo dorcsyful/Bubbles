@@ -10,6 +10,8 @@
 #define SHARK_FILENAME "Assets/Shapes/7.png"
 #define SQUID_FILENAME "Assets/Shapes/8.png"
 #define WHALE_FILENAME "Assets/Shapes/9.png"
+#define BATH_BOMB_FILENAME "Assets/Shapes/Bath.png"
+#define SPIKY_BOMB_FILENAME "Assets/Shapes/Spiky.png"
 
 #define STAR_NEXT_FILENAME "Assets/Shapes/NextUp/0.png"
 #define CRAB_NEXT_FILENAME "Assets/Shapes/NextUp/1.png"
