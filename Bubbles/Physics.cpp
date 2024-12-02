@@ -41,7 +41,8 @@ void Physics::Update(float a_Delta)
 				{
 					m_Manifolds.emplace_back(std::move(manifold));
 					if(bubble1->GetBubbleType() == bubble2->GetBubbleType() || 
-						(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB))
+						(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB) || 
+						(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB))
 					{
 						if(!BubbleAlreadyInCombineList(bubble1) && !BubbleAlreadyInCombineList(bubble2))
 						{

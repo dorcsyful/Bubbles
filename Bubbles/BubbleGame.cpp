@@ -35,8 +35,16 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
 	{
+		
 		const BubbleObject* bubble1 = m_Physics->m_BubblesToCombine[i].first;
 		auto bubble2 = m_Physics->m_BubblesToCombine[i].second;
+
+		if(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB)
+		{
+			m_Wrapper->RemoveObjectByPointer(bubble1);
+			m_Wrapper->RemoveObjectByPointer(bubble2);
+			continue;
+		}
 
 		m_ComboTextPositions = BubbleMath::Lerp(bubble1->GetPosition(),bubble2->GetPosition(), 0.5f);
 		m_ComboTextPositions.x *= Settings::get().GetPixelToMeter();
