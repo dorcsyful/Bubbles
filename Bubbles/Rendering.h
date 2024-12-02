@@ -91,6 +91,8 @@ private:
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
+	std::unique_ptr<sf::RectangleShape> m_MainBackgroundSprite;
+	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;

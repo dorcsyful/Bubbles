@@ -31,6 +31,7 @@
 #define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"
 
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
+#define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
 #define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
 #define FRAME_FILENAME "Assets/Other/ContainerFrame.png"
 #define GAME_OVER_FILENAME "Assets/Other/GameOver.png"

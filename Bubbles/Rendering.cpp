@@ -47,6 +47,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 
 void Rendering::PlayDraw() const
 {
+	m_Window->draw(*m_BackgroundSprite);
+
 	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
 	m_MenuButtons.at("Back to menu")->DetectHover(mousePosition);
 	m_MenuButtons.at("Restart")->DetectHover(mousePosition);
@@ -71,6 +73,7 @@ void Rendering::PlayDraw() const
 
 void Rendering::MenuDraw() const
 {
+	m_Window->draw(*m_MainBackgroundSprite);
 	m_Window->draw(*m_Title);
 	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
 	m_MenuButtons.at("Play")->DetectHover(mousePosition);
@@ -89,6 +92,7 @@ void Rendering::MenuDraw() const
 
 void Rendering::GameOverAnimationDraw() const
 {
+	m_Window->draw(*m_BackgroundSprite);
 
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Frame);
@@ -104,6 +108,8 @@ void Rendering::GameOverAnimationDraw() const
 
 void Rendering::HighScoreDraw() const
 {
+	m_Window->draw(*m_BackgroundSprite);
+
 	m_Window->draw(*m_HighScoreTitle);
 	m_HSBackButton->Draw(*m_Window);
 	for (int i = 0; i < 10; i++)
@@ -114,6 +120,8 @@ void Rendering::HighScoreDraw() const
 
 void Rendering::GameOverDraw() const
 {
+	m_Window->draw(*m_BackgroundSprite);
+
 	m_Window->draw(*m_GameOver);
 	m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
@@ -137,6 +145,8 @@ void Rendering::ConfirmationDraw() const
 
 void Rendering::SettingsDraw() const
 {
+	m_Window->draw(*m_BackgroundSprite);
+
 	for (auto& current : m_SettingSliders)
 	{
 		current->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
@@ -162,7 +172,6 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 {
 	m_Window->clear();
 
-	m_Window->draw(*m_BackgroundSprite);
 	if (a_State == EGAME_STATE::STATE_PLAY)
 	{
 		PlayDraw();
@@ -170,6 +179,7 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
+		m_Window->draw(*m_MainBackgroundSprite);
 		m_Loading->Draw(*m_Window);
 	}
 	if(a_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
@@ -392,16 +402,20 @@ void Rendering::LoadBackground()
 {
 	//Game Background
 	m_BackgroundTexture = std::make_unique<sf::Texture>();
-
-	if (!m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME))
-	{
-		//throw std::exception("Failed to load background texture");
-	}
+	m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME);
 	m_BackgroundTexture->setRepeated(true);
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
 	m_BackgroundSprite->setSize(windowSize);
+
+	//Main Background
+	m_MainBackgroundTexture = std::make_unique<sf::Texture>();
+	m_MainBackgroundTexture->loadFromFile(MENU_BACKGROUND_FILENAME);
+	m_MainBackgroundTexture->setRepeated(true);
+	m_MainBackgroundSprite = std::make_unique<sf::RectangleShape>();
+	m_MainBackgroundSprite->setTexture(m_MainBackgroundTexture.get());
+	m_MainBackgroundSprite->setSize(windowSize);
 
 	//Container
 	m_ContainerTexture = std::make_unique<sf::Texture>();
@@ -567,13 +581,12 @@ void Rendering::CreateMenuButtonSprites()
 
 void Rendering::CreateScoreText()
 {
-	sf::Vector2f position = m_Container->getPosition();
-	position.x -= Settings::get().GetContainerWidth() / 4;
-	position.y += 300;
+	sf::Vector2f position = m_Frame->getPosition();
+	position.x -= m_Frame->getSize().x / 2 + 150;
 	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
 
-	m_Score = std::make_unique<SpriteWithText>("Score: \n 0 \n High Score: \n " + m_HighScoreSprites[0]->GetText(), *m_Font, sf::Vector2f(200, 170),
+	m_Score = std::make_unique<SpriteWithText>(" 0 " + m_HighScoreSprites[0]->GetText(), *m_Font, sf::Vector2f(250, 300),
 		position, sf::Color::Black, m_ScoreBackgroundTexture.get());
 
 
