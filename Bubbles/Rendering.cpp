@@ -108,7 +108,7 @@ void Rendering::GameOverAnimationDraw() const
 
 void Rendering::HighScoreDraw() const
 {
-	m_Window->draw(*m_BackgroundSprite);
+	m_Window->draw(*m_MainBackgroundSprite);
 
 	m_Window->draw(*m_HighScoreTitle);
 	m_HSBackButton->Draw(*m_Window);
@@ -145,7 +145,7 @@ void Rendering::ConfirmationDraw() const
 
 void Rendering::SettingsDraw() const
 {
-	m_Window->draw(*m_BackgroundSprite);
+	m_Window->draw(*m_MainBackgroundSprite);
 
 	for (auto& current : m_SettingSliders)
 	{
@@ -179,7 +179,26 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
-		m_Window->draw(*m_MainBackgroundSprite);
+		if(CallAfterDelay::getInstance().HasFunction("SetPlayState"))
+		{
+			m_Window->draw(*m_BackgroundSprite);
+			m_BackgroundSprite->setFillColor(sf::Color::White);
+			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetPlayState");
+			m_MainBackgroundSprite->setFillColor(sf::Color(255, 255, 255, remainingTime * 255.f));
+			m_Window->draw(*m_MainBackgroundSprite);
+
+		}
+		else
+		{
+			m_Window->draw(*m_MainBackgroundSprite);
+			m_MainBackgroundSprite->setFillColor(sf::Color::White);
+			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetMenuState");
+			std::cout << remainingTime << "\n";
+			m_BackgroundSprite->setFillColor(sf::Color(255, 255, 255, remainingTime * 255.f));
+			m_Window->draw(*m_BackgroundSprite);
+
+		}
+
 		m_Loading->Draw(*m_Window);
 	}
 	if(a_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)

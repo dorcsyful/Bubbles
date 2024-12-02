@@ -80,6 +80,28 @@ public:
 	    }
     }
 
+	float GetRemainingTimeAsPercentage(const std::string& a_Name)
+    {
+	    for(auto& current : m_Functions)
+	    {
+		    if(current.m_Name == a_Name)
+		    {
+				auto duration = std::chrono::duration_cast<std::chrono::milliseconds>((current.m_TargetTime - std::chrono::steady_clock::now())).count();
+				return  ((duration / 1000.f) / current.m_Delay);
+		    }
+	    }
+		return 0;
+    }
+
+	bool HasFunction(std::string a_Name)
+    {
+	    for(auto& current : m_Functions)
+	    {
+		    if(current.m_Name == a_Name) return true;
+	    }
+		return false;
+    }
+
 private:
 
     std::vector<FunctionData> m_Functions;
