@@ -26,21 +26,25 @@ public:
     float GetTextWidth() const { return m_Text->getGlobalBounds().width; }
 	void Draw(sf::RenderTarget& a_Target) 
 	{
-        // You can draw other high-level objects
         a_Target.draw(*m_Shape);
-        a_Target.draw(*m_Text);
-        return;
+
+        //std::cout << m_Text->getString().toAnsiString() << "\n";
+        // You can draw other high-level objects
+
         m_RenderTexture.clear(sf::Color::Transparent);
-        m_RenderTexture.draw(*m_Text);
+
+        a_Target.draw(*m_Text);
+
         m_RenderTexture.display();
 
         // Draw the text sprite with the shader
         sf::Sprite sprite = sf::Sprite();
     	sprite.setTexture(m_RenderTexture.getTexture());
-        sprite.setPosition(m_Shape->getPosition());
-    	m_Shader.setUniform("u_Texture", m_RenderTexture.getTexture());
-        a_Target.draw(sprite, &m_Shader);
+        sprite.setPosition(m_Shape->getGlobalBounds().left,m_Shape->getGlobalBounds().top);
+        m_Shader.setUniform("u_Texture", sf::Shader::CurrentTexture);
+        m_Shader.setUniform("u_TextureSize", sf::Vector2f(m_RenderTexture.getSize().x, m_RenderTexture.getSize().y));
 
+        //a_Target.draw(sprite, &m_Shader);
     }
 private:
 

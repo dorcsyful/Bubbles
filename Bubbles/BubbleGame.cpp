@@ -9,6 +9,9 @@
 
 void BubbleGame::Initialize()
 {
+	time_t currentTime = time(nullptr);
+	srand(static_cast<unsigned int>(currentTime));
+
 	CallAfterDelay::getInstance().ClearQueue();
 	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();

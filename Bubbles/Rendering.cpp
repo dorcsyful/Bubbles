@@ -15,6 +15,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 {
 	sf::ContextSettings context;
 	context.antialiasingLevel = Settings::get().GetAaLevel();
+
 	if(Settings::get().IsFullscreen())
 	{
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bubbles!",
