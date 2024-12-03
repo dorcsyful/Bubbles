@@ -133,6 +133,10 @@ void Rendering::GameOverDraw() const
 
 void Rendering::ConfirmationDraw() const
 {
+	sf::RectangleShape temp;
+	temp.setSize(sf::Vector2f(m_Window->getSize().x, m_Window->getSize().y));
+	temp.setFillColor(sf::Color(0, 0, 0, 128));
+	m_Window->draw(temp);
 	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
 	m_MenuButtons.at("ConfirmConfirm")->DetectHover(mousePosition);
 	m_MenuButtons.at("CancelConfirm")->DetectHover(mousePosition);
@@ -443,7 +447,13 @@ void Rendering::LoadBackground()
 	m_MainBackgroundTexture->setRepeated(true);
 	m_MainBackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_MainBackgroundSprite->setTexture(m_MainBackgroundTexture.get());
-	m_MainBackgroundSprite->setSize(windowSize);
+	// Calculate scaling factors and set sprite size and origin
+	float verticalScale = (float)windowSize.y / m_MainBackgroundTexture->getSize().y;
+	float horizontalScale = verticalScale;
+	m_MainBackgroundSprite->setSize(BubbleMath::ToVector2f(m_MainBackgroundTexture->getSize()));
+	m_MainBackgroundSprite->setScale(horizontalScale, verticalScale);
+	m_MainBackgroundSprite->setOrigin(m_MainBackgroundSprite->getSize().x / 2.f, m_MainBackgroundSprite->getSize().y / 2.f);
+	m_MainBackgroundSprite->setPosition(windowSize.x / 2, windowSize.y / 2);
 
 	//Container
 	m_ContainerTexture = std::make_unique<sf::Texture>();
@@ -509,15 +519,17 @@ void Rendering::CreateGameOverSprite()
 	m_GameOverTexture->loadFromFile(GAME_OVER_FILENAME);
 	m_GameOver = std::make_unique<sf::RectangleShape>();
 	m_GameOver->setTexture(m_GameOverTexture.get());
-	sf::Vector2f titleTextureSize = sf::Vector2f(Settings::get().GetTitleWidth(), Settings::get().GetTitleHeight());
-
-	m_GameOver->setSize(titleTextureSize);
+	sf::Vector2f titleSize = m_Title->getSize();
+	auto vector2U = m_GameOverTexture->getSize();
+	float scale = titleSize.y / vector2U.y;
+	titleSize.x = vector2U.x * scale;
+	m_GameOver->setSize(titleSize);
 
 	sf::Vector2f basePos = BubbleMath::ToVector2f(m_GameOverTexture->getSize());
-	m_GameOver->setOrigin(basePos.x / 2, basePos.y / 2);
+	m_GameOver->setOrigin(titleSize.x / 2, titleSize.y / 2);
 
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
-	m_GameOver->setPosition(sf::Vector2f(basePos.x / 2, basePos.y / 2.5f));
+	m_GameOver->setPosition(sf::Vector2f(m_Title->getPosition()));
 
 	basePos = m_GameOver->getPosition();
 	basePos.y += m_GameOver->getSize().y;

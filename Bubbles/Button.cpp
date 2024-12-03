@@ -21,7 +21,8 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 
 	m_Text->setFont(a_Font);
 	m_Text->setCharacterSize(50);
-	m_Text->setFillColor(sf::Color::Black);
+	sf::Color temp = sf::Color(100, 55, 0, 255);
+	m_Text->setFillColor(temp);
 	m_Text->setStyle(sf::Text::Bold);
 	m_Text->setPosition(a_Position);
 
