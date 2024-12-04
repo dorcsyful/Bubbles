@@ -83,6 +83,7 @@ private:
 	void CreateHighScoreSprites();
 	void CreateDuck();
 	void CreateNextUpSprites();
+	void CreatePlayScoreSprites();
 	void CreatePlayModeButtons();
 	void CreateConfirmationWindow();
 	void CreateSettingsButtons();
@@ -118,7 +119,9 @@ private:
 	std::unique_ptr<sf::Text> m_ComboText;
 	std::unique_ptr<sf::Text> m_Score;
 	std::unique_ptr<sf::RectangleShape> m_ScoreTitle;
+	std::unique_ptr<sf::RectangleShape> m_HighScoreTitleInPlay;
 	std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
+	std::unique_ptr<SpriteWithText> m_HighScoresInPlay;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;

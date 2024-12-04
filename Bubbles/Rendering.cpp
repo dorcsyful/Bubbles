@@ -72,6 +72,7 @@ void Rendering::PlayDraw() const
 	m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
+	m_Window->draw(*m_HighScoreTitleInPlay);
 
 }
 
@@ -737,6 +738,40 @@ void Rendering::CreateNextUpSprites()
 	}
 }
 
+void Rendering::CreatePlayScoreSprites()
+{
+	m_ScoreTitleTexture = std::make_unique<sf::Texture>();
+	m_ScoreTitleTexture->loadFromFile(SCORE_TITLE_FILENAME);
+
+	m_ScoreTitle = std::make_unique<sf::RectangleShape>();
+	m_ScoreTitle->setTexture(m_ScoreTitleTexture.get());
+	float i = static_cast<float>(m_ScoreTitleTexture->getSize().y) / static_cast<float>(m_ScoreTitleTexture->getSize().x);
+	float y = Settings::get().GetScoreTitleWidth() * i;
+	m_ScoreTitle->setSize(sf::Vector2f(Settings::get().GetScoreTitleWidth(), y));
+
+	auto position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
+	position.y += m_Frame->getGlobalBounds().height / 4.f;
+	position.x -= m_ScoreTitle->getSize().x * 1.3f;
+	m_ScoreTitle->setPosition(position);
+	position.y += m_ScoreTitle->getSize().y * 1.1f;
+	m_Score->setPosition(position);
+
+
+
+	m_HighScoreTitleInPlay = std::make_unique<sf::RectangleShape>();
+	m_HighScoreTitleInPlay->setTexture(m_HighScoreTexture.get());
+	m_HighScoreTitleInPlay->setSize(BubbleMath::ToVector2f(m_HighScoreTexture->getSize()));
+	i = (static_cast<float>(m_HighScoreTexture->getSize().x) / static_cast<float>(m_HighScoreTexture->getSize().y));
+	y = m_ScoreTitle->getSize().y * i *0.9f;
+	m_HighScoreTitleInPlay->setSize(sf::Vector2f(y, m_ScoreTitle->getSize().y * 0.9f));
+
+	position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
+	position.y += m_Frame->getGlobalBounds().height / 2.f;
+	position.x = (m_ScoreTitle->getGlobalBounds().left + m_ScoreTitle->getGlobalBounds().width / 2.f) - m_HighScoreTitleInPlay->getSize().x / 2.f;
+	m_HighScoreTitleInPlay->setPosition(position);
+	position.y += m_HighScoreTitleInPlay->getSize().y * 1.1f;
+}
+
 void Rendering::CreatePlayModeButtons()
 {
 	sf::Vector2f basePos;
@@ -770,19 +805,7 @@ void Rendering::CreatePlayModeButtons()
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 
-	m_ScoreTitleTexture = std::make_unique<sf::Texture>();
-	m_ScoreTitleTexture->loadFromFile(SCORE_TITLE_FILENAME);
-
-	m_ScoreTitle = std::make_unique<sf::RectangleShape>();
-	m_ScoreTitle->setTexture(m_ScoreTitleTexture.get());
-	float i = static_cast<float>(m_ScoreTitleTexture->getSize().y) / static_cast<float>(m_ScoreTitleTexture->getSize().x);
-	float y = Settings::get().GetScoreTitleWidth() * i;
-	m_ScoreTitle->setSize(sf::Vector2f(Settings::get().GetScoreTitleWidth(), y));
-
-	auto position = m_Score->getPosition();
-	//position.x = m_Container->getGlobalBounds().left - m_Score->getGlobalBounds().width;
-	//position.y -= m_Score->getGlobalBounds().height;
-	m_ScoreTitle->setPosition(position);
+	CreatePlayScoreSprites();
 }
 
 void Rendering::CreateConfirmationWindow()
