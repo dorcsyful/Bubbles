@@ -74,6 +74,11 @@ void Rendering::PlayDraw() const
 	m_Window->draw(*m_ScoreTitle);
 	m_Window->draw(*m_HighScoreTitleInPlay);
 
+	for (size_t i = 0; i < 3; i++)
+	{
+		m_Window->draw(*(m_HighScoresInPlay[i]));
+	}
+
 }
 
 void Rendering::MenuDraw() const
@@ -757,7 +762,6 @@ void Rendering::CreatePlayScoreSprites()
 	m_Score->setPosition(position);
 
 
-
 	m_HighScoreTitleInPlay = std::make_unique<sf::RectangleShape>();
 	m_HighScoreTitleInPlay->setTexture(m_HighScoreTexture.get());
 	m_HighScoreTitleInPlay->setSize(BubbleMath::ToVector2f(m_HighScoreTexture->getSize()));
@@ -767,9 +771,25 @@ void Rendering::CreatePlayScoreSprites()
 
 	position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
 	position.y += m_Frame->getGlobalBounds().height / 2.f;
-	position.x = (m_ScoreTitle->getGlobalBounds().left + m_ScoreTitle->getGlobalBounds().width / 2.f) - m_HighScoreTitleInPlay->getSize().x / 2.f;
+	auto highScoreTitleSize = m_HighScoreTitleInPlay->getSize();
+	position.x = (m_ScoreTitle->getGlobalBounds().left + m_ScoreTitle->getGlobalBounds().width / 2.f) - highScoreTitleSize.x / 2.f;
 	m_HighScoreTitleInPlay->setPosition(position);
-	position.y += m_HighScoreTitleInPlay->getSize().y * 1.1f;
+	position.y += highScoreTitleSize.y * 1.1f;
+
+
+
+	m_HighScoresInPlay = std::vector<std::unique_ptr<SpriteWithText>>(3);
+	position.x = m_HighScoreTitleInPlay->getPosition().x + highScoreTitleSize.x / 2;
+	highScoreTitleSize.y /= 2;
+	for (int i = 0; i < 3; i++)
+	{
+		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
+		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
+
+		m_HighScoresInPlay[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, highScoreTitleSize,
+			position, textColor, shapeColor);
+		position.y += Settings::get().GetHighScoreItemHeight();
+	}
 }
 
 void Rendering::CreatePlayModeButtons()
