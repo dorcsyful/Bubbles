@@ -35,8 +35,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreatePointer();
 	CreateMenuSprites();
 	CreateHighScoreSprites();
-
 	CreateScoreText();
+
 	CreateGameOverSprite();
 
 	CreateDuck();
@@ -44,6 +44,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
 	CreateSettings();
+
 }
 
 void Rendering::PlayDraw() const
@@ -70,6 +71,8 @@ void Rendering::PlayDraw() const
 	m_MenuButtons.at("Restart")->Draw(*m_Window);
 	m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
+	m_Window->draw(*m_ScoreTitle);
+
 }
 
 void Rendering::MenuDraw() const
@@ -305,7 +308,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 	{
 		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
 	}
-	m_Score->SetText("Score: \n 0 \n High Score: \n " + m_HighScoreSprites[0]->GetText());
+	m_Score->setString("0" + m_HighScoreSprites[0]->GetText());
 
 }
 
@@ -536,7 +539,7 @@ void Rendering::CreateGameOverSprite()
 	basePos.y += m_GameOver->getSize().y;
 	auto size = m_GameOver->getSize();
 	size.x /= 5;
-	m_GOScoreSprite = std::make_unique<SpriteWithText>(m_Score->GetText(), *m_Font, size,basePos,sf::Color::Black,m_ScoreBackgroundTexture.get());
+	m_GOScoreSprite = std::make_unique<SpriteWithText>(m_Score->getString(), *m_Font, size,basePos,sf::Color::Black,m_ScoreBackgroundTexture.get());
 
 	basePos.y += size.y * 1.1f;
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.7f), Settings::get().GetMenuButtonHeight() / m_BaseButtonTexture->getSize().y);
@@ -627,9 +630,12 @@ void Rendering::CreateScoreText()
 	m_ScoreBackgroundTexture = std::make_unique<sf::Texture>();
 	m_ScoreBackgroundTexture->loadFromFile(SCORE_FILENAME);
 
-	m_Score = std::make_unique<SpriteWithText>(" 0 " + m_HighScoreSprites[0]->GetText(), *m_Font, sf::Vector2f(250, 300),
-		position, sf::Color::Black, m_ScoreBackgroundTexture.get());
-
+	m_Score = std::make_unique<sf::Text>();
+	m_Score->setFont(*m_Font);
+	m_Score->setFillColor(sf::Color::Black);
+	m_Score->setCharacterSize(70);
+	m_Score->setString(" 0 " + m_HighScoreSprites[0]->GetText());
+	m_Score->setPosition(position);
 
 	m_ComboText = std::make_unique<sf::Text>();
 	m_ComboText->setFont(*m_Font);
@@ -763,6 +769,20 @@ void Rendering::CreatePlayModeButtons()
 	newButton->ResizeCharacters(40);
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
+
+	m_ScoreTitleTexture = std::make_unique<sf::Texture>();
+	m_ScoreTitleTexture->loadFromFile(SCORE_TITLE_FILENAME);
+
+	m_ScoreTitle = std::make_unique<sf::RectangleShape>();
+	m_ScoreTitle->setTexture(m_ScoreTitleTexture.get());
+	float i = static_cast<float>(m_ScoreTitleTexture->getSize().y) / static_cast<float>(m_ScoreTitleTexture->getSize().x);
+	float y = Settings::get().GetScoreTitleWidth() * i;
+	m_ScoreTitle->setSize(sf::Vector2f(Settings::get().GetScoreTitleWidth(), y));
+
+	auto position = m_Score->getPosition();
+	//position.x = m_Container->getGlobalBounds().left - m_Score->getGlobalBounds().width;
+	//position.y -= m_Score->getGlobalBounds().height;
+	m_ScoreTitle->setPosition(position);
 }
 
 void Rendering::CreateConfirmationWindow()

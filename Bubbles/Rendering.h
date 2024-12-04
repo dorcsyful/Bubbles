@@ -34,7 +34,7 @@ public:
 
 	void UpdateScore(const unsigned int a_Score) const
 	{
-		m_Score->SetText("Score: \n" + std::to_string(a_Score) + "\nHigh Score : \n " + m_HighScoreSprites[0]->GetText());
+		m_Score->setString(std::to_string(a_Score));
 	}
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
@@ -116,7 +116,9 @@ private:
 	//Play mode UI
 	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
 	std::unique_ptr<sf::Text> m_ComboText;
-	std::unique_ptr<SpriteWithText> m_Score;
+	std::unique_ptr<sf::Text> m_Score;
+	std::unique_ptr<sf::RectangleShape> m_ScoreTitle;
+	std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;

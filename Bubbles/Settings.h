@@ -61,6 +61,7 @@ public:
 
     [[nodiscard]] float GetTitleWidth() const { return m_TitleWidth; }
     [[nodiscard]] float GetTitleHeight() const { return m_TitleHeight; }
+    [[nodiscard]] float GetScoreTitleWidth() const { return m_ScoreTitleWidth; }
 
 private:
     bool m_FullScreen = false;
@@ -79,6 +80,7 @@ private:
     float m_MenuButtonHeight = 0;
     float m_ButtonWidth = 0;
     float m_ButtonHeight = 0;
+    float m_ScoreTitleWidth = 0;
 
     float m_PointerMoveSpeed = 0;
 

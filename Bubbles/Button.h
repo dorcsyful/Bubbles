@@ -35,7 +35,7 @@ public:
 
         a_Target.draw(*m_Text);
 
-        m_RenderTexture.display();
+        //m_RenderTexture.display();
 
         // Draw the text sprite with the shader
         sf::Sprite sprite = sf::Sprite();

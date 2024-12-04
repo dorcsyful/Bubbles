@@ -13,7 +13,7 @@ void BubbleGame::Initialize()
 	srand(static_cast<unsigned int>(currentTime));
 
 	CallAfterDelay::getInstance().ClearQueue();
-	m_State = EGAME_STATE::STATE_MENU;
+	m_State = EGAME_STATE::STATE_PLAY;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());

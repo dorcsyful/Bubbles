@@ -83,6 +83,8 @@ void Settings::LoadSettings()
                 m_TitleWidth = stof(value);
             if(name == "TITLE_HEIGHT")
                 m_TitleHeight = stof(value);
+            if (name == "SCORE_TITLE_SIZE")
+                m_ScoreTitleWidth = stof(value);
         }
         file.close();
     }

@@ -16,6 +16,16 @@ public:
 
 	void SetText(const std::string& a_Text);
 	std::string GetText() const { return m_Text->getString(); }
+	sf::Vector2f GetPosition() const { return m_Shape->getPosition(); }
+	float GetHeight() const { return m_Shape->getGlobalBounds().height; }
+	float GetWidth() const { return m_Shape->getGlobalBounds().width; }
+	void ResizeCharacters(float a_Size) const {
+		m_Text->setCharacterSize(a_Size);
+		m_Text->setOrigin(m_Text->getGlobalBounds().getSize() / 2.f + m_Text->getLocalBounds().getPosition());
+
+
+		m_Text->setPosition(m_Shape->getPosition());
+	}
 
 private:
 
