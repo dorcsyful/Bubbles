@@ -422,37 +422,42 @@ void BubbleGame::ConfirmInput(const sf::Event& a_Event)
 
 void BubbleGame::SettingsInput(const sf::Event& a_Event)
 {
-	if (m_IsMouseButtonPressed)
+	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+
+	if (m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition, m_IsMouseButtonPressed))
 	{
-		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-
-		if (m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition))
-		{
-			Audio::getInstance().SetMusicVolume(m_Rendering->GetSettingSlider(0)->GetSliderValue());
-		}
-		if (m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition))
-		{
-			Audio::getInstance().SetEffectsVolume(m_Rendering->GetSettingSlider(1)->GetSliderValue());
-		}
-		if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
-		{
-			Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-			m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-
-			if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
-			{
-				Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-				m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
-				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
-			}
-			else
-				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "ApplySettings", 0.1f, false);
-		}
-		if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
-		}
-
-		m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
+		Audio::getInstance().SetMusicVolume(m_Rendering->GetSettingSlider(0)->GetSliderValue());
 	}
+	if (m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition, m_IsMouseButtonPressed))
+	{
+		Audio::getInstance().SetEffectsVolume(m_Rendering->GetSettingSlider(1)->GetSliderValue());
+	}
+	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
+	{
+		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
+		m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+
+		if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
+		{
+			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+			m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
+		}
+		else
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "ApplySettings", 0.1f, false);
+	}
+	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
+	{
+		CallAfterDelay::getInstance().AddFunction([this]()
+		{
+				m_Rendering->GetFullscreenCheckbox()->SetEnableCheckbox(Settings::get().IsFullscreen());
+				m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
+				Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
+				m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
+				Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
+				m_State = EGAME_STATE::STATE_MENU;
+		}, "RevertSettings", 0.1f, false);
+	}
+
+	if(m_IsMouseButtonPressed) m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
 }

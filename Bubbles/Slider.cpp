@@ -37,16 +37,16 @@ void Slider::DetectHover(const sf::Vector2f& a_MousePosition) const
 	m_Pointer->setFillColor(m_Color[0]);
 }
 
-bool Slider::DetectClick(const sf::Vector2f& a_MousePosition)
+bool Slider::DetectClick(const sf::Vector2f& a_MousePosition, bool a_IsPressed)
 {
 
-	if (!m_IsClicked && m_Pointer->getGlobalBounds().contains(a_MousePosition))
+	if (!m_IsClicked && a_IsPressed && m_Pointer->getGlobalBounds().contains(a_MousePosition))
 	{
 		m_Pointer->setFillColor(m_Color[2]);
 		m_IsClicked = true;
 		return true;
 	}
-	if (m_IsClicked)
+	if (m_IsClicked && a_IsPressed)
 	{
 		float x1 = m_Pointer->getSize().x / 2;
 		float x = std::clamp(a_MousePosition.x, m_Slider->getPosition().x, m_Slider->getPosition().x + m_Slider->getSize().x - m_Pointer->getSize().x);

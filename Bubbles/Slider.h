@@ -9,7 +9,7 @@ public:
 			const sf::Color& a_HoverColor, const sf::Color& a_ClickedColor, const sf::Color& a_SliderColor);
 
 	void DetectHover(const sf::Vector2f& a_MousePosition) const;
-	bool DetectClick(const sf::Vector2f& a_MousePosition);
+	bool DetectClick(const sf::Vector2f& a_MousePosition, bool a_IsPressed);
 	sf::Vector2f GetSliderPosition() const { return m_Slider->getPosition(); }
 	float GetSliderValue();
 	void SetSliderValue(float a_NewVolume);

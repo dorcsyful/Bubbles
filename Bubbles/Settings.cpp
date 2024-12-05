@@ -110,6 +110,7 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
 void Settings::SetSoundEnabled(float a_Music, float a_Effects)
 {
     m_MusicVolume = a_Music;
+    m_EffectVolume = a_Effects;
     Audio::getInstance().SetMusicVolume(a_Music);
     Audio::getInstance().SetEffectsVolume(a_Effects);
 
