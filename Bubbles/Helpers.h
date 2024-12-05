@@ -40,13 +40,7 @@ public:
 		data.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(a_Delay * 1000.f));
 		data.m_Delay = a_Delay;
 		int temp = rand();
-		for(int i = 0; i < m_Functions.size(); i++)
-		{
-			if(m_Functions[i].m_Name == a_RefName)
-			{
-				throw new std::exception("Function with this already exists!");
-			}
-		}
+
 		m_Functions.push_back(data);
     }
 

@@ -12,10 +12,7 @@ public:
 
 	void Update()
 	{
-		if(m_GameObjects.size() != m_Rendered.size())
-		{
-			throw std::runtime_error("BubbleWrapper::Update() - m_GameObjects and m_Rendered size mismatch");
-		}
+
 
 		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
