@@ -97,7 +97,7 @@ private:
 	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
 
 	//Play mode
-	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;
+	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 	std::unique_ptr<sf::Texture> m_ContainerTexture;
 	std::unique_ptr<sf::RectangleShape> m_Container;
 	std::unique_ptr<sf::Texture> m_FrameTexture;
