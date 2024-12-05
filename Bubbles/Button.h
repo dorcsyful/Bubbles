@@ -28,9 +28,6 @@ public:
 	{
         a_Target.draw(*m_Shape);
 
-        //std::cout << m_Text->getString().toAnsiString() << "\n";
-        // You can draw other high-level objects
-
         m_RenderTexture.clear(sf::Color::Transparent);
 
         a_Target.draw(*m_Text);

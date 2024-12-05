@@ -30,7 +30,7 @@ void Checkbox::SetEnableCheckbox(bool a_Enable)
 
 bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 {
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && m_Sprite->getGlobalBounds().contains(a_MousePosition))
+	if(m_Sprite->getGlobalBounds().contains(a_MousePosition))
 	{
 		Audio::getInstance().PlayClick();
 		int rect = m_IsChecked ? 0 : 1;

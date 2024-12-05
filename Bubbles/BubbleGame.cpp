@@ -9,11 +9,12 @@
 
 void BubbleGame::Initialize()
 {
+	m_IsMouseButtonPressed = false;
 	time_t currentTime = time(nullptr);
 	srand(static_cast<unsigned int>(currentTime));
 
 	CallAfterDelay::getInstance().ClearQueue();
-	m_State = EGAME_STATE::STATE_PLAY;
+	m_State = EGAME_STATE::STATE_MENU;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
@@ -35,7 +36,6 @@ void BubbleGame::PlayUpdate(float a_Delta)
 {
 	m_Gameplay->Update(a_Delta);
 	m_Physics->Update(a_Delta);
-
 	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
 	{
 		
@@ -74,7 +74,6 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) { GameOver(); }
 
 }
 
@@ -104,29 +103,37 @@ void BubbleGame::Update()
 		while (m_Rendering->GetWindow()->pollEvent(event))
 		{
 
+			if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			{
+				m_IsMouseButtonPressed = true;
+			}
+			else if(event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+			{
+				m_IsMouseButtonPressed = false;
+			}
 			if (event.type == sf::Event::Closed)
 				m_Rendering->GetWindow()->close();
 
 			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
-				PlayInput(event);
+				PlayInput(event,delta);
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
-				MenuInput();
+				MenuInput(event);
 			}
 			else if(m_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
 			{
-				GameOverAnimationInput();
+				GameOverAnimationInput(event);
 			}
 			else if(m_State == EGAME_STATE::STATE_GAME_OVER)
 			{
-				GameOverInput();
+				GameOverInput(event);
 			}
 			else if(m_State == EGAME_STATE::STATE_HIGH_SCORE)
 			{
 				sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-				if(m_Rendering->GetHSBackButton()->DetectClick(mousePosition))
+				if(m_IsMouseButtonPressed && m_Rendering->GetHSBackButton()->DetectClick(mousePosition))
 				{
 					CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"SetMenuState", 0.2f, false);
 				}
@@ -134,11 +141,11 @@ void BubbleGame::Update()
 			else if(m_State == EGAME_STATE::STATE_MENU_CONFIRM || m_State == EGAME_STATE::STATE_RESTART_CONFIRM
 				|| m_State == EGAME_STATE::STATE_EXIT_CONFIRM || m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
 			{
-				ConfirmInput();
+				ConfirmInput(event);
 			}
 			else if(m_State == EGAME_STATE::STATE_SETTINGS)
 			{
-				SettingsInput();
+				SettingsInput(event);
 			}
 			
 		}
@@ -250,9 +257,9 @@ void BubbleGame::NextComboText()
 	}
 }
 
-void BubbleGame::PlayInput(const sf::Event& a_Event)
+void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 {
-	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Space)
+	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::Space)
 	{
 		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 		{
@@ -262,20 +269,38 @@ void BubbleGame::PlayInput(const sf::Event& a_Event)
 		}
 	}
 
-	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
-	if (buttons.at("Back to menu")->DetectClick(mousePosition))
+	if(m_IsMouseButtonPressed)
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_MENU_CONFIRM); },
-			"SetConfirmState1", 0.1f, false);
-		//BackToMenu();
-	}
-	if(buttons.at("Restart")->DetectClick(mousePosition))
-	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_RESTART_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_RESTART_CONFIRM); },
-			"SetConfirmState2", 0.1f, false);
+		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+		std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
+		if (buttons.at("Back to menu")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_MENU_CONFIRM); },
+				"SetConfirmState1", 0.1f, false);
+			//BackToMenu();
+		}
+		if(buttons.at("Restart")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_RESTART_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_RESTART_CONFIRM); },
+				"SetConfirmState2", 0.1f, false);
 
-		//RestartGame();
+			//RestartGame();
+		}
+	}
+
+	if (a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::A))
+	{
+		m_Gameplay->UpdateMoveDirection(0.f);
+	}
+
+
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::D)
+	{
+		m_Gameplay->UpdateMoveDirection(1.f);
+	}
+	else if (a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::A)
+	{
+		m_Gameplay->UpdateMoveDirection(-1.f);
 	}
 
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
@@ -292,130 +317,142 @@ void BubbleGame::PlayInput(const sf::Event& a_Event)
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::W) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
 }
 
-void BubbleGame::MenuInput()
+void BubbleGame::MenuInput(const sf::Event& a_Event)
 {
-	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-	std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
-	if (buttons.at("Play")->DetectClick(mousePosition))
+	if (m_IsMouseButtonPressed)
 	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
-	}
-	if (buttons.at("High_Score")->DetectClick(mousePosition))
-	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, "SetHighScoreState", 0.1f, false);
-	}
+		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+		std::map<std::string, std::unique_ptr<Button>>& buttons = m_Rendering->GetMenuButtons();
+		if (buttons.at("Play")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "SetPlayState", Settings::get().GetLoadTime(), false);
+		}
+		if (buttons.at("High_Score")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_HIGH_SCORE; }, "SetHighScoreState", 0.1f, false);
+		}
 
-	if (buttons.at("Exit")->DetectClick(mousePosition))
-	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_EXIT_CONFIRM; }, "Exit", 0.1f, false);
-	}
-	if (buttons.at("Settings")->DetectClick(mousePosition))
-	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "SetSettingState", 0.1f, false);
+		if (buttons.at("Exit")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_EXIT_CONFIRM; }, "Exit", 0.1f, false);
+		}
+		if (buttons.at("Settings")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "SetSettingState", 0.1f, false);
+		}
 	}
 }
 
-void BubbleGame::GameOverAnimationInput()
+void BubbleGame::GameOverAnimationInput(const sf::Event& a_Event)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+	if (a_Event.type == sf::Event::KeyPressed)
 	{
 		m_State = EGAME_STATE::STATE_GAME_OVER;
 	}
 }
 
-void BubbleGame::GameOverInput()
+void BubbleGame::GameOverInput(const sf::Event& a_Event)
 {
-	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-	if (m_Rendering->GetMenuButtons().at("PlayAgain")->DetectClick(mousePosition))
+	if (m_IsMouseButtonPressed)
 	{
-		RestartGame();
-	}
-	if(m_Rendering->GetMenuButtons().at("BackToMenu")->DetectClick(mousePosition))
-	{
-		m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
-		m_Physics->Reset();
-		m_Rendering->Reset();
-		m_Wrapper->Clear();
+		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+		if (m_Rendering->GetMenuButtons().at("PlayAgain")->DetectClick(mousePosition))
+		{
+			RestartGame();
+		}
+		if (m_Rendering->GetMenuButtons().at("BackToMenu")->DetectClick(mousePosition))
+		{
+			m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
+			m_Physics->Reset();
+			m_Rendering->Reset();
+			m_Wrapper->Clear();
 
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
-
-	}
-}
-
-void BubbleGame::ConfirmInput()
-{
-	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-	if (m_Rendering->GetMenuButtons().at("ConfirmConfirm")->DetectClick(mousePosition))
-	{
-		if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, "Exit", 0.2f, false);
-		}
-		if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { RestartGame(); }, "Restart", 0.2f, false);
-		}
-		if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { BackToMenu(); }, "BackToMenu", 0.2f, false);
-		}
-		if (m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_START; }, "RestartGame", 0.2f, false);
-		}
-	}
-	if (m_Rendering->GetMenuButtons().at("CancelConfirm")->DetectClick(mousePosition))
-	{
-		if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
-		{
 			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
-		}
-		if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
-		}
-		if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
-		}
-		if(m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
-		{
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "BackToSettings", 0.2f, false);
+
 		}
 	}
 }
 
-void BubbleGame::SettingsInput()
+void BubbleGame::ConfirmInput(const sf::Event& a_Event)
 {
-	sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
-
-	if(m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition))
+	if (m_IsMouseButtonPressed)
 	{
-		Audio::getInstance().SetMusicVolume(m_Rendering->GetSettingSlider(0)->GetSliderValue());
-	}
-	if (m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition))
-	{
-		Audio::getInstance().SetEffectsVolume(m_Rendering->GetSettingSlider(1)->GetSliderValue());
-	}
-	if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
-	{
-		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-		m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-
-		if(m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
+		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+		if (m_Rendering->GetMenuButtons().at("ConfirmConfirm")->DetectClick(mousePosition))
 		{
-			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-			m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
+			if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->GetWindow()->close(); }, "Exit", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { RestartGame(); }, "Restart", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { BackToMenu(); }, "BackToMenu", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_START; }, "RestartGame", 0.2f, false);
+			}
 		}
-		else
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; },"ApplySettings", 0.1f, false);
+		if (m_Rendering->GetMenuButtons().at("CancelConfirm")->DetectClick(mousePosition))
+		{
+			if (m_State == EGAME_STATE::STATE_EXIT_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_RESTART_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_MENU_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_PLAY; }, "BackToPlay", 0.2f, false);
+			}
+			if (m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
+			{
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS; }, "BackToSettings", 0.2f, false);
+			}
+		}
 	}
-	if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
-	{
-		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
-	}
+}
 
-	m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
+void BubbleGame::SettingsInput(const sf::Event& a_Event)
+{
+	if (m_IsMouseButtonPressed)
+	{
+		sf::Vector2f mousePosition = m_Rendering->GetWindow()->mapPixelToCoords(sf::Mouse::getPosition(*m_Rendering->GetWindow()));
+
+		if (m_Rendering->GetSettingSlider(0)->DetectClick(mousePosition))
+		{
+			Audio::getInstance().SetMusicVolume(m_Rendering->GetSettingSlider(0)->GetSliderValue());
+		}
+		if (m_Rendering->GetSettingSlider(1)->DetectClick(mousePosition))
+		{
+			Audio::getInstance().SetEffectsVolume(m_Rendering->GetSettingSlider(1)->GetSliderValue());
+		}
+		if (m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
+		{
+			Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
+			m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+
+			if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
+			{
+				Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+				m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
+			}
+			else
+				CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "ApplySettings", 0.1f, false);
+		}
+		if (m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
+		{
+			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "RevertSettings", 0.1f, false);
+		}
+
+		m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
+	}
 }

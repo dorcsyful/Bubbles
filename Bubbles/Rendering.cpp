@@ -207,7 +207,6 @@ void Rendering::Draw(const EGAME_STATE a_State) const
 			m_Window->draw(*m_MainBackgroundSprite);
 			m_MainBackgroundSprite->setFillColor(sf::Color::White);
 			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetMenuState");
-			std::cout << remainingTime << "\n";
 			m_BackgroundSprite->setFillColor(sf::Color(255, 255, 255, remainingTime * 255.f));
 			m_Window->draw(*m_BackgroundSprite);
 

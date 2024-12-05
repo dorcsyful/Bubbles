@@ -7,15 +7,7 @@
 
 void Gameplay::Update(float a_Delta)
 {
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D))
-	{
-		Move(Settings::get().GetPointerMoveSpeed() * a_Delta);
-	}
-	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A))
-	{
-		Move(Settings::get().GetPointerMoveSpeed() * a_Delta * -1.f);
-	}
-
+		Move(Settings::get().GetPointerMoveSpeed() * m_MoveDirection * a_Delta);
 }
 
 void Gameplay::CheatNextBubble(EBUBBLE_TYPE a_ToDrop)

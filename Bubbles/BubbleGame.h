@@ -25,12 +25,12 @@ public:
 private:
 	void PlayUpdate(float a_Delta);
 	void RestartGame();
-	void PlayInput(const sf::Event& a_Event);
-	void MenuInput();
-	void GameOverAnimationInput();
-	void GameOverInput();
-	void ConfirmInput();
-	void SettingsInput();
+	void PlayInput(const sf::Event& a_Event, float a_Delta);
+	void MenuInput(const sf::Event& a_Event);
+	void GameOverAnimationInput(const sf::Event& a_Event);
+	void GameOverInput(const sf::Event& a_Event);
+	void ConfirmInput(const sf::Event& a_Event);
+	void SettingsInput(const sf::Event& a_Event);
 
 	void GameOver();
 
@@ -39,6 +39,8 @@ private:
 
 	void NextComboText();
 
+
+	bool m_IsMouseButtonPressed;
 	sf::Vector2f m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 	sf::Clock m_ScaleTimer;
 
