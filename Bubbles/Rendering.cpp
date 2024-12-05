@@ -409,27 +409,6 @@ void Rendering::LoadNextUpTextures()
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_FISH]->loadFromFile(FISH_NEXT_FILENAME);
 
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_FROG]->loadFromFile(FROG_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_JELLY, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_JELLY]->loadFromFile(JELLY_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_KRILL, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_KRILL]->loadFromFile(KRILL_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SEAL, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SEAL]->loadFromFile(SEAL_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SHARK, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SHARK]->loadFromFile(SHARK_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_SQUID]->loadFromFile(SQUID_NEXT_FILENAME);
-
-	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Texture>()));
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_WHALE]->loadFromFile(WHALE_NEXT_FILENAME);
-
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_BATH_BOMB]->loadFromFile("Assets/Shapes/NextUp/special.png");
 }
@@ -551,14 +530,14 @@ void Rendering::CreateGameOverSprite()
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
-	newButton->ResizeCharacters(45);
+	newButton->ResizeCharacters(30);
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight();
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Back to menu");
-	newButton->ResizeCharacters(45);
+	newButton->ResizeCharacters(30);
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("BackToMenu", std::move(newButton)));
 
@@ -693,7 +672,7 @@ void Rendering::CreateHighScoreSprites()
 	basePos.y -= m_Window->getSize().y / 10;
 	m_HSBackButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	m_HSBackButton->SetText("Back");
-	m_HSBackButton->ResizeCharacters(40);
+	m_HSBackButton->ResizeCharacters(30);
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.5f), Settings::get().GetButtonHeight() / m_BaseButtonTexture->getSize().y);
 
 	m_HSBackButton->SetScale(buttonScale);
@@ -721,15 +700,7 @@ void Rendering::CreateNextUpSprites()
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_STAR, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CRAB))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FISH))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FROG))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_JELLY, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_JELLY))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_KRILL, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_KRILL))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SEAL, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_SEAL))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SHARK, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_SHARK))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SQUID, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_SQUID))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_WHALE, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_WHALE))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_BATH_BOMB))));
-	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SPIKY_BOMB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_BATH_BOMB))));
+
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR)->getSize());
 	float factorX = Settings::get().GetNextUpWidth() / size.x;
@@ -811,7 +782,7 @@ void Rendering::CreatePlayModeButtons()
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Menu");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(35);
 	sf::Vector2f buttonScale = sf::Vector2f(buttonWidth, Settings::get().GetButtonHeight() / (m_BaseButtonTexture->getSize().y));
 
 	newButton->SetScale(buttonScale);
@@ -820,7 +791,7 @@ void Rendering::CreatePlayModeButtons()
 	basePos.x += Settings::get().GetMenuButtonWidth() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Restart");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(35);
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 
@@ -846,14 +817,14 @@ void Rendering::CreateConfirmationWindow()
 	basePos.y += m_ConfirmationWindow->getGlobalBounds().height / 1.3f;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Yes");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(30);
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ConfirmConfirm", std::move(newButton)));
 
 	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 2;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("No");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(30);
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("CancelConfirm", std::move(newButton)));
 
@@ -872,7 +843,7 @@ void Rendering::CreateSettingsButtons()
 {
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(m_MenuButtons.at("Back to menu")->GetPosition(), *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Apply");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(30);
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (m_BaseButtonTexture->getSize().x / 3.f), Settings::get().GetButtonHeight() / (m_BaseButtonTexture->getSize().y));
 
 	newButton->SetScale(buttonScale);
@@ -880,7 +851,7 @@ void Rendering::CreateSettingsButtons()
 
 	newButton = std::make_unique<Button>(m_MenuButtons.at("Restart")->GetPosition(), *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Revert");
-	newButton->ResizeCharacters(40);
+	newButton->ResizeCharacters(30);
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
 }

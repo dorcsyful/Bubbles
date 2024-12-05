@@ -1,5 +1,7 @@
 #include "Save.h"
 
+#include <fstream>
+
 #include "FilePaths.h"
 
 Save::Save()
@@ -69,7 +71,6 @@ void Save::SaveData(const std::vector<Data>& a_Data)
     std::ofstream file(HIGH_SCORE_DATA_FILENAME);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file for writing. \n";
         return;
     }
 
@@ -87,7 +88,6 @@ std::vector<Save::Data> Save::LoadData()
     std::ifstream file(HIGH_SCORE_DATA_FILENAME);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file." << '\n';
         return data;
     }
 
@@ -104,9 +104,6 @@ std::vector<Save::Data> Save::LoadData()
         // Verify hash
         if (calculateHash == hash) {
             data.emplace_back(value, date);
-        }
-        else {
-            std::cerr << "Data hash wrong.\n";
         }
     }
 

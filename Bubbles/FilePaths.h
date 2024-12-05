@@ -16,13 +16,6 @@
 #define STAR_NEXT_FILENAME "Assets/Shapes/NextUp/0.png"
 #define CRAB_NEXT_FILENAME "Assets/Shapes/NextUp/1.png"
 #define FISH_NEXT_FILENAME "Assets/Shapes/NextUp/2.png"
-#define FROG_NEXT_FILENAME "Assets/Shapes/NextUp/3.png"
-#define JELLY_NEXT_FILENAME "Assets/Shapes/NextUp/4.png"
-#define KRILL_NEXT_FILENAME "Assets/Shapes/NextUp/5.png"
-#define SEAL_NEXT_FILENAME "Assets/Shapes/NextUp/6.png"
-#define SHARK_NEXT_FILENAME "Assets/Shapes/NextUp/7.png"
-#define SQUID_NEXT_FILENAME "Assets/Shapes/NextUp/8.png"
-#define WHALE_NEXT_FILENAME "Assets/Shapes/NextUp/9.png"
 
 #define TITLE_FILENAME "Assets/Menu/Title.png"
 #define BUTTON_FILENAME "Assets/Menu/Button.png"
