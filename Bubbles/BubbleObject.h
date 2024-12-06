@@ -19,7 +19,7 @@ public:
 		m_Mass = bubble_weights.at(a_Type);
 		m_InverseMass = 1.f / m_Mass;
 		m_Restitution = 0.2f;
-		m_DynamicFriction = 0.5f;
+		m_DynamicFriction = 0.4f;
 		m_StaticFriction = 0.2f;
 		BubbleObject::CalculateInertia();
 

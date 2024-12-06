@@ -26,7 +26,7 @@ void BubbleGame::Initialize()
 
 	m_Physics->CreateContainerLines();
 
-	m_Rendering->UpdateHighScores(m_Save->GetScores());
+	m_Rendering->UpdateHighScore(m_Save->GetScores());
 	m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 	m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
 	m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
@@ -192,6 +192,7 @@ void BubbleGame::GameOver()
 {
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
+	m_Rendering->UpdateHighScore(m_Save->GetScores());
 	Audio::getInstance().PlaySadGameOver();
 	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;
 	m_Rendering->GetDuck()->SetAnimate(false, false);
@@ -315,6 +316,7 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Q) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_BATH_BOMB);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::W) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
+	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::P) GameOver();
 }
 
 void BubbleGame::MenuInput(const sf::Event& a_Event)

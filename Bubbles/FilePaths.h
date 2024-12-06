@@ -19,7 +19,7 @@
 
 #define TITLE_FILENAME "Assets/Menu/Title.png"
 #define BUTTON_FILENAME "Assets/Menu/Button.png"
-#define FONT_FILENAME "Assets/Menu/Fonts/Linotte Bold.otf"
+#define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
 #define SETTINGS_FILENAME "Assets/Menu/Settings.png"

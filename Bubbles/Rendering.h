@@ -53,6 +53,7 @@ public:
 	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
 	void UpdateConfirmText(EGAME_STATE a_NewState) const;
 	void UpdateComboPosition(const sf::Vector2f& a_NewPos) const;
+	void UpdateHighScore(const std::vector<unsigned int>& a_Scores) const;
 
 	std::unique_ptr<Button>& GetHSBackButton() { return m_HSBackButton; }
 	std::unique_ptr<Slider>& GetSettingSlider(int a_Id) { return m_SettingSliders[a_Id]; }

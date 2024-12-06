@@ -357,6 +357,18 @@ void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 
 }
 
+void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
+{
+	for (int i = 0; i < a_Scores.size(); i++)
+	{
+		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
+	}
+
+	m_HighScoresInPlay[0]->SetText(std::to_string(a_Scores[0]));
+	m_HighScoresInPlay[1]->SetText(std::to_string(a_Scores[1]));
+	m_HighScoresInPlay[2]->SetText(std::to_string(a_Scores[2]));
+}
+
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
