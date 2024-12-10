@@ -108,6 +108,15 @@ std::vector<Save::Data> Save::LoadData()
     }
 
     file.close();
+
+    if(data.size() < 30)
+    {
+	    for(size_t i = data.size(); i < 30; i++)
+	    {
+            data.emplace_back(0);
+	    }
+        SaveData(data);
+    }
     return data;
 }
 

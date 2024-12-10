@@ -2,8 +2,8 @@
 //Gameplay
 #define GRAVITY (-9.81f)
 
-#define NAIL_LENGTH 0.5f
-#define NAIL_WEIGHT 0.5f
+#define NAIL_LENGTH 0.3f
+#define NAIL_WEIGHT 0.3f
 
 #include <map>
 
@@ -21,7 +21,9 @@ enum class EGAME_STATE
 	STATE_MENU_CONFIRM,
 	STATE_SETTINGS,
 	STATE_SETTINGS_CONFIRM,
-	STATE_RESTART
+	STATE_RESTART,
+	STATE_TUTORIAL_ONE,
+	STATE_TUTORIAL_TWO
 };
 
 enum class EOBJECT_TYPE

@@ -1,8 +1,5 @@
 #include "Gameplay.h"
 
-#include <iostream>
-#include <SFML/Window/Keyboard.hpp>
-
 #include "BubbleMath.h"
 
 void Gameplay::Update(float a_Delta)

@@ -16,11 +16,11 @@ public:
 		m_Position = a_Position;
 		m_Rotation = a_Rotation;
 		m_Type = EOBJECT_TYPE::TYPE_CIRCLE;
-		m_Mass = bubble_weights.at(a_Type);
+		m_Mass = 10;
 		m_InverseMass = 1.f / m_Mass;
 		m_Restitution = 0.2f;
 		m_DynamicFriction = 0.4f;
-		m_StaticFriction = 0.2f;
+		m_StaticFriction = 0.4f;
 		BubbleObject::CalculateInertia();
 
 	}
@@ -32,8 +32,8 @@ public:
 		m_Mass = bubble_weights.at(a_Type);
 		m_InverseMass = 1.f / m_Mass;
 		m_Restitution = 0.2f;
-		m_DynamicFriction = 0.5f;
-		m_StaticFriction = 0.3f;
+		m_DynamicFriction = 0.4f;
+		m_StaticFriction = 0.4f;
 		BubbleObject::CalculateInertia();
 
 	}

@@ -1,39 +1,30 @@
 #pragma once
 //Files
-#define STAR_FILENAME "Assets/Shapes/0.png"
-#define CRAB_FILENAME "Assets/Shapes/1.png"
-#define FISH_FILENAME "Assets/Shapes/2.png"
-#define FROG_FILENAME "Assets/Shapes/3.png"
-#define JELLY_FILENAME "Assets/Shapes/4.png"
-#define KRILL_FILENAME "Assets/Shapes/5.png"
-#define SEAL_FILENAME "Assets/Shapes/6.png"
-#define SHARK_FILENAME "Assets/Shapes/7.png"
-#define SQUID_FILENAME "Assets/Shapes/8.png"
-#define WHALE_FILENAME "Assets/Shapes/9.png"
-#define BATH_BOMB_FILENAME "Assets/Shapes/Bath.png"
-#define SPIKY_BOMB_FILENAME "Assets/Shapes/Spiky.png"
+#define BUBBLE_PATH "Assets/Shapes/"
+#define BATH_BUBBLE_FILENAME "Assets/Shapes/bath.png"
+#define SPIKY_BUBBLE_FILENAME "Assets/Shapes/spiky.png"
 
-#define STAR_NEXT_FILENAME "Assets/Shapes/NextUp/0.png"
-#define CRAB_NEXT_FILENAME "Assets/Shapes/NextUp/1.png"
-#define FISH_NEXT_FILENAME "Assets/Shapes/NextUp/2.png"
+#define NEXT_UP_PATH "Assets/Shapes/NextUp/"
+#define NEXT_UP_SPECIAL_PATH "Assets/Shapes/NextUp/special.png"
 
-#define TITLE_FILENAME "Assets/Menu/Title.png"
+#define TITLE_FILENAME "Assets/Titles/Title.png"
+#define SETTINGS_FILENAME "Assets/Titles/Settings.png"
+#define GAME_OVER_FILENAME "Assets/Titles/GameOver.png"
+#define HIGH_SCORE_TITLE_FILENAME "Assets/Titles/HighScore.png"
+#define SCORE_TITLE_FILENAME "Assets/Titles/Score.png"
+
 #define BUTTON_FILENAME "Assets/Menu/Button.png"
 #define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
-#define SETTINGS_FILENAME "Assets/Menu/Settings.png"
 #define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"
-
+#define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
 #define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
-#define CONTAINER_FILENAME "Assets/Other/ContainerBackground.png"
-#define FRAME_FILENAME "Assets/Other/ContainerFrame.png"
-#define GAME_OVER_FILENAME "Assets/Other/GameOver.png"
-#define SCORE_FILENAME "Assets/Other/ScoreBackground.png"
-#define HIGH_SCORE_TITLE_FILENAME "Assets/Other/HighScore.png"
-#define DUCK_FILENAME "Assets/Other/Duck.png"
-#define SCORE_TITLE_FILENAME "Assets/Other/Score.png"
+
+#define CONTAINER_FILENAME "Assets/PlayMode/ContainerBackground.png"
+#define FRAME_FILENAME "Assets/PlayMode/ContainerFrame.png"
+#define DUCK_FILENAME "Assets/PlayMode/Duck.png"
 
 #define HIGH_SCORE_DATA_FILENAME "Assets/Slot00001.save"
 
@@ -43,6 +34,9 @@
 #define AUDIO_SAD_GAME_OVER "Assets/Audio/SadGameOver.wav"
 
 #define SOUND_FILENAME "Assets/Menu/Sound.png"
+
+#define TUTORIAL_ONE_FILENAME "Assets/HowTo/tutorial 1.png"
+#define TUTORIAL_TWO_FILENAME "Assets/HowTo/tutorial 2.png"
 
 #define CONFIRM_EXIT_GAME "Exit the game?"
 #define CONFIRM_RESTART "Restart game?"

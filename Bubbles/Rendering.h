@@ -35,6 +35,7 @@ public:
 	void UpdateScore(const unsigned int a_Score) const
 	{
 		m_Score->setString(std::to_string(a_Score));
+		m_GameOverScoreText->setString("Your score: " + std::to_string(a_Score));
 	}
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
@@ -70,6 +71,7 @@ private:
 	void GameOverDraw() const;
 	void ConfirmationDraw() const;
 	void SettingsDraw() const;
+	void HowToDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -89,6 +91,7 @@ private:
 	void CreateConfirmationWindow();
 	void CreateSettingsButtons();
 	void CreateSettings();
+	void CreateTutorial();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -127,7 +130,8 @@ private:
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;
 	std::unique_ptr<sf::Texture> m_GameOverTexture;
-	std::unique_ptr<SpriteWithText> m_GOScoreSprite;
+	std::unique_ptr<sf::RectangleShape> m_GOScoreSprite;
+	std::unique_ptr<sf::Text> m_GameOverScoreText;
 
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;
@@ -156,5 +160,10 @@ private:
 	std::vector<std::unique_ptr<Slider>> m_SettingSliders;
 	std::unique_ptr<sf::Texture> m_CheckboxTexture;
 	std::unique_ptr<Checkbox> m_FullscreenCheckbox;
+
+	//HowTo
+	std::vector<std::unique_ptr<sf::Texture>> m_TutorialTextures;
+	std::vector<std::unique_ptr<sf::RectangleShape>> m_TutorialSprites;
+	std::vector<std::unique_ptr<sf::Text>> m_TutorialTexts;
 };
 
