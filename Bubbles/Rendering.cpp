@@ -406,7 +406,7 @@ void Rendering::LoadNextUpTextures()
 {
 	m_NextUpTextures = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>();
 
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		m_NextUpTextures.insert(std::pair(static_cast<EBUBBLE_TYPE>(i), std::make_unique<sf::Texture>()));
 		m_NextUpTextures[static_cast<EBUBBLE_TYPE>(i)]->loadFromFile(NEXT_UP_PATH + std::to_string(i) + ".png");
@@ -565,6 +565,9 @@ void Rendering::CreateMenuButtonSprites()
 	m_Font = std::make_unique<sf::Font>();
 	m_Font->loadFromFile(FONT_FILENAME);
 
+	m_FontBold = std::make_unique<sf::Font>();
+	m_FontBold->loadFromFile(FONT_BOLD_FILENAME);
+
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 	basePos.y += m_Title->getSize().y + 10;
 	basePos.x -= m_Title->getSize().x / 4;
@@ -713,6 +716,7 @@ void Rendering::CreateNextUpSprites()
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_STAR, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_CRAB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_CRAB))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FISH, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FISH))));
+	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_FROG, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_FROG))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_SPIKY_BOMB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_BATH_BOMB))));
 	m_NextUpBubbles.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Sprite>(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_BATH_BOMB))));
 
@@ -733,17 +737,22 @@ void Rendering::CreatePlayScoreSprites()
 	m_ScoreTitleTexture = std::make_unique<sf::Texture>();
 	m_ScoreTitleTexture->loadFromFile(SCORE_TITLE_FILENAME);
 
-	m_ScoreTitle = std::make_unique<sf::RectangleShape>();
-	m_ScoreTitle->setTexture(m_ScoreTitleTexture.get());
+	m_ScoreTitle = std::make_unique<sf::Text>();
+	m_ScoreTitle->setFont(*m_FontBold);
+	m_ScoreTitle->setStyle(sf::Text::Bold);
+	m_ScoreTitle->setString("Score");
+	m_ScoreTitle->setFillColor(sf::Color::White);
+	m_ScoreTitle->setOutlineThickness(4);
+	m_ScoreTitle->setOutlineColor(sf::Color(192, 102, 71, 255));
 	float i = static_cast<float>(m_ScoreTitleTexture->getSize().y) / static_cast<float>(m_ScoreTitleTexture->getSize().x);
 	float y = Settings::get().GetScoreTitleWidth() * i;
-	m_ScoreTitle->setSize(sf::Vector2f(Settings::get().GetScoreTitleWidth(), y));
+	m_ScoreTitle->setCharacterSize(68);
 
 	auto position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
 	position.y += m_Frame->getGlobalBounds().height / 4.f;
-	position.x -= m_ScoreTitle->getSize().x * 1.3f;
+	position.x -= m_ScoreTitle->getLocalBounds().width * 1.3f;
 	m_ScoreTitle->setPosition(position);
-	position.y += m_ScoreTitle->getSize().y * 1.1f;
+	position.y += m_ScoreTitle->getLocalBounds().height * 1.1f;
 	m_Score->setPosition(position);
 
 
@@ -751,8 +760,8 @@ void Rendering::CreatePlayScoreSprites()
 	m_HighScoreTitleInPlay->setTexture(m_HighScoreTexture.get());
 	m_HighScoreTitleInPlay->setSize(BubbleMath::ToVector2f(m_HighScoreTexture->getSize()));
 	i = (static_cast<float>(m_HighScoreTexture->getSize().x) / static_cast<float>(m_HighScoreTexture->getSize().y));
-	y = m_ScoreTitle->getSize().y * i *0.9f;
-	m_HighScoreTitleInPlay->setSize(sf::Vector2f(y, m_ScoreTitle->getSize().y * 0.9f));
+	y = m_ScoreTitle->getLocalBounds().height * i *0.9f;
+	m_HighScoreTitleInPlay->setSize(sf::Vector2f(y, m_ScoreTitle->getLocalBounds().height * 0.9f));
 
 	position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
 	position.y += m_Frame->getGlobalBounds().height / 2.f;

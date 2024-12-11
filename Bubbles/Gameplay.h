@@ -39,6 +39,8 @@ public:
 	void Reset(float a_WindowWidth);
 
 private:
+	static EBUBBLE_TYPE GenerateRandom();
+
 	float m_MoveDirection = 0;
 	unsigned int m_CombineCombo;
 	unsigned int m_Score;

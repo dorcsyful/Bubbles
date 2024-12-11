@@ -18,9 +18,9 @@ public:
 		m_Type = EOBJECT_TYPE::TYPE_CIRCLE;
 		m_Mass = 10;
 		m_InverseMass = 1.f / m_Mass;
-		m_Restitution = 0.2f;
+		m_Restitution = 0.4f;
 		m_DynamicFriction = 0.4f;
-		m_StaticFriction = 0.4f;
+		m_StaticFriction = 0.6f;
 		BubbleObject::CalculateInertia();
 
 	}
@@ -31,9 +31,9 @@ public:
 		m_Type = EOBJECT_TYPE::TYPE_CIRCLE;
 		m_Mass = bubble_weights.at(a_Type);
 		m_InverseMass = 1.f / m_Mass;
-		m_Restitution = 0.2f;
+		m_Restitution = 0.4f;
 		m_DynamicFriction = 0.4f;
-		m_StaticFriction = 0.4f;
+		m_StaticFriction = 0.5f;
 		BubbleObject::CalculateInertia();
 
 	}
@@ -45,7 +45,4 @@ public:
 private:
 	EBUBBLE_TYPE m_BubbleType;
 	float m_Radius;
-
-
-
 };

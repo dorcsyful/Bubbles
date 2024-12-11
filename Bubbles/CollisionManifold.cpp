@@ -21,8 +21,8 @@ CollisionManifold::CollisionManifold(GameObject* a_First, GameObject* a_Second)
 void CollisionManifold::ApplyImpulse()
 {
     // Relative velocity
-    sf::Vector2f ra = m_CollisionPoint - m_Objects[0]->GetPosition();
-    sf::Vector2f rb = m_CollisionPoint - m_Objects[1]->GetPosition();
+    sf::Vector2f ra = m_CollisionPoint - sf::Vector2f(m_Objects[0]->GetPosition().x + 0.0001f,m_Objects[0]->GetPosition().y);
+    sf::Vector2f rb = m_CollisionPoint - sf::Vector2f(m_Objects[1]->GetPosition().x + 0.0001f, m_Objects[1]->GetPosition().y);
     sf::Vector2f rv = m_Objects[1]->GetLinearVelocity() + BubbleMath::Cross(m_Objects[1]->GetAngularVelocity(), rb) -
 					 m_Objects[0]->GetLinearVelocity() - BubbleMath::Cross(m_Objects[0]->GetAngularVelocity(), ra);
 

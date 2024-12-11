@@ -15,6 +15,7 @@
 
 #define BUTTON_FILENAME "Assets/Menu/Button.png"
 #define FONT_FILENAME "Assets/Menu/Fonts/Linotte Regular.otf"
+#define FONT_BOLD_FILENAME "Assets/Menu/Fonts/Linotte Bold.otf"
 #define LOADING_FILENAME "Assets/Menu/LoadingSheet.png"
 #define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
 #define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"

@@ -122,10 +122,11 @@ private:
 	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
 	std::unique_ptr<sf::Text> m_ComboText;
 	std::unique_ptr<sf::Text> m_Score;
-	std::unique_ptr<sf::RectangleShape> m_ScoreTitle;
+	std::unique_ptr<sf::Text> m_ScoreTitle;
 	std::unique_ptr<sf::RectangleShape> m_HighScoreTitleInPlay;
 	std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoresInPlay;
+	std::vector<std::unique_ptr<sf::Texture>> m_ScoreNumberTextures;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;
@@ -138,6 +139,7 @@ private:
 	std::unique_ptr<sf::Texture> m_TitleTexture;
 	std::map<std::string, std::unique_ptr<Button>> m_MenuButtons;
 	std::unique_ptr<sf::Font> m_Font;
+	std::unique_ptr<sf::Font> m_FontBold;
 	std::unique_ptr<AnimatedSprite> m_Loading;
 	std::unique_ptr<sf::Texture> m_LoadingTexture;
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;

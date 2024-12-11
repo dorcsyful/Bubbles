@@ -1,5 +1,7 @@
 #include "Gameplay.h"
 
+#include <random>
+
 #include "BubbleMath.h"
 
 void Gameplay::Update(float a_Delta)
@@ -47,11 +49,7 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
-	int next = rand() % 10;
-	if (next == 8) { next = 10; }
-	else if (next == 9) { next = 11; }
-	else { next = rand() % 3; }
-	m_NextBubble = static_cast<EBUBBLE_TYPE>(next);
+	m_NextBubble = GenerateRandom();
 	Move(0);
 	m_CombineCombo = 0;
 	return newBubble;
@@ -61,11 +59,32 @@ void Gameplay::Reset(float a_WindowWidth)
 {
 	time_t currentTime = time(nullptr);
 	srand(static_cast<unsigned int>(currentTime));
-	m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-	m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+	m_CurrentBubble = GenerateRandom();
+	m_NextBubble = GenerateRandom();
+
 	m_ContainerEdges[0] = a_WindowWidth / 2.f - Settings::get().GetContainerWidth() / 2.f;
 	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 	m_CurrentPosition = 0;
 	Move(0);
 	m_Score = 0;
+}
+
+EBUBBLE_TYPE Gameplay::GenerateRandom()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(0, 99);
+
+	int randomNum = dis(gen);
+
+	if (randomNum < 70) {
+		// 70% chance: 0, 1, or 2
+		return static_cast<EBUBBLE_TYPE>(randomNum % 3);
+	}
+	if (randomNum < 90) {
+		// 20% chance: 3 or 4
+		return static_cast<EBUBBLE_TYPE>(3);
+	}
+	// 10% chance: 5 or 6
+	return static_cast<EBUBBLE_TYPE>(10 + randomNum % 2);
 }
