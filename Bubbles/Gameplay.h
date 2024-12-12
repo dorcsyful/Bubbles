@@ -35,7 +35,23 @@ public:
 	void UpdateMoveDirection(float a_Direction) { m_MoveDirection = a_Direction; }
 	void Reset(float a_WindowWidth);
 
+	void AddToStorage(EBUBBLE_TYPE a_Type)
+	{
+		m_Storage = a_Type;
+		m_CurrentBubble = m_NextBubble;
+		m_NextBubble = GenerateRandom();
+	}
+	EBUBBLE_TYPE PullUpStorage()
+	{
+		EBUBBLE_TYPE temp = m_Storage;
+		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
+		return temp;
+	}
+
 private:
+
+	EBUBBLE_TYPE m_Storage;
+
 	static EBUBBLE_TYPE GenerateRandom();
 	float m_MoveDirection = 0;
 	unsigned int m_CombineCombo;

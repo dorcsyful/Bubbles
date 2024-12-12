@@ -85,6 +85,10 @@ void Settings::LoadSettings()
                 m_TitleHeight = stof(value);
             if (name == "SCORE_TITLE_SIZE")
                 m_ScoreTitleWidth = stof(value);
+            if (name == "STORAGE_WIDTH")
+                m_StorageSpriteWidth = stof(value);
+            if (name == "STORAGE_HEIGHT")
+                m_StorageSpriteHeight = stof(value);
         }
         file.close();
     }

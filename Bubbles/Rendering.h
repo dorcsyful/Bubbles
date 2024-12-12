@@ -19,7 +19,7 @@ class Rendering
 public:
 
 	Rendering(int a_X, int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper);
-	void Draw(EGAME_STATE a_State) const;
+	void Draw(EGAME_STATE a_State);
 	void CreateSprite(EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, float a_Rotation,
 	                  std::unique_ptr<AnimatedSprite>& a_NewSprite) const;
 
@@ -60,11 +60,11 @@ public:
 	std::unique_ptr<Slider>& GetSettingSlider(int a_Id) { return m_SettingSliders[a_Id]; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
 	std::unique_ptr<Checkbox>& GetFullscreenCheckbox() { return m_FullscreenCheckbox; }
-
+	void StartMoveToStorage(EBUBBLE_TYPE a_Type);
 	void Reset();
 
 private:
-	void PlayDraw() const;
+	void PlayDraw();
 	void MenuDraw() const;
 	void GameOverAnimationDraw() const;
 	void HighScoreDraw() const;
@@ -92,6 +92,7 @@ private:
 	void CreateSettingsButtons();
 	void CreateSettings();
 	void CreateTutorial();
+	void CreateStorageSprites();
 
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
@@ -127,6 +128,11 @@ private:
 	std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoresInPlay;
 	std::vector<std::unique_ptr<sf::Texture>> m_ScoreNumberTextures;
+
+	std::unique_ptr<sf::Sprite> m_StoredSprite;
+	std::unique_ptr<sf::Sprite> m_MovingStorageSprite;
+	float m_IsMovingStorage = 0;
+	EBUBBLE_TYPE m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;

@@ -63,6 +63,9 @@ public:
     [[nodiscard]] float GetTitleHeight() const { return m_TitleHeight; }
     [[nodiscard]] float GetScoreTitleWidth() const { return m_ScoreTitleWidth; }
 
+    [[nodiscard]] float GetStorageBoxWidth() const { return m_StorageSpriteWidth; }
+    [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
+
 private:
     bool m_FullScreen = false;
 
@@ -81,7 +84,8 @@ private:
     float m_ButtonWidth = 0;
     float m_ButtonHeight = 0;
     float m_ScoreTitleWidth = 0;
-
+    float m_StorageSpriteWidth = 0;
+    float m_StorageSpriteHeight = 0;
     float m_PointerMoveSpeed = 0;
 
     float m_PixelToMeter = 0;

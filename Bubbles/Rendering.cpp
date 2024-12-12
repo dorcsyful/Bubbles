@@ -44,10 +44,10 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
 	CreateSettings();
-
+	CreateStorageSprites();
 }
 
-void Rendering::PlayDraw() const
+void Rendering::PlayDraw()
 {
 	m_Window->draw(*m_BackgroundSprite);
 
@@ -73,10 +73,25 @@ void Rendering::PlayDraw() const
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
 	m_Window->draw(*m_HighScoreTitleInPlay);
-
+	m_Window->draw(*m_StoredSprite);
 	for (size_t i = 0; i < 3; i++)
 	{
 		m_Window->draw(*(m_HighScoresInPlay[i]));
+	}
+
+	if(m_IsMovingStorage != 0.0f)
+	{
+		if(m_IsMovingStorage < 1.f)
+		{
+			m_MovingStorageSprite->setPosition(BubbleMath::Lerp(m_Duck->GetPosition(), m_StoredSprite->getPosition(), m_IsMovingStorage));
+			m_Window->draw(*m_MovingStorageSprite);
+			m_IsMovingStorage += 0.001f;
+		}
+		else
+		{
+			m_IsMovingStorage = 0.0f;
+			m_StoredSprite->setTexture(*m_NextUpTextures.at(m_TypeInStorage));
+		}
 	}
 
 }
@@ -197,7 +212,7 @@ void Rendering::HowToDraw() const
 	}
 }
 
-void Rendering::Draw(const EGAME_STATE a_State) const
+void Rendering::Draw(const EGAME_STATE a_State)
 {
 	m_Window->clear();
 
@@ -384,7 +399,6 @@ void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
 	m_HighScoresInPlay[2]->SetText(std::to_string(a_Scores[2]));
 }
 
-
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
@@ -414,6 +428,16 @@ void Rendering::LoadNextUpTextures()
 
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_BATH_BOMB]->loadFromFile(NEXT_UP_SPECIAL_PATH);
+	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_NULL, std::make_unique<sf::Texture>()));
+	std::string temp = "/empty.png";
+	m_NextUpTextures[EBUBBLE_TYPE::TYPE_NULL]->loadFromFile(NEXT_UP_PATH + temp);
+}
+
+void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type)
+{
+	m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
+	m_TypeInStorage = a_Type;
+	m_IsMovingStorage = 0.000001f;
 }
 
 void Rendering::Reset()
@@ -952,5 +976,16 @@ void Rendering::CreateTutorial()
 	m_TutorialSprites = std::vector<std::unique_ptr<sf::RectangleShape>>(2);
 	m_TutorialSprites[0] = std::make_unique<sf::RectangleShape>();
 	m_TutorialSprites[0]->setTexture(m_TutorialTextures[0].get());
+}
+
+void Rendering::CreateStorageSprites()
+{
+	m_StoredSprite = std::make_unique<sf::Sprite>();
+	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / m_StoredSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_StoredSprite->getTexture()->getSize().y);
+	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width, m_Container->getGlobalBounds().top + m_Container->getGlobalBounds().height - Settings::get().GetStorageBoxHeight());
+	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
+	m_MovingStorageSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	m_MovingStorageSprite->setScale(Settings::get().GetStorageBoxWidth() / m_MovingStorageSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_MovingStorageSprite->getTexture()->getSize().y);
 }
 

@@ -7,7 +7,7 @@
 
 void Gameplay::Update(float a_Delta)
 {
-		Move(Settings::get().GetPointerMoveSpeed() * m_MoveDirection * a_Delta);
+	Move(Settings::get().GetPointerMoveSpeed() * m_MoveDirection * a_Delta);
 }
 
 void Gameplay::CheatNextBubble(EBUBBLE_TYPE a_ToDrop)
