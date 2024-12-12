@@ -39,7 +39,6 @@ public:
 	    data.m_Function = a_Function;
 		data.m_TargetTime = std::chrono::steady_clock::now() + std::chrono::milliseconds((long)(a_Delay * 1000.f));
 		data.m_Delay = a_Delay;
-		int temp = rand();
 
 		m_Functions.push_back(data);
     }

@@ -10,9 +10,7 @@
 void BubbleGame::Initialize()
 {
 	m_IsMouseButtonPressed = false;
-	time_t currentTime = time(nullptr);
-	srand(static_cast<unsigned int>(currentTime));
-
+	Random::getInstance().SetSeed(time(nullptr));
 	CallAfterDelay::getInstance().ClearQueue();
 	m_State = EGAME_STATE::STATE_PLAY;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
@@ -58,13 +56,59 @@ void BubbleGame::PlayUpdate(float a_Delta)
 		m_Rendering->UpScaleComboText(0.5);
 		m_ScaleTimer = sf::Clock();
 
-		auto combined = m_Gameplay->CombineBubble(bubble1, bubble2);
+
+		if(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB)
+		{
+			if(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB && bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB)
+			{
+				auto combined = std::make_unique<BubbleObject>(EBUBBLE_TYPE::TYPE_BATH_BOMB);
+				combined->SetPosition(BubbleMath::Lerp(bubble1->GetPosition(), bubble2->GetPosition(), 0.5f));
+				CreateWrapper(combined);
+			}
+			else
+			{
+				if(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_BATH_BOMB)
+				{
+					const BubbleObject* temp = bubble1;
+					bubble1 = bubble2;
+					bubble2 = temp;
+				}
+				int random = Random::getInstance().GetRandomNumber(0, 100);
+				std::cout << random << "\n";
+				if(random < 34)
+				{
+					auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, true);
+					CreateWrapper(combined);
+				}
+				else if(random > 66)
+				{
+					auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, false);
+					CreateWrapper(combined);
+				}
+				else
+				{
+					m_Gameplay->AddScore(static_cast<unsigned int>(bubble_weights.at(bubble1->GetBubbleType())) / 10);
+					std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(bubble1->GetBubbleType());
+					newBubble->SetPosition(bubble1->GetPosition());
+					CreateWrapper(newBubble);
+					newBubble = std::make_unique<BubbleObject>(bubble1->GetBubbleType());
+					newBubble->SetPosition(bubble2->GetPosition());
+					CreateWrapper(newBubble);
+				}
+			}
+		}
+		else
+		{
+			auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, true);
+			CreateWrapper(combined);			
+		}
+
+
 		unsigned combo = Settings::get().GetComboScore() * m_Gameplay->GetComboScore();
 		m_Rendering->UpdateCombo(combo);
 
 		m_Wrapper->RemoveObjectByPointer(bubble1);
 		m_Wrapper->RemoveObjectByPointer(bubble2);
-		CreateWrapper(combined);
 
 	}
 

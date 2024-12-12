@@ -116,7 +116,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)SFML-2.6.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -183,6 +183,7 @@
     <ClInclude Include="NailObject.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="Settings.h" />

@@ -1,20 +1,17 @@
 #pragma once
 #include <chrono>
-#include <ctime>
 #include <memory>
-#include <vector>
 
 #include "BubbleObject.h"
+#include "Random.h"
 #include "Settings.h"
 
 class Gameplay
 {
 public:
 	Gameplay(float a_WindowWidth) {
-		time_t currentTime = time(nullptr);
-		srand(static_cast<unsigned int>(currentTime));
-		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
-		m_NextBubble = static_cast<EBUBBLE_TYPE>(rand() % 3);
+		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
+		m_NextBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
 		m_ContainerEdges[0] = (a_WindowWidth / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
 		m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 		Move(0);
@@ -24,10 +21,10 @@ public:
 
 	void Update(float a_Delta);
 	void CheatNextBubble(EBUBBLE_TYPE a_ToDrop);
-	std::unique_ptr<BubbleObject> CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second);
+	std::unique_ptr<BubbleObject> CombineBubble(const BubbleObject* a_First, const BubbleObject* a_Second, bool a_Enlarge);
 	unsigned int GetComboScore() const { return m_CombineCombo; }
 	unsigned int GetScore() const { return m_Score; }
-
+	void AddScore(unsigned int a_Amount);
 	void Move(float a_Direction);
 	std::unique_ptr<BubbleObject> Drop(const sf::Vector2f& a_Start);
 	float GetCurrentPosition() const { return m_CurrentPosition; }
@@ -40,7 +37,6 @@ public:
 
 private:
 	static EBUBBLE_TYPE GenerateRandom();
-
 	float m_MoveDirection = 0;
 	unsigned int m_CombineCombo;
 	unsigned int m_Score;
