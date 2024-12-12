@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -25,6 +26,18 @@ public:
 
 	void Reset();
 	std::vector<std::pair<const BubbleObject*, const BubbleObject*>> m_BubblesToCombine;
+
+	void ShakeBox(float shakeIntensity, float decayFactor) {
+		for (auto& circle : m_GameObjects) {
+			// Generate random force
+			float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14;
+			float forceMagnitude = shakeIntensity * static_cast<float>(rand()) / RAND_MAX;
+			float forceX = forceMagnitude * cos(angle);
+			float forceY = forceMagnitude * sin(angle);
+			std::cout << forceX << " " << forceY << "\n";
+			circle->AddForce(sf::Vector2f(forceX, forceY));
+		}
+	}
 
 private:
 	bool BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const;

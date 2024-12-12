@@ -75,25 +75,19 @@ void BubbleGame::PlayUpdate(float a_Delta)
 				}
 				int random = Random::getInstance().GetRandomNumber(0, 100);
 				std::cout << random << "\n";
-				if(random < 34)
+				if(random <= 50)
 				{
 					auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, true);
 					CreateWrapper(combined);
 				}
-				else if(random > 66)
+				else if(random > 50)
 				{
 					auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, false);
 					CreateWrapper(combined);
 				}
 				else
 				{
-					m_Gameplay->AddScore(static_cast<unsigned int>(bubble_weights.at(bubble1->GetBubbleType())) / 10);
-					std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(bubble1->GetBubbleType());
-					newBubble->SetPosition(bubble1->GetPosition());
-					CreateWrapper(newBubble);
-					newBubble = std::make_unique<BubbleObject>(bubble1->GetBubbleType());
-					newBubble->SetPosition(bubble2->GetPosition());
-					CreateWrapper(newBubble);
+					m_Physics->ShakeBox(1000, 10);
 				}
 			}
 		}
@@ -333,17 +327,17 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		}
 	}
 
-	if (a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::A))
+	if (a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::A
+		|| a_Event.key.code == sf::Keyboard::Left || a_Event.key.code == sf::Keyboard::Right))
 	{
 		m_Gameplay->UpdateMoveDirection(0.f);
 	}
 
-
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::D)
+	if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::Right))
 	{
 		m_Gameplay->UpdateMoveDirection(1.f);
 	}
-	else if (a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::A)
+	else if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::A || a_Event.key.code == sf::Keyboard::Left))
 	{
 		m_Gameplay->UpdateMoveDirection(-1.f);
 	}

@@ -12,8 +12,6 @@ public:
 
 	void Update()
 	{
-
-
 		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
 			sf::Vector2f position = m_GameObjects[i]->GetPosition();

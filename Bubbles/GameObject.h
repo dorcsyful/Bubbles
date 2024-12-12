@@ -35,6 +35,7 @@ public:
 	virtual void CalculateInertia() = 0;
 
 	virtual void ApplyImpulse(const sf::Vector2f& a_Impulse, const sf::Vector2f& a_ContactVector);
+	void AddForce(const sf::Vector2f& a_Force) { m_Force += a_Force; }
 
 protected:
 
