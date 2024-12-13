@@ -79,18 +79,22 @@ void Rendering::PlayDraw()
 		m_Window->draw(*(m_HighScoresInPlay[i]));
 	}
 
-	if(m_IsMovingStorage != 0.0f)
+	if(m_MovingDirection != 0.0f)
 	{
-		if(m_IsMovingStorage < 1.f)
+		if(m_MovingStorageLerp < 1.f && m_MovingStorageLerp > 0.f)
 		{
-			m_MovingStorageSprite->setPosition(BubbleMath::Lerp(m_Duck->GetPosition(), m_StoredSprite->getPosition(), m_IsMovingStorage));
+			m_MovingStorageSprite->setPosition(BubbleMath::Lerp(m_Duck->GetPosition(), m_StoredSprite->getPosition(), m_MovingStorageLerp));
 			m_Window->draw(*m_MovingStorageSprite);
-			m_IsMovingStorage += 0.001f;
+			m_MovingStorageLerp += (m_MovingDirection > 0.f) ? 0.001f : -0.001f;
 		}
+
 		else
 		{
-			m_IsMovingStorage = 0.0f;
-			m_StoredSprite->setTexture(*m_NextUpTextures.at(m_TypeInStorage));
+			if (m_MovingDirection > 0) m_StoredSprite->setTexture(*m_NextUpTextures.at(m_TypeInStorage));
+			else m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+			m_MovingDirection = 0.0f;
+			m_MovingStorageLerp = 0.0f;
+			m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
 		}
 	}
 
@@ -433,11 +437,16 @@ void Rendering::LoadNextUpTextures()
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_NULL]->loadFromFile(NEXT_UP_PATH + temp);
 }
 
-void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type)
+void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 {
+	if(a_Type == EBUBBLE_TYPE::TYPE_NULL)
+	{
+		
+	}
 	m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
 	m_TypeInStorage = a_Type;
-	m_IsMovingStorage = 0.000001f;
+	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999;
+	m_MovingDirection = a_ToStorage ? 1 : -1;
 }
 
 void Rendering::Reset()

@@ -60,7 +60,7 @@ public:
 	std::unique_ptr<Slider>& GetSettingSlider(int a_Id) { return m_SettingSliders[a_Id]; }
 	std::unique_ptr<AnimatedSprite>& GetDuck() { return m_Duck; }
 	std::unique_ptr<Checkbox>& GetFullscreenCheckbox() { return m_FullscreenCheckbox; }
-	void StartMoveToStorage(EBUBBLE_TYPE a_Type);
+	void StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage);
 	void Reset();
 
 private:
@@ -131,7 +131,8 @@ private:
 
 	std::unique_ptr<sf::Sprite> m_StoredSprite;
 	std::unique_ptr<sf::Sprite> m_MovingStorageSprite;
-	float m_IsMovingStorage = 0;
+	float m_MovingStorageLerp = 0;
+	float m_MovingDirection = 0;
 	EBUBBLE_TYPE m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
 
 	//Game over mode

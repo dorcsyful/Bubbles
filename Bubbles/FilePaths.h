@@ -20,7 +20,7 @@
 #define CONFIRM_FILENAME "Assets/Menu/Confirm.png"
 #define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"
 #define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
-#define GAME_BACKGROUND_FILENAME "Assets/background.jpg"
+#define GAME_BACKGROUND_FILENAME "Assets/background.png"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
 
 #define CONTAINER_FILENAME "Assets/PlayMode/ContainerBackground.png"

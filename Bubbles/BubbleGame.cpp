@@ -342,10 +342,18 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		m_Gameplay->UpdateMoveDirection(-1.f);
 	}
 
-	if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
+	if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::S || a_Event.key.code == sf::Keyboard::Down))
 	{
+		m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
+
 		m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
-		m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble());
+	}
+
+	if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
+	{
+		m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
+
+		m_Gameplay->PullUpStorage();
 	}
 
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);

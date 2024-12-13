@@ -35,6 +35,7 @@ public:
 	void UpdateMoveDirection(float a_Direction) { m_MoveDirection = a_Direction; }
 	void Reset(float a_WindowWidth);
 
+	EBUBBLE_TYPE GetStorage() { return m_Storage; }
 	void AddToStorage(EBUBBLE_TYPE a_Type)
 	{
 		m_Storage = a_Type;
@@ -43,6 +44,8 @@ public:
 	}
 	EBUBBLE_TYPE PullUpStorage()
 	{
+		m_CurrentBubble = m_Storage;
+
 		EBUBBLE_TYPE temp = m_Storage;
 		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
 		return temp;
