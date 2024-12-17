@@ -27,27 +27,12 @@ public:
 	void Draw(sf::RenderTarget& a_Target) 
 	{
         a_Target.draw(*m_Shape);
-
-        m_RenderTexture.clear(sf::Color::Transparent);
-
         a_Target.draw(*m_Text);
 
-        //m_RenderTexture.display();
-
-        // Draw the text sprite with the shader
-        sf::Sprite sprite = sf::Sprite();
-    	sprite.setTexture(m_RenderTexture.getTexture());
-        sprite.setPosition(m_Shape->getGlobalBounds().left,m_Shape->getGlobalBounds().top);
-        m_Shader.setUniform("u_Texture", sf::Shader::CurrentTexture);
-        m_Shader.setUniform("u_TextureSize", sf::Vector2f(m_RenderTexture.getSize().x, m_RenderTexture.getSize().y));
-
-        //a_Target.draw(sprite, &m_Shader);
     }
 private:
 
     void DisableClicked();
-    sf::RenderTexture m_RenderTexture;
-    sf::Shader m_Shader;
 	sf::Texture* m_BaseBackGround;
     std::unique_ptr<sf::Text> m_Text;
     std::unique_ptr<sf::Sprite> m_Shape;

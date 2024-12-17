@@ -993,7 +993,10 @@ void Rendering::CreateStorageSprites()
 	m_StoredSprite = std::make_unique<sf::Sprite>();
 	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / m_StoredSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_StoredSprite->getTexture()->getSize().y);
-	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width, m_Container->getGlobalBounds().top + m_Container->getGlobalBounds().height - Settings::get().GetStorageBoxHeight());
+	m_StoredSprite->setOrigin(m_StoredSprite->getLocalBounds().left + m_StoredSprite->getLocalBounds().width / 2.f,
+		m_StoredSprite->getLocalBounds().top + m_StoredSprite->getLocalBounds().height / 2.f);
+	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width * 1.1f, m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetStorageBoxHeight() / 2.f);
+
 	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
 	m_MovingStorageSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_MovingStorageSprite->setScale(Settings::get().GetStorageBoxWidth() / m_MovingStorageSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_MovingStorageSprite->getTexture()->getSize().y);
@@ -1002,10 +1005,11 @@ void Rendering::CreateStorageSprites()
 	m_StorageText->setFont(*m_Font);
 	m_StorageText->setOutlineColor(sf::Color(192, 102, 71, 255));
 	m_StorageText->setOutlineThickness(3);
+	m_StorageText->setCharacterSize(35);
 	m_StorageText->setFillColor(sf::Color::White);
 	m_StorageText->setStyle(sf::Text::Bold);
 	m_StorageText->setString("Storage:");
-	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left, 
+	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left + m_StorageText->getLocalBounds().width / 2.f,
 		m_StorageText->getLocalBounds().top);
-	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height / 2.f);
+	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height * 0.8f);
 }

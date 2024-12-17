@@ -190,9 +190,6 @@
     <ClInclude Include="Slider.h" />
     <ClInclude Include="SpriteWithText.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Other\misty_text.glsl" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

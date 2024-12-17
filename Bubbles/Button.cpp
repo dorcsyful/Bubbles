@@ -29,9 +29,6 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 	m_Text->setOutlineColor(sf::Color(0, 0, 0, 25));
 	m_Text->setOutlineThickness(2);
 
-	m_Shader.loadFromFile("Assets/Other/misty_text.glsl", sf::Shader::Fragment);
-	m_RenderTexture.create(Settings::get().GetButtonWidth() * 2, Settings::get().GetButtonHeight() * 2);
-
 }
 
 void Button::SetText(const std::string& a_Text) const

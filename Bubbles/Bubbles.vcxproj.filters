@@ -150,7 +150,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Other\misty_text.glsl" />
-  </ItemGroup>
 </Project>
