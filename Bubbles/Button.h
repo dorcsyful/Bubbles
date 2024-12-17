@@ -1,13 +1,10 @@
 #pragma once
-#include <iostream>
 #include <memory>
 #include <string>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Shader.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
 
 class Button
 {

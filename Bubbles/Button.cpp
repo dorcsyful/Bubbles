@@ -3,8 +3,8 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Audio.h"
+#include "BubbleMath.h"
 #include "Helpers.h"
-#include "Settings.h"
 
 Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture)
 {
@@ -14,15 +14,15 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 	m_BaseBackGround = a_BaseTexture;
 
 	m_Shape->setTexture(*m_BaseBackGround);
-	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
-	m_Shape->setOrigin(static_cast<float>(m_BaseBackGround->getSize().x) / 6 , static_cast<float>(m_BaseBackGround->getSize().y) / 2);
+	sf::Vector2i size = sf::Vector2i(m_BaseBackGround->getSize());
+	m_Shape->setTextureRect(sf::IntRect(0, 0, size.x / 3, size.y));
+	m_Shape->setOrigin(static_cast<float>(size.x) / 6 , static_cast<float>(size.y) / 2);
 	m_Shape->setPosition(a_Position);
 
 
 	m_Text->setFont(a_Font);
 	m_Text->setCharacterSize(40);
-	sf::Color temp = sf::Color(100, 55, 0, 255);
-	temp = sf::Color::White;
+	sf::Color temp = sf::Color::White;
 	m_Text->setFillColor(temp);
 	m_Text->setStyle(sf::Text::Bold);
 	m_Text->setPosition(a_Position);
@@ -41,7 +41,8 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 	if(!m_IsClicked && m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
 		Audio::getInstance().PlayClick();
-		m_Shape->setTextureRect(sf::IntRect(m_BaseBackGround->getSize().x / 3 * 2, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+		sf::Vector2i size = sf::Vector2i(m_BaseBackGround->getSize());
+		m_Shape->setTextureRect(sf::IntRect(size.x / 3 * 2, 0, size.x / 3, size.y));
 		CallAfterDelay::getInstance().AddFunction([this]() { DisableClicked(); }, "DisableClicked", 0.1f, false);
 
 		m_IsClicked = true;
@@ -54,12 +55,14 @@ bool Button::DetectClick(const sf::Vector2f& a_MousePosition)
 void Button::DetectHover(const sf::Vector2f& a_MousePosition) const
 {
 	if (m_IsClicked) return;
+
+	sf::Vector2i size = sf::Vector2i(m_BaseBackGround->getSize());
 	if(m_Shape->getGlobalBounds().contains(a_MousePosition))
 	{
-		m_Shape->setTextureRect(sf::IntRect(m_BaseBackGround->getSize().x / 3, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+		m_Shape->setTextureRect(sf::IntRect(size.x / 3, 0, size.x / 3, size.y));
 		return;
 	}
-	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+	m_Shape->setTextureRect(sf::IntRect(0, 0, size.x / 3,size.y));
 }
 
 void Button::ResizeCharacters(unsigned int a_Size) const
@@ -73,6 +76,7 @@ void Button::ResizeCharacters(unsigned int a_Size) const
 
 void Button::DisableClicked()
 {
+	sf::Vector2i size = sf::Vector2i(m_BaseBackGround->getSize());
 	m_IsClicked = false;
-	m_Shape->setTextureRect(sf::IntRect(0, 0, m_BaseBackGround->getSize().x / 3, m_BaseBackGround->getSize().y));
+	m_Shape->setTextureRect(sf::IntRect(0, 0, size.x / 3, size.y));
 }
