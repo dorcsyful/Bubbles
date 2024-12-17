@@ -129,6 +129,7 @@ private:
 	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoresInPlay;
 	std::vector<std::unique_ptr<sf::Texture>> m_ScoreNumberTextures;
 
+	std::unique_ptr<sf::Text> m_StorageText;
 	std::unique_ptr<sf::Sprite> m_StoredSprite;
 	std::unique_ptr<sf::Sprite> m_MovingStorageSprite;
 	float m_MovingStorageLerp = 0;

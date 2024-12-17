@@ -60,7 +60,7 @@ void Rendering::PlayDraw()
 	m_Duck->Draw(*m_Window);
 
 	m_Window->draw(*m_Line);
-	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
+	//m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
@@ -73,6 +73,7 @@ void Rendering::PlayDraw()
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
 	m_Window->draw(*m_HighScoreTitleInPlay);
+	m_Window->draw(*m_StorageText);
 	m_Window->draw(*m_StoredSprite);
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -996,5 +997,15 @@ void Rendering::CreateStorageSprites()
 	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
 	m_MovingStorageSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_MovingStorageSprite->setScale(Settings::get().GetStorageBoxWidth() / m_MovingStorageSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_MovingStorageSprite->getTexture()->getSize().y);
-}
 
+	m_StorageText = std::make_unique<sf::Text>();
+	m_StorageText->setFont(*m_Font);
+	m_StorageText->setOutlineColor(sf::Color(192, 102, 71, 255));
+	m_StorageText->setOutlineThickness(3);
+	m_StorageText->setFillColor(sf::Color::White);
+	m_StorageText->setStyle(sf::Text::Bold);
+	m_StorageText->setString("Storage:");
+	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left, 
+		m_StorageText->getLocalBounds().top);
+	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height / 2.f);
+}
