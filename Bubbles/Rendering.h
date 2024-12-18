@@ -19,7 +19,8 @@ class Rendering
 public:
 
 	Rendering(int a_X, int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper);
-	void Draw(EGAME_STATE a_State);
+	void FinishMoveToStorage();
+	void Draw(EGAME_STATE a_State, float a_Delta);
 	void CreateSprite(EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, float a_Rotation,
 	                  std::unique_ptr<AnimatedSprite>& a_NewSprite) const;
 
@@ -64,7 +65,7 @@ public:
 	void Reset();
 
 private:
-	void PlayDraw();
+	void PlayDraw(float a_Delta);
 	void MenuDraw() const;
 	void GameOverAnimationDraw() const;
 	void HighScoreDraw() const;

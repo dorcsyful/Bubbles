@@ -194,7 +194,7 @@ void BubbleGame::Update()
 		}
 
 		CallAfterDelay::getInstance().LoopThroughFunctions();
-		m_Rendering->Draw(m_State);
+		m_Rendering->Draw(m_State, delta);
 	}
 }
 

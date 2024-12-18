@@ -47,7 +47,23 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateStorageSprites();
 }
 
-void Rendering::PlayDraw()
+void Rendering::FinishMoveToStorage()
+{
+	EBUBBLE_TYPE toStore = m_TypeInStorage == EBUBBLE_TYPE::TYPE_SPIKY_BOMB ? EBUBBLE_TYPE::TYPE_BATH_BOMB : m_TypeInStorage;
+	if (m_MovingDirection > 0)
+	{
+		m_StoredSprite->setTexture(*m_NextUpTextures.at(toStore));
+	}
+	else
+	{
+		m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	}
+
+	m_MovingDirection = 0.0f;
+	m_MovingStorageLerp = 0.0f;
+}
+
+void Rendering::PlayDraw(float a_Delta)
 {
 	m_Window->draw(*m_BackgroundSprite);
 
@@ -84,18 +100,16 @@ void Rendering::PlayDraw()
 	{
 		if(m_MovingStorageLerp < 1.f && m_MovingStorageLerp > 0.f)
 		{
-			m_MovingStorageSprite->setPosition(BubbleMath::Lerp(m_Duck->GetPosition(), m_StoredSprite->getPosition(), m_MovingStorageLerp));
+			m_MovingStorageLerp += a_Delta * 2.f * m_MovingDirection;
+
+			m_MovingStorageSprite->setPosition(BubbleMath::Lerp(m_Duck->GetPosition(), m_StoredSprite->getPosition(), 
+				m_MovingStorageLerp));
 			m_Window->draw(*m_MovingStorageSprite);
-			m_MovingStorageLerp += (m_MovingDirection > 0.f) ? 0.001f : -0.001f;
 		}
 
 		else
 		{
-			if (m_MovingDirection > 0) m_StoredSprite->setTexture(*m_NextUpTextures.at(m_TypeInStorage));
-			else m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-			m_MovingDirection = 0.0f;
-			m_MovingStorageLerp = 0.0f;
-			m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
+			FinishMoveToStorage();
 		}
 	}
 
@@ -217,13 +231,13 @@ void Rendering::HowToDraw() const
 	}
 }
 
-void Rendering::Draw(const EGAME_STATE a_State)
+void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 {
 	m_Window->clear();
 
 	if (a_State == EGAME_STATE::STATE_PLAY)
 	{
-		PlayDraw();
+		PlayDraw(a_Delta);
 	}
 	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
@@ -263,7 +277,7 @@ void Rendering::Draw(const EGAME_STATE a_State)
 	}
 	if(a_State == EGAME_STATE::STATE_MENU_CONFIRM || a_State == EGAME_STATE::STATE_RESTART_CONFIRM)
 	{
-		PlayDraw();
+		PlayDraw(a_Delta);
 		ConfirmationDraw();
 	}
 	if(a_State == EGAME_STATE::STATE_EXIT_CONFIRM)
@@ -442,12 +456,20 @@ void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 {
 	if(a_Type == EBUBBLE_TYPE::TYPE_NULL)
 	{
-		
+		return;
 	}
 	m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
+	sf::Vector2i u = sf::Vector2i(m_BubbleTextures.at(a_Type)->getSize());
+	m_MovingStorageSprite->setTextureRect(sf::IntRect(0, 0, u.x / 8, u.y));
+	float storage_box_width = Settings::get().GetStorageBoxWidth();
+	sf::Vector2f size = BubbleMath::ToVector2f(m_MovingStorageSprite->getTexture()->getSize());
+	float factor_x = storage_box_width / (size.x / 8.f);
+	float factor_y = storage_box_width / size.y;
+	m_MovingStorageSprite->setScale(factor_x, factor_y);
 	m_TypeInStorage = a_Type;
-	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999;
+	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999f;
 	m_MovingDirection = a_ToStorage ? 1 : -1;
+	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 }
 
 void Rendering::Reset()
@@ -778,8 +800,6 @@ void Rendering::CreatePlayScoreSprites()
 	m_ScoreTitle->setFillColor(sf::Color::White);
 	m_ScoreTitle->setOutlineThickness(4);
 	m_ScoreTitle->setOutlineColor(sf::Color(192, 102, 71, 255));
-	float i = static_cast<float>(m_ScoreTitleTexture->getSize().y) / static_cast<float>(m_ScoreTitleTexture->getSize().x);
-	float y = Settings::get().GetScoreTitleWidth() * i;
 	m_ScoreTitle->setCharacterSize(68);
 
 	auto position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
@@ -793,8 +813,9 @@ void Rendering::CreatePlayScoreSprites()
 	m_HighScoreTitleInPlay = std::make_unique<sf::RectangleShape>();
 	m_HighScoreTitleInPlay->setTexture(m_HighScoreTexture.get());
 	m_HighScoreTitleInPlay->setSize(BubbleMath::ToVector2f(m_HighScoreTexture->getSize()));
-	i = (static_cast<float>(m_HighScoreTexture->getSize().x) / static_cast<float>(m_HighScoreTexture->getSize().y));
-	y = m_ScoreTitle->getLocalBounds().height * i *0.9f;
+	float i = (static_cast<float>(m_HighScoreTexture->getSize().x) / static_cast<float>(m_HighScoreTexture->getSize().
+		y));
+	const float y = m_ScoreTitle->getLocalBounds().height * i * 0.9f;
 	m_HighScoreTitleInPlay->setSize(sf::Vector2f(y, m_ScoreTitle->getLocalBounds().height * 0.9f));
 
 	position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
@@ -992,14 +1013,18 @@ void Rendering::CreateStorageSprites()
 {
 	m_StoredSprite = std::make_unique<sf::Sprite>();
 	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / m_StoredSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_StoredSprite->getTexture()->getSize().y);
+	sf::Vector2f size = BubbleMath::ToVector2f(m_StoredSprite->getTexture()->getSize());
+	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / size.x, Settings::get().GetStorageBoxHeight() / size.y);
 	m_StoredSprite->setOrigin(m_StoredSprite->getLocalBounds().left + m_StoredSprite->getLocalBounds().width / 2.f,
 		m_StoredSprite->getLocalBounds().top + m_StoredSprite->getLocalBounds().height / 2.f);
 	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width * 1.1f, m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetStorageBoxHeight() / 2.f);
 
 	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
 	m_MovingStorageSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-	m_MovingStorageSprite->setScale(Settings::get().GetStorageBoxWidth() / m_MovingStorageSprite->getTexture()->getSize().x, Settings::get().GetStorageBoxHeight() / m_MovingStorageSprite->getTexture()->getSize().y);
+	m_MovingStorageSprite->setOrigin(m_MovingStorageSprite->getLocalBounds().left + m_MovingStorageSprite->getLocalBounds().width / 2.f,
+		m_MovingStorageSprite->getLocalBounds().top + m_MovingStorageSprite->getLocalBounds().height / 2.f);
+
+
 
 	m_StorageText = std::make_unique<sf::Text>();
 	m_StorageText->setFont(*m_Font);
