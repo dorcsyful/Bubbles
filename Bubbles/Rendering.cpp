@@ -458,7 +458,9 @@ void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 	{
 		return;
 	}
-	m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
+	if(a_ToStorage) m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
+	else m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(m_TypeInStorage));
+
 	sf::Vector2i u = sf::Vector2i(m_BubbleTextures.at(a_Type)->getSize());
 	m_MovingStorageSprite->setTextureRect(sf::IntRect(0, 0, u.x / 8, u.y));
 	float storage_box_width = Settings::get().GetStorageBoxWidth();
@@ -466,7 +468,8 @@ void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 	float factor_x = storage_box_width / (size.x / 8.f);
 	float factor_y = storage_box_width / size.y;
 	m_MovingStorageSprite->setScale(factor_x, factor_y);
-	m_TypeInStorage = a_Type;
+
+	m_TypeInStorage = a_ToStorage ? a_Type :EBUBBLE_TYPE::TYPE_NULL;
 	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999f;
 	m_MovingDirection = a_ToStorage ? 1 : -1;
 	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));

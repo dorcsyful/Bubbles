@@ -44,8 +44,9 @@ public:
 	}
 	EBUBBLE_TYPE PullUpStorage()
 	{
+		m_NextBubble = m_CurrentBubble;
 		m_CurrentBubble = m_Storage;
-
+		
 		EBUBBLE_TYPE temp = m_Storage;
 		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
 		return temp;
