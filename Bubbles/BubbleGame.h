@@ -39,8 +39,9 @@ private:
 
 	void NextComboText();
 
-
-	bool m_IsMouseButtonPressed;
+	bool m_IsStorageButtonPressed = false;
+	bool m_IsSpacePressed = false;
+	bool m_IsMouseButtonPressed = false;
 	sf::Vector2f m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 	sf::Clock m_ScaleTimer;
 

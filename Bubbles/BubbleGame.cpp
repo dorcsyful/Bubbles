@@ -298,14 +298,19 @@ void BubbleGame::NextComboText()
 
 void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 {
-	if(a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::Space)
+	if(!m_IsSpacePressed && a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::Space)
 	{
+		m_IsSpacePressed = true;
 		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
 		{
 			m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 			AddBubble();
 			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 		}
+	}
+	if(m_IsSpacePressed && a_Event.type == sf::Event::KeyReleased && a_Event.key.code == sf::Keyboard::Space)
+	{
+		m_IsSpacePressed = false;
 	}
 
 	if(m_IsMouseButtonPressed)
@@ -342,19 +347,31 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		m_Gameplay->UpdateMoveDirection(-1.f);
 	}
 
-	if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::S || a_Event.key.code == sf::Keyboard::Down))
+	if(!m_IsStorageButtonPressed)
 	{
-		m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
+		if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::S || a_Event.key.code == sf::Keyboard::Down))
+		{
+			m_IsStorageButtonPressed = true;
+			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
 
-		m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
+			m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
+		}
+
+		if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
+		{
+			m_IsStorageButtonPressed = true;
+			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
+
+			m_Gameplay->PullUpStorage();
+		}
 	}
 
-	if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
+	if ( m_IsStorageButtonPressed && a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::S
+		|| a_Event.key.code == sf::Keyboard::Down || a_Event.key.code == sf::Keyboard::Up))
 	{
-		m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
-
-		m_Gameplay->PullUpStorage();
+		m_IsStorageButtonPressed = false;
 	}
+
 
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
 	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
