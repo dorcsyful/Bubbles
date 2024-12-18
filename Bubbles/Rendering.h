@@ -77,6 +77,7 @@ private:
 	void LoadBackground();
 	void LoadBubbleTextures();
 	void LoadNextUpTextures();
+	void LoadStorageTextures();
 
 	void CreatePointer();
 	void CreateTitleSprite();
@@ -94,7 +95,7 @@ private:
 	void CreateSettings();
 	void CreateTutorial();
 	void CreateStorageSprites();
-
+	void CreateCycleBottle();
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
@@ -136,6 +137,10 @@ private:
 	float m_MovingStorageLerp = 0;
 	float m_MovingDirection = 0;
 	EBUBBLE_TYPE m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
+	std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>> m_StorageTextures;
+
+	std::unique_ptr<sf::Texture> m_CycleTexture;
+	std::unique_ptr<sf::RectangleShape> m_CycleSprite;
 
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;

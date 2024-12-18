@@ -7,6 +7,9 @@
 #define NEXT_UP_PATH "Assets/Shapes/NextUp/"
 #define NEXT_UP_SPECIAL_PATH "Assets/Shapes/NextUp/special.png"
 
+#define STORAGE_PATH "Assets/Shapes/Storage/"
+#define STORAGE_SPECIAL_PATH "Assets/Shapes/Storage/special.png"
+
 #define TITLE_FILENAME "Assets/Titles/Title.png"
 #define SETTINGS_FILENAME "Assets/Titles/Settings.png"
 #define GAME_OVER_FILENAME "Assets/Titles/GameOver.png"
@@ -22,6 +25,7 @@
 #define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
 #define GAME_BACKGROUND_FILENAME "Assets/background.png"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
+#define SOAP_BOTTLE_FILENAME "Assets/PlayMode/soapbottle.png"
 
 #define CONTAINER_FILENAME "Assets/PlayMode/ContainerBackground.png"
 #define FRAME_FILENAME "Assets/PlayMode/ContainerFrame.png"

@@ -32,6 +32,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	LoadBackground();
 	LoadBubbleTextures();
 	LoadNextUpTextures();
+	LoadStorageTextures();
 	CreatePointer();
 	CreateMenuSprites();
 	CreateHighScoreSprites();
@@ -44,6 +45,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
 	CreateSettings();
+	CreateCycleBottle();
 	CreateStorageSprites();
 }
 
@@ -52,11 +54,11 @@ void Rendering::FinishMoveToStorage()
 	EBUBBLE_TYPE toStore = m_TypeInStorage == EBUBBLE_TYPE::TYPE_SPIKY_BOMB ? EBUBBLE_TYPE::TYPE_BATH_BOMB : m_TypeInStorage;
 	if (m_MovingDirection > 0)
 	{
-		m_StoredSprite->setTexture(*m_NextUpTextures.at(toStore));
+		m_StoredSprite->setTexture(*m_StorageTextures.at(toStore));
 	}
 	else
 	{
-		m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+		m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	}
 
 	m_MovingDirection = 0.0f;
@@ -112,7 +114,7 @@ void Rendering::PlayDraw(float a_Delta)
 			FinishMoveToStorage();
 		}
 	}
-
+	m_Window->draw(*m_CycleSprite);
 }
 
 void Rendering::MenuDraw() const
@@ -448,8 +450,26 @@ void Rendering::LoadNextUpTextures()
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Texture>()));
 	m_NextUpTextures[EBUBBLE_TYPE::TYPE_BATH_BOMB]->loadFromFile(NEXT_UP_SPECIAL_PATH);
 	m_NextUpTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_NULL, std::make_unique<sf::Texture>()));
+}
+
+void Rendering::LoadStorageTextures()
+{
+	m_StorageTextures = std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>>();
+
+	for (int i = 0; i < 4; i++)
+	{
+		m_StorageTextures.insert(std::pair(static_cast<EBUBBLE_TYPE>(i), std::make_unique<sf::Texture>()));
+		m_StorageTextures[static_cast<EBUBBLE_TYPE>(i)]->loadFromFile(STORAGE_PATH + std::to_string(i) + ".png");
+	}
+
+	m_StorageTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_BATH_BOMB, std::make_unique<sf::Texture>()));
+	m_StorageTextures[EBUBBLE_TYPE::TYPE_BATH_BOMB]->loadFromFile(STORAGE_SPECIAL_PATH);
+	m_StorageTextures.insert(std::pair(EBUBBLE_TYPE::TYPE_NULL, std::make_unique<sf::Texture>()));
 	std::string temp = "/empty.png";
-	m_NextUpTextures[EBUBBLE_TYPE::TYPE_NULL]->loadFromFile(NEXT_UP_PATH + temp);
+	m_StorageTextures[EBUBBLE_TYPE::TYPE_NULL]->loadFromFile(STORAGE_PATH + temp);
+
+	m_CycleTexture = std::make_unique<sf::Texture>();
+	m_CycleTexture->loadFromFile(SOAP_BOTTLE_FILENAME);
 }
 
 void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
@@ -472,7 +492,7 @@ void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 	m_TypeInStorage = a_ToStorage ? a_Type :EBUBBLE_TYPE::TYPE_NULL;
 	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999f;
 	m_MovingDirection = a_ToStorage ? 1 : -1;
-	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 }
 
 void Rendering::Reset()
@@ -519,7 +539,7 @@ void Rendering::LoadBackground()
 	float width = Settings::get().GetContainerWidth();
 	float height = Settings::get().GetContainerHeight() ;
 	m_Container->setSize(sf::Vector2f(width, height));
-	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 2.f));
+	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 1.5f));
 	m_Container->setPosition(basePos);
 
 	m_FrameTexture = std::make_unique<sf::Texture>();
@@ -784,10 +804,11 @@ void Rendering::CreateNextUpSprites()
 	float factorX = Settings::get().GetNextUpWidth() / size.x;
 	float factorY = Settings::get().GetNextUpHeight() / size.y;
 
+	sf::Vector2<float> position = m_Container->getPosition();
 	for (auto& val : m_NextUpBubbles | std::views::values)
 	{
 		val->setScale(factorX, factorY);
-		val->setPosition(m_Container->getSize().x * 1.1f + m_Container->getPosition().x, m_Container->getPosition().y + m_Container->getSize().y / 2.f);
+		val->setPosition(m_Container->getSize().x * 1.1f + position.x, position.y + m_Container->getSize().y / 2.f);
 	}
 }
 
@@ -848,9 +869,9 @@ void Rendering::CreatePlayModeButtons()
 {
 	sf::Vector2f basePos;
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
-	float buttonWidth = Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.f);
-	basePos.x = m_Frame->getGlobalBounds().left - Settings::get().GetButtonWidth();
-	basePos.y = m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height + Settings::get().GetButtonHeight() / 2;
+	float buttonWidth = (Settings::get().GetButtonWidth() + 15.f) / (BBTextureSize.x / 3.f);
+	basePos.x = m_Frame->getGlobalBounds().left - Settings::get().GetButtonWidth() * 2;
+	basePos.y = m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetButtonHeight() / 2;
 	if(Settings::get().IsFullscreen())
 	{
 		float height = static_cast<float>(sf::VideoMode::getDesktopMode().height);
@@ -870,7 +891,7 @@ void Rendering::CreatePlayModeButtons()
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Back to menu", std::move(newButton)));
 
-	basePos.x += Settings::get().GetMenuButtonWidth() * 1.1f;
+	basePos.x += (Settings::get().GetButtonWidth() + 15.f) * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Restart");
 	newButton->ResizeCharacters(35);
@@ -1015,7 +1036,7 @@ void Rendering::CreateTutorial()
 void Rendering::CreateStorageSprites()
 {
 	m_StoredSprite = std::make_unique<sf::Sprite>();
-	m_StoredSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	sf::Vector2f size = BubbleMath::ToVector2f(m_StoredSprite->getTexture()->getSize());
 	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / size.x, Settings::get().GetStorageBoxHeight() / size.y);
 	m_StoredSprite->setOrigin(m_StoredSprite->getLocalBounds().left + m_StoredSprite->getLocalBounds().width / 2.f,
@@ -1023,11 +1044,9 @@ void Rendering::CreateStorageSprites()
 	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width * 1.1f, m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetStorageBoxHeight() / 2.f);
 
 	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
-	m_MovingStorageSprite->setTexture(*m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+	m_MovingStorageSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_MovingStorageSprite->setOrigin(m_MovingStorageSprite->getLocalBounds().left + m_MovingStorageSprite->getLocalBounds().width / 2.f,
 		m_MovingStorageSprite->getLocalBounds().top + m_MovingStorageSprite->getLocalBounds().height / 2.f);
-
-
 
 	m_StorageText = std::make_unique<sf::Text>();
 	m_StorageText->setFont(*m_Font);
@@ -1040,4 +1059,21 @@ void Rendering::CreateStorageSprites()
 	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left + m_StorageText->getLocalBounds().width / 2.f,
 		m_StorageText->getLocalBounds().top);
 	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height * 0.8f);
+}
+
+void Rendering::CreateCycleBottle()
+{
+	m_CycleSprite = std::make_unique<sf::RectangleShape>();
+	m_CycleSprite->setTexture(m_CycleTexture.get());
+	float temp = (m_Container->getSize().y * 0.95f) / m_CycleTexture->getSize().y;
+	sf::Vector2f f(m_CycleTexture->getSize().x * temp, m_Container->getSize().y * 0.95f);
+	m_CycleSprite->setSize(f);
+	m_CycleSprite->setOrigin(m_CycleSprite->getLocalBounds().left + m_CycleSprite->getLocalBounds().width / 2.f,
+		m_CycleSprite->getLocalBounds().top + m_CycleSprite->getLocalBounds().height / 2.f);
+
+	sf::Vector2f position;
+	position.y = m_Frame->getPosition().y - m_Frame->getGlobalBounds().height / 8.f;
+	position.x = m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width;
+	position.x += m_CycleSprite->getLocalBounds().width / 2.f;
+	m_CycleSprite->setPosition(position);
 }
