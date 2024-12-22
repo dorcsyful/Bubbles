@@ -41,12 +41,13 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateGameOverSprite();
 
 	CreateDuck();
-	CreateNextUpSprites();
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
 	CreateSettings();
 	CreateCycleBottle();
 	CreateStorageSprites();
+	CreateNextUpSprites();
+
 }
 
 void Rendering::FinishMoveToStorage()
@@ -93,6 +94,7 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_HighScoreTitleInPlay);
 	m_Window->draw(*m_StorageText);
 	m_Window->draw(*m_StoredSprite);
+	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 	for (size_t i = 0; i < 3; i++)
 	{
 		m_Window->draw(*(m_HighScoresInPlay[i]));
@@ -804,11 +806,12 @@ void Rendering::CreateNextUpSprites()
 	float factorX = Settings::get().GetNextUpWidth() / size.x;
 	float factorY = Settings::get().GetNextUpHeight() / size.y;
 
-	sf::Vector2<float> position = m_Container->getPosition();
-	for (auto& val : m_NextUpBubbles | std::views::values)
+	for (int i = 0; i < 4; i++)
 	{
-		val->setScale(factorX, factorY);
-		val->setPosition(m_Container->getSize().x * 1.1f + position.x, position.y + m_Container->getSize().y / 2.f);
+		auto& sprite = m_NextUpBubbles.at(static_cast<EBUBBLE_TYPE>(i));
+		size = BubbleMath::ToVector2f(sprite->getTexture()->getSize());
+		sprite->setScale(Settings::get().GetNextUpWidth() / size.x, Settings::get().GetStorageBoxHeight() / size.y);
+		sprite->setPosition(m_CycleSprite->getGlobalBounds().left,m_CycleSprite->getGlobalBounds().top);
 	}
 }
 
