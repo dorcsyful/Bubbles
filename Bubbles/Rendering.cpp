@@ -28,6 +28,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 			sf::Style::Default, context);
 
 	}
+	m_Window->setFramerateLimit(60);
+
 
 	LoadBackground();
 	LoadBubbleTextures();

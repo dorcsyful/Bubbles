@@ -129,6 +129,7 @@ void BubbleGame::RestartGame()
 void BubbleGame::Update()
 {
 	sf::Clock dtClock;
+
 	while(m_Rendering->GetWindow()->isOpen())
 	{
 		if(m_State == EGAME_STATE::STATE_START)
