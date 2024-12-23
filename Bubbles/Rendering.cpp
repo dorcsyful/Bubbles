@@ -812,8 +812,8 @@ void Rendering::CreateNextUpSprites()
 	{
 		auto& sprite = m_NextUpBubbles.at(static_cast<EBUBBLE_TYPE>(i));
 		size = BubbleMath::ToVector2f(sprite->getTexture()->getSize());
-		sprite->setScale(Settings::get().GetNextUpWidth() / size.x, Settings::get().GetStorageBoxHeight() / size.y);
-		sprite->setPosition(m_CycleSprite->getGlobalBounds().left,m_CycleSprite->getGlobalBounds().top);
+		sprite->setScale(Settings::get().GetNextUpWidth() / size.x,  factorX);
+		sprite->setPosition(m_CycleSprite->getGlobalBounds().left + 5,m_CycleSprite->getGlobalBounds().top + 10);
 	}
 }
 
