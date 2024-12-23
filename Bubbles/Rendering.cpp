@@ -561,8 +561,9 @@ void Rendering::LoadBackground()
 void Rendering::CreatePointer()
 {
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f position = sf::Vector2f((static_cast<float>(m_Window->getSize().x) / 2.f) - (Settings::get().GetContainerWidth() / 2.f), ((static_cast<float>(m_Window->getSize().y) - containerHeight) / 2.f));
-	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight - 5));
+	sf::Vector2f position =
+		sf::Vector2f((m_Window->getSize().x / 2.f) - (m_Container->getSize().x / 2.f), ((m_Window->getSize().y - containerHeight) / 1.48f));
+		m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight - 5));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
@@ -789,7 +790,7 @@ void Rendering::CreateDuck()
 	float factorY = Settings::get().GetDuckHeight() / static_cast<float>(m_DuckTexture->getSize().y);
 	m_Duck->GetSprite()->setScale(factorX, factorY);
 	float x = Settings::get().GetDuckWidth() * 4.f;
-	float y = Settings::get().GetDuckHeight() * 4.f;
+	float y = Settings::get().GetDuckHeight() * 3.85f;
 	m_Duck->GetSprite()->setOrigin(x, y);
 }
 
