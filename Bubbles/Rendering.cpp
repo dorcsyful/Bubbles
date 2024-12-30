@@ -119,6 +119,7 @@ void Rendering::PlayDraw(float a_Delta)
 		}
 	}
 	m_Window->draw(*m_CycleSprite);
+	m_Window->draw(*m_InstructionShape);
 }
 
 void Rendering::MenuDraw() const
@@ -1065,6 +1066,17 @@ void Rendering::CreateStorageSprites()
 	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left + m_StorageText->getLocalBounds().width / 2.f,
 		m_StorageText->getLocalBounds().top);
 	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height * 0.8f);
+
+
+	m_InstructionTexture = std::make_unique<sf::Texture>();
+	m_InstructionTexture->loadFromFile(INSTRUCTION_FILENAME);
+	m_InstructionShape = std::make_unique<sf::Sprite>();
+	m_InstructionShape->setTexture(*m_InstructionTexture);
+	m_InstructionShape->setOrigin(m_InstructionShape->getLocalBounds().width / 2.f, m_InstructionShape->getLocalBounds().height / 2.f);
+	m_InstructionShape->setScale(sf::Vector2f(0.35f, 0.35f));
+
+	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width + m_InstructionShape->getGlobalBounds().width / 2.f;
+	m_InstructionShape->setPosition(x, m_StoredSprite->getPosition().y - 20);
 }
 
 void Rendering::CreateCycleBottle()

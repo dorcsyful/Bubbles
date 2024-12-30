@@ -139,6 +139,9 @@ private:
 	EBUBBLE_TYPE m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>> m_StorageTextures;
 
+	std::unique_ptr<sf::Texture> m_InstructionTexture;
+	std::unique_ptr<sf::Sprite> m_InstructionShape;
+
 	std::unique_ptr<sf::Texture> m_CycleTexture;
 	std::unique_ptr<sf::RectangleShape> m_CycleSprite;
 

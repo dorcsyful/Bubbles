@@ -26,6 +26,7 @@
 #define GAME_BACKGROUND_FILENAME "Assets/background.png"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
 #define SOAP_BOTTLE_FILENAME "Assets/PlayMode/soapbottle.png"
+#define INSTRUCTION_FILENAME "Assets/PlayMode/Controls.png"
 
 #define CONTAINER_FILENAME "Assets/PlayMode/ContainerBackground.png"
 #define FRAME_FILENAME "Assets/PlayMode/ContainerFrame.png"
