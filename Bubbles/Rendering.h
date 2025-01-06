@@ -117,6 +117,9 @@ private:
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
 	std::unique_ptr<sf::RectangleShape> m_MainBackgroundSprite;
 	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
+	std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;
+	std::unique_ptr<sf::Sprite> m_MainBackgroundExtendedSprite;
+
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
@@ -139,6 +142,8 @@ private:
 	//Play mode UI
 	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
 	std::unique_ptr<sf::Sprite> m_ScoreBackgroundSprite;
+	std::unique_ptr<sf::Texture> m_ScoreBackgroundInPlayTexture;
+	std::unique_ptr<sf::Sprite> m_ScoreBackgroundInPlaySprite;
 	std::unique_ptr<sf::Text> m_ComboText;
 	std::unique_ptr<sf::Text> m_Score;
 	std::unique_ptr<sf::Sprite> m_ScoreTitle;

@@ -11,6 +11,7 @@
 #define STORAGE_SPECIAL_PATH "Assets/Shapes/Storage/special.png"
 
 #define SCORE_PATH "Assets/Numbers/"
+#define SCORE_CLOUD_FILENAME "Assets/PlayMode/ScoreBackground.png"
 
 #define TITLE_FILENAME "Assets/Titles/Title.png"
 #define SETTINGS_FILENAME "Assets/Titles/Settings.png"
@@ -27,6 +28,7 @@
 #define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
 #define GAME_BACKGROUND_FILENAME "Assets/background.png"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
+#define MENU_BACKGROUND_EXTENDED_FILENAME "Assets/background-main-pink.png"
 #define SOAP_BOTTLE_FILENAME "Assets/PlayMode/soapbottle.png"
 #define INSTRUCTION_FILENAME "Assets/PlayMode/Controls.png"
 #define PLAY_MODE_SCOREBOARD "Assets/PlayMode/scoreboard.png"

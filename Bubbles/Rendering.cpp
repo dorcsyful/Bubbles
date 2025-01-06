@@ -91,7 +91,7 @@ void Rendering::PlayDraw(float a_Delta)
 
 	m_MenuButtons.at("Back to menu")->Draw(*m_Window);
 	m_MenuButtons.at("Restart")->Draw(*m_Window);
-	m_Window->draw(*m_Score);
+	//m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
 	m_Window->draw(*m_HighScoreTitleInPlay);
@@ -103,7 +103,8 @@ void Rendering::PlayDraw(float a_Delta)
 	std::string scoreString = m_Score->getString();
 	for (int i = 0; i < scoreString.size(); i++)
 	{
-		int value = scoreString[i] - '0';
+		unsigned char asChar = scoreString[i];
+		int value = asChar - '0';
 		m_ScoreNumberSprites[value]->setPosition(lastPosition, m_ScoreNumberSprites[value]->getPosition().y);
 		m_Window->draw(*m_ScoreNumberSprites[value]);
 		lastPosition += m_ScoreNumberSprites[value]->getGlobalBounds().width + 2;
@@ -125,6 +126,7 @@ void Rendering::PlayDraw(float a_Delta)
 			FinishMoveToStorage();
 		}
 	}
+	m_Window->draw(*m_ScoreBackgroundInPlaySprite);
 	m_Window->draw(*m_CycleSprite);
 	m_Window->draw(*m_InstructionShape);
 	m_Window->draw(*m_HighScoresInPlay[0]);
@@ -379,7 +381,7 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 	{
 		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
 	}
-	m_Score->setString("0" + m_HighScoreSprites[0]->GetText());
+	m_Score->setString(m_HighScoreSprites[0]->GetText());
 
 }
 
@@ -541,6 +543,13 @@ void Rendering::LoadBackground()
 	m_MainBackgroundSprite->setScale(horizontalScale, verticalScale);
 	m_MainBackgroundSprite->setOrigin(m_MainBackgroundSprite->getSize().x / 2.f, m_MainBackgroundSprite->getSize().y / 2.f);
 	m_MainBackgroundSprite->setPosition(windowSize.x / 2, windowSize.y / 2);
+
+
+	m_MainBackgroundExtendedTexture = std::make_unique<sf::Texture>();
+	m_MainBackgroundExtendedTexture->loadFromFile(MENU_BACKGROUND_EXTENDED_FILENAME);
+	m_MainBackgroundExtendedTexture->setRepeated(true);
+	m_MainBackgroundExtendedSprite = std::make_unique<sf::Sprite>();
+	m_MainBackgroundExtendedSprite->setTexture(*m_MainBackgroundExtendedTexture);
 
 	//Container
 	m_ContainerTexture = std::make_unique<sf::Texture>();
@@ -728,7 +737,7 @@ void Rendering::CreateScoreText()
 	m_Score->setFont(*m_Font);
 	m_Score->setFillColor(sf::Color::Black);
 	m_Score->setCharacterSize(70);
-	m_Score->setString(" 0 " + m_HighScoreSprites[0]->GetText());
+	m_Score->setString("0");
 	m_Score->setPosition(position);
 
 	m_ComboText = std::make_unique<sf::Text>();
@@ -827,6 +836,16 @@ void Rendering::CreateNextUpSprites()
 		sprite->setScale(Settings::get().GetNextUpWidth() / size.x,  factorX);
 		sprite->setPosition(m_CycleSprite->getGlobalBounds().left + 5,m_CycleSprite->getGlobalBounds().top + 10);
 	}
+
+	std::unique_ptr<sf::Sprite>& sprite = m_NextUpBubbles.at(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
+	size = BubbleMath::ToVector2f(sprite->getTexture()->getSize());
+	sprite->setScale(Settings::get().GetNextUpWidth() / size.x, factorX);
+	sprite->setPosition(m_CycleSprite->getGlobalBounds().left + 5, m_CycleSprite->getGlobalBounds().top + 10);
+
+	std::unique_ptr<sf::Sprite>& sprite2 = m_NextUpBubbles.at(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
+	size = BubbleMath::ToVector2f(sprite2->getTexture()->getSize());
+	sprite2->setScale(Settings::get().GetNextUpWidth() / size.x, factorX);
+	sprite2->setPosition(m_CycleSprite->getGlobalBounds().left + 5, m_CycleSprite->getGlobalBounds().top + 10);
 }
 
 void Rendering::CreateHighScoreSpriteInPlay(sf::Vector2f& position)
@@ -1157,4 +1176,13 @@ void Rendering::CreateScoreNumberSprites()
 		m_ScoreNumberSprites[i]->setPosition(m_ScoreTitle->getPosition().x, m_ScoreTitle->getPosition().y + m_ScoreTitle->getGlobalBounds().height / 2 + 10);
 		
 	}
+
+	m_ScoreBackgroundInPlayTexture = std::make_unique<sf::Texture>();
+	m_ScoreBackgroundInPlayTexture->loadFromFile(SCORE_CLOUD_FILENAME);
+	m_ScoreBackgroundInPlaySprite = std::make_unique<sf::Sprite>();
+	m_ScoreBackgroundInPlaySprite->setTexture(*m_ScoreBackgroundInPlayTexture);
+	m_ScoreBackgroundInPlaySprite->setOrigin(m_ScoreBackgroundInPlaySprite->getLocalBounds().width / 2, m_ScoreBackgroundInPlaySprite->getLocalBounds().height / 2);
+	m_ScoreBackgroundInPlaySprite->setScale(0.3f, 0.3f);
+	m_ScoreBackgroundInPlaySprite->setPosition(m_ScoreTitle->getPosition().x, m_ScoreTitle->getPosition().y + m_ScoreTitle->getGlobalBounds().height / 2 
+											+ m_ScoreBackgroundInPlaySprite->getGlobalBounds().height / 4);
 }
