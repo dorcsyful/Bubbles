@@ -352,18 +352,32 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 	{
 		if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::S || a_Event.key.code == sf::Keyboard::Down))
 		{
-			m_IsStorageButtonPressed = true;
-			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
+			if(m_Gameplay->GetStorage() != EBUBBLE_TYPE::TYPE_NULL)
+			{
+				std::cout << "Storage full! \n";
+			}
+			else
+			{
+				m_IsStorageButtonPressed = true;
+				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
 
-			m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
+				m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
+			}
 		}
 
 		if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
 		{
-			m_IsStorageButtonPressed = true;
-			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
+			if (m_Gameplay->GetStorage() == EBUBBLE_TYPE::TYPE_NULL)
+			{
+				std::cout << "Storage empty! \n";
+			}
+			else
+			{
+				m_IsStorageButtonPressed = true;
+				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
 
-			m_Gameplay->PullUpStorage();
+				m_Gameplay->PullUpStorage();
+			}
 		}
 	}
 

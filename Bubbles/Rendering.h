@@ -33,10 +33,21 @@ public:
 	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
 
-	void UpdateScore(const unsigned int a_Score) const
+	void UpdateScore(const unsigned int a_Score)
 	{
-		m_Score->setString(std::to_string(a_Score));
-		m_GameOverScoreText->setString("Your score: " + std::to_string(a_Score));
+		std::string scoreString = std::to_string(a_Score);
+		m_Score->setString(scoreString);
+
+		float size = 0;
+		for(int i = 0; i < scoreString.size(); i++)
+		{
+			int value = scoreString[i] - '0';
+			size += m_ScoreNumberSprites[value]->getGlobalBounds().width;
+		}
+
+		m_ScoreStartPosition = m_ScoreTitle->getPosition().x - size / 2;
+
+		m_GameOverScoreText->setString("Your score: " + scoreString);
 	}
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
@@ -88,6 +99,7 @@ private:
 	void CreateHighScoreSprites();
 	void CreateDuck();
 	void CreateNextUpSprites();
+	void CreateHighScoreSpriteInPlay(sf::Vector2f& position);
 	void CreatePlayScoreSprites();
 	void CreatePlayModeButtons();
 	void CreateConfirmationWindow();
@@ -96,6 +108,9 @@ private:
 	void CreateTutorial();
 	void CreateStorageSprites();
 	void CreateCycleBottle();
+	void CreateScoreNumberSprites();
+	
+
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
@@ -123,13 +138,20 @@ private:
 
 	//Play mode UI
 	std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
+	std::unique_ptr<sf::Sprite> m_ScoreBackgroundSprite;
 	std::unique_ptr<sf::Text> m_ComboText;
 	std::unique_ptr<sf::Text> m_Score;
-	std::unique_ptr<sf::Text> m_ScoreTitle;
-	std::unique_ptr<sf::RectangleShape> m_HighScoreTitleInPlay;
+	std::unique_ptr<sf::Sprite> m_ScoreTitle;
 	std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
-	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoresInPlay;
 	std::vector<std::unique_ptr<sf::Texture>> m_ScoreNumberTextures;
+	std::vector<std::unique_ptr<sf::Sprite>> m_ScoreNumberSprites;
+	float m_ScoreStartPosition;
+
+	std::unique_ptr<sf::Sprite> m_HighScoreTitleInPlay;
+	std::unique_ptr<sf::Texture> m_HighScoreTitleTextureInPlay;
+	std::vector<std::unique_ptr<sf::Text>> m_HighScoresInPlay;
+	std::unique_ptr<sf::Texture> m_HighScoreTextureInPlay;
+	std::unique_ptr<sf::Sprite> m_HighScoreSpriteInPlay;
 
 	std::unique_ptr<sf::Text> m_StorageText;
 	std::unique_ptr<sf::Sprite> m_StoredSprite;
