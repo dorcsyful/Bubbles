@@ -20,6 +20,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	{
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bubbles!",
 													 sf::Style::Fullscreen, context);
+		Settings::get().IncreaseIfFullScreen(static_cast<float>(sf::VideoMode::getDesktopMode().width), static_cast<float>(sf::VideoMode::getDesktopMode().height));
+
 	}
 	else
 	{
@@ -82,7 +84,7 @@ void Rendering::PlayDraw(float a_Delta)
 
 	m_Window->draw(*m_Line);
 	//m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
-	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
+	//m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
 		element->Draw(*m_Window);
@@ -101,7 +103,7 @@ void Rendering::PlayDraw(float a_Delta)
 
 	float lastPosition = m_ScoreStartPosition;
 	std::string scoreString = m_Score->getString();
-	for (int i = 0; i < scoreString.size(); i++)
+	for (size_t i = 0; i < scoreString.size(); i++)
 	{
 		unsigned char asChar = scoreString[i];
 		int value = asChar - '0';
@@ -136,6 +138,7 @@ void Rendering::PlayDraw(float a_Delta)
 
 void Rendering::MenuDraw() const
 {
+	m_Window->draw(*m_MainBackgroundExtendedSprite);
 	m_Window->draw(*m_MainBackgroundSprite);
 	m_Window->draw(*m_Title);
 	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
@@ -317,25 +320,6 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 	m_Window->display();
 }
 
-void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
-{
-	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(),Settings::get().GetBubbleAnimationTotalTime() , Settings::get().GetBubbleFrames());
-
-	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
-	size.x /= static_cast<float>(Settings::get().GetBubbleFrames());
-	float pixelToMeter = Settings::get().GetPixelToMeter();
-	float factorX = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.x;
-	float factorY = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.y;
-	a_NewSprite->GetSprite()->setScale(factorX, factorY);
-
-	float x = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().x;
-	float y = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().y;
-	a_NewSprite->GetSprite()->setOrigin(x, y);
-
-	a_NewSprite->SetPosition(a_Position);
-	a_NewSprite->SetRotation(a_Rotation);
-}
-
 void Rendering::MovePointerLine(const float a_X) const
 {
 
@@ -373,6 +357,11 @@ void Rendering::ResetButtons() const
 	{
 		element.second->ApplyBaseTexture();
 	}
+}
+
+void Rendering::Reset()
+{
+	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
 }
 
 void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) const
@@ -437,6 +426,29 @@ void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
 	m_HighScoresInPlay[2]->setString(std::to_string(a_Scores[2]));
 }
 
+void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
+{
+	if (a_Type == EBUBBLE_TYPE::TYPE_NULL)
+	{
+		return;
+	}
+	if (a_ToStorage) m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
+	else m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(m_TypeInStorage));
+
+	sf::Vector2i u = sf::Vector2i(m_BubbleTextures.at(a_Type)->getSize());
+	m_MovingStorageSprite->setTextureRect(sf::IntRect(0, 0, u.x / 8, u.y));
+	float storage_box_width = Settings::get().GetStorageBoxWidth();
+	sf::Vector2f size = BubbleMath::ToVector2f(m_MovingStorageSprite->getTexture()->getSize());
+	float factor_x = storage_box_width / (size.x / 8.f);
+	float factor_y = storage_box_width / size.y;
+	m_MovingStorageSprite->setScale(factor_x, factor_y);
+
+	m_TypeInStorage = a_ToStorage ? a_Type : EBUBBLE_TYPE::TYPE_NULL;
+	m_MovingStorageLerp = a_ToStorage ? 0.000001f : 0.999999f;
+	m_MovingDirection = a_ToStorage ? 1 : -1;
+	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
+}
+
 void Rendering::LoadBubbleTextures()
 {
 	m_BubbleTextures = std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>>();
@@ -487,34 +499,6 @@ void Rendering::LoadStorageTextures()
 
 	m_CycleTexture = std::make_unique<sf::Texture>();
 	m_CycleTexture->loadFromFile(SOAP_BOTTLE_FILENAME);
-}
-
-void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
-{
-	if(a_Type == EBUBBLE_TYPE::TYPE_NULL)
-	{
-		return;
-	}
-	if(a_ToStorage) m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(a_Type));
-	else m_MovingStorageSprite->setTexture(*m_BubbleTextures.at(m_TypeInStorage));
-
-	sf::Vector2i u = sf::Vector2i(m_BubbleTextures.at(a_Type)->getSize());
-	m_MovingStorageSprite->setTextureRect(sf::IntRect(0, 0, u.x / 8, u.y));
-	float storage_box_width = Settings::get().GetStorageBoxWidth();
-	sf::Vector2f size = BubbleMath::ToVector2f(m_MovingStorageSprite->getTexture()->getSize());
-	float factor_x = storage_box_width / (size.x / 8.f);
-	float factor_y = storage_box_width / size.y;
-	m_MovingStorageSprite->setScale(factor_x, factor_y);
-
-	m_TypeInStorage = a_ToStorage ? a_Type :EBUBBLE_TYPE::TYPE_NULL;
-	m_MovingStorageLerp = a_ToStorage? 0.000001f : 0.999999f;
-	m_MovingDirection = a_ToStorage ? 1 : -1;
-	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-}
-
-void Rendering::Reset()
-{
-	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
 }
 
 void Rendering::LoadBackground()
@@ -578,12 +562,32 @@ void Rendering::LoadBackground()
 
 }
 
+void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
+{
+	a_NewSprite = std::make_unique<AnimatedSprite>(m_BubbleTextures.at(a_Type).get(), Settings::get().GetBubbleAnimationTotalTime(), Settings::get().GetBubbleFrames());
+
+	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
+	size.x /= static_cast<float>(Settings::get().GetBubbleFrames());
+	float pixelToMeter = Settings::get().GetPixelToMeter();
+	float factorX = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.x;
+	float factorY = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.y;
+	a_NewSprite->GetSprite()->setScale(factorX, factorY);
+
+	float x = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().x;
+	float y = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().y;
+	a_NewSprite->GetSprite()->setOrigin(x, y);
+
+	a_NewSprite->SetPosition(a_Position);
+	a_NewSprite->SetRotation(a_Rotation);
+}
+
 void Rendering::CreatePointer()
 {
 	float containerHeight = Settings::get().GetContainerHeight();
+	sf::Vector2f size = BubbleMath::ToVector2f(m_Window->getSize());
 	sf::Vector2f position =
-		sf::Vector2f((m_Window->getSize().x / 2.f) - (m_Container->getSize().x / 2.f), ((m_Window->getSize().y - containerHeight) / 1.48f));
-		m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight - 5));
+		sf::Vector2f(m_Container->getGlobalBounds().left, m_Container->getGlobalBounds().top);
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight));
 	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
 	m_Line->setPosition(position);
 
@@ -683,21 +687,21 @@ void Rendering::CreateMenuButtonSprites()
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play");
-	newButton->ResizeCharacters(38);
+	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("High Scores");
-	newButton->ResizeCharacters(38);
+	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("How to play");
-	newButton->ResizeCharacters(38);
+	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("How to play", std::move(newButton)));
 
@@ -705,18 +709,16 @@ void Rendering::CreateMenuButtonSprites()
 	basePos.y = m_Title->getPosition().y + m_Title->getSize().y + 10;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Settings");
-	newButton->ResizeCharacters(38);
+	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Exit");
-	newButton->ResizeCharacters(38);
+	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Exit", std::move(newButton)));
-
-
 
 	m_LoadingTexture = std::make_unique<sf::Texture>();
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
@@ -806,12 +808,14 @@ void Rendering::CreateDuck()
 	m_Duck = std::make_unique<AnimatedSprite>(m_DuckTexture.get(), 1, 4, true, true);
 	m_Duck->SetFrame(0);
 	m_Duck->UpdateFrameToAnimate(2);
+	//float y = Settings::get().GetDuckHeight();
+	float y = m_Duck->GetSprite()->getGlobalBounds().height * 0.75f;
+	float x = m_Duck->GetSprite()->getGlobalBounds().width * 0.75f;
+	m_Duck->GetSprite()->setOrigin(x, y);
 	float factorX = Settings::get().GetDuckWidth() / (static_cast<float>(m_DuckTexture->getSize().x) / 4);
 	float factorY = Settings::get().GetDuckHeight() / static_cast<float>(m_DuckTexture->getSize().y);
 	m_Duck->GetSprite()->setScale(factorX, factorY);
-	float x = Settings::get().GetDuckWidth() * 4.f;
-	float y = Settings::get().GetDuckHeight() * 3.85f;
-	m_Duck->GetSprite()->setOrigin(x, y);
+
 }
 
 void Rendering::CreateNextUpSprites()
@@ -827,7 +831,6 @@ void Rendering::CreateNextUpSprites()
 
 	sf::Vector2f size = BubbleMath::ToVector2f(m_NextUpTextures.at(EBUBBLE_TYPE::TYPE_STAR)->getSize());
 	float factorX = Settings::get().GetNextUpWidth() / size.x;
-	float factorY = Settings::get().GetNextUpHeight() / size.y;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -886,8 +889,6 @@ void Rendering::CreatePlayScoreSprites()
 	position.y += m_Frame->getGlobalBounds().height / 6.f;
 	position.x -= m_ScoreTitle->getGlobalBounds().width;
 	m_ScoreTitle->setPosition(position);
-
-
 
 	position.y += m_ScoreTitle->getGlobalBounds().height * 1.1f;
 	m_Score->setPosition(position);
@@ -1144,8 +1145,11 @@ void Rendering::CreateCycleBottle()
 {
 	m_CycleSprite = std::make_unique<sf::RectangleShape>();
 	m_CycleSprite->setTexture(m_CycleTexture.get());
-	float temp = (m_Container->getSize().y * 0.95f) / m_CycleTexture->getSize().y;
-	sf::Vector2f f(m_CycleTexture->getSize().x * temp, m_Container->getSize().y * 0.95f);
+
+	sf::Vector2f cycleTextureSize = BubbleMath::ToVector2f(m_CycleTexture->getSize());
+
+	float temp = (m_Container->getSize().y * 0.95f) / cycleTextureSize.y;
+	sf::Vector2f f(cycleTextureSize.x * temp, m_Container->getSize().y * 0.95f);
 	m_CycleSprite->setSize(f);
 	m_CycleSprite->setOrigin(m_CycleSprite->getLocalBounds().left + m_CycleSprite->getLocalBounds().width / 2.f,
 		m_CycleSprite->getLocalBounds().top + m_CycleSprite->getLocalBounds().height / 2.f);

@@ -12,7 +12,7 @@ void BubbleGame::Initialize()
 	m_IsMouseButtonPressed = false;
 	Random::getInstance().SetSeed(time(nullptr));
 	CallAfterDelay::getInstance().ClearQueue();
-	m_State = EGAME_STATE::STATE_MENU;
+	m_State = EGAME_STATE::STATE_PLAY;
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
@@ -150,7 +150,7 @@ void BubbleGame::Update()
 			{
 				m_IsMouseButtonPressed = false;
 			}
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 				m_Rendering->GetWindow()->close();
 
 			if (m_State == EGAME_STATE::STATE_PLAY )

@@ -89,6 +89,8 @@ void Settings::LoadSettings()
                 m_StorageSpriteWidth = stof(value);
             if (name == "STORAGE_HEIGHT")
                 m_StorageSpriteHeight = stof(value);
+            if (name == "MAIN_BUTTON_FONT_SIZE")
+                m_MainButtonFontSize = stoi(value);
         }
         file.close();
     }
@@ -150,4 +152,36 @@ void Settings::SetSoundEnabled(float a_Music, float a_Effects)
         outfile << nline << '\n';
     }
     outfile.close();
+}
+
+void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
+{
+    float xScale = a_WindowX / m_WindowWidth;
+    float yScale = a_WindowY / m_WindowHeight;
+
+    m_WindowWidth *= xScale;
+    m_WindowHeight *= yScale;
+    m_ContainerWidth *= xScale;
+    m_ContainerHeight *= yScale;
+    m_FrameWidth *= xScale;
+    m_FrameHeight *= yScale;
+    m_ConfirmationWidth *= xScale;
+    m_ConfirmationHeight *= yScale;
+    m_TitleWidth *= xScale;
+    m_TitleHeight *= yScale;
+    m_MenuButtonWidth *= xScale;
+    m_MenuButtonHeight *= yScale;
+    m_ButtonWidth *= xScale;
+    m_ButtonHeight *= yScale;
+    m_ScoreTitleWidth *= xScale;
+    m_StorageSpriteWidth *= xScale;
+    m_StorageSpriteHeight *= yScale;
+    m_HighScoreItemWidth *= xScale;
+    m_HighScoreItemHeight *= yScale;
+    m_DuckHeight *= yScale;
+    float MainButtonFontSize = static_cast<float>(m_MainButtonFontSize) * yScale;
+    m_MainButtonFontSize = static_cast<int>(MainButtonFontSize);
+    m_DuckWidth *= xScale;
+    m_NextUpWidth *= xScale;
+    m_NextUpHeight *= yScale;
 }

@@ -58,6 +58,7 @@ public:
     [[nodiscard]] float GetMenuButtonHeight() const { return m_MenuButtonHeight; }
     [[nodiscard]] float GetButtonHeight() const { return m_ButtonHeight; }
     [[nodiscard]] float GetButtonWidth() const { return m_ButtonWidth; }
+    [[nodiscard]] int GetMainButtonFontSize() const { return m_MainButtonFontSize; }
 
     [[nodiscard]] float GetTitleWidth() const { return m_TitleWidth; }
     [[nodiscard]] float GetTitleHeight() const { return m_TitleHeight; }
@@ -66,7 +67,11 @@ public:
     [[nodiscard]] float GetStorageBoxWidth() const { return m_StorageSpriteWidth; }
     [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
 
+
+    void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
+
 private:
+
     bool m_FullScreen = false;
 
     float m_WindowWidth = 0;
@@ -111,6 +116,7 @@ private:
 
     float m_NextUpWidth = 0;
     float m_NextUpHeight = 0;
+    int m_MainButtonFontSize = 0;
 
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
 };
