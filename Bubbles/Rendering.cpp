@@ -80,9 +80,10 @@ void Rendering::PlayDraw(float a_Delta)
 
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Frame);
+	m_Window->draw(*m_Line);
+
 	m_Duck->Draw(*m_Window);
 
-	m_Window->draw(*m_Line);
 	//m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 	//m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
@@ -547,19 +548,22 @@ void Rendering::LoadBackground()
 	float width = Settings::get().GetContainerWidth();
 	float height = Settings::get().GetContainerHeight() ;
 	m_Container->setSize(sf::Vector2f(width, height));
-	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 1.5f));
+	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 1.755f));
 	m_Container->setPosition(basePos);
 
 	m_FrameTexture = std::make_unique<sf::Texture>();
 	m_FrameTexture->loadFromFile(FRAME_FILENAME);
 	m_Frame = std::make_unique<sf::RectangleShape>();
 	m_Frame->setTexture(m_FrameTexture.get());
-	m_Frame->setSize(sf::Vector2f(Settings::get().GetFrameWidth(), Settings::get().GetFrameHeight()));
-	m_Frame->setOrigin(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f);
-	sf::Vector2f position = m_Container->getGlobalBounds().getPosition();
-	sf::Vector2f size = m_Container->getGlobalBounds().getSize();
-	m_Frame->setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f -15);
 
+	sf::Vector2f containerSize = BubbleMath::ToVector2f(m_ContainerTexture->getSize());
+	sf::Vector2f frameSize = BubbleMath::ToVector2f(m_FrameTexture->getSize());
+	float x = (Settings::get().GetContainerWidth() / containerSize.x) * frameSize.x;
+	float y = (Settings::get().GetContainerHeight() / containerSize.y) * frameSize.y;
+	m_Frame->setSize(sf::Vector2f(x, y));
+
+	m_Frame->setOrigin(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f);
+	m_Frame->setPosition(m_Container->getPosition().x + m_Container->getSize().x / 2, m_Container->getPosition().y + m_Container->getSize().y / 2 - Settings::get().GetFrameCorrection());
 }
 
 void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const

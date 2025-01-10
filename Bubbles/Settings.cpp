@@ -184,4 +184,5 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_DuckWidth *= xScale;
     m_NextUpWidth *= xScale;
     m_NextUpHeight *= yScale;
+    m_Correction *= yScale;
 }

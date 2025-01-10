@@ -20,6 +20,7 @@ public:
     [[nodiscard]] float GetContainerHeight() const { return m_ContainerHeight; }
     [[nodiscard]] float GetFrameWidth() const { return m_FrameWidth; }
     [[nodiscard]] float GetFrameHeight() const { return m_FrameHeight; }
+    float GetFrameCorrection() const { return m_Correction; }
     [[nodiscard]] float GetConfirmationWidth() const { return m_ConfirmationWidth; }
     [[nodiscard]] float GetConfirmationHeight() const { return m_ConfirmationHeight; }
     [[nodiscard]] bool IsFullscreen() const { return m_FullScreen; }
@@ -80,6 +81,7 @@ private:
     float m_ContainerHeight = 0;
     float m_FrameWidth = 0;
     float m_FrameHeight = 0;
+    float m_Correction = 15;
     float m_ConfirmationWidth = 0;
     float m_ConfirmationHeight = 0;
     float m_TitleWidth = 0;
