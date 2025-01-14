@@ -946,20 +946,10 @@ void Rendering::CreatePlayModeButtons()
 	float buttonWidth = (Settings::get().GetButtonWidth() + 15.f) / (BBTextureSize.x / 3.f);
 	basePos.x = m_Frame->getGlobalBounds().left - Settings::get().GetButtonWidth() * 2;
 	basePos.y = m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetButtonHeight() / 2;
-	if(Settings::get().IsFullscreen())
-	{
-		float height = static_cast<float>(sf::VideoMode::getDesktopMode().height);
-		if(height > Settings::get().GetWindowHeight())
-		{
-			basePos.y = height - Settings::get().GetButtonHeight() * 1.5f;
-		}
-		basePos.x = Settings::get().GetButtonWidth() * 1.2f;
-
-	}
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("menu");
-	newButton->ResizeCharacters(35);
+	newButton->ResizeCharacters(35 * Settings::get().GetScaleY());
 	sf::Vector2f buttonScale = sf::Vector2f(buttonWidth, Settings::get().GetButtonHeight() / (BBTextureSize.y));
 
 	newButton->SetScale(buttonScale);
@@ -968,7 +958,7 @@ void Rendering::CreatePlayModeButtons()
 	basePos.x += (Settings::get().GetButtonWidth() + 15.f) * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("restart");
-	newButton->ResizeCharacters(35);
+	newButton->ResizeCharacters(35 * Settings::get().GetScaleY());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 
