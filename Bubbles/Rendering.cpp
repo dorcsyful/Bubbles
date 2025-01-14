@@ -98,8 +98,9 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
 	m_Window->draw(*m_HighScoreTitleInPlay);
-	m_Window->draw(*m_StorageText);
 	m_Window->draw(*m_StoredSprite);
+	m_Window->draw(*m_StorageText);
+
 	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
 
 	float lastPosition = m_ScoreStartPosition;
@@ -1104,27 +1105,34 @@ void Rendering::CreateStorageSprites()
 	m_StoredSprite = std::make_unique<sf::Sprite>();
 	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	sf::Vector2f size = BubbleMath::ToVector2f(m_StoredSprite->getTexture()->getSize());
-	m_StoredSprite->setScale(Settings::get().GetStorageBoxWidth() / size.x, Settings::get().GetStorageBoxHeight() / size.y);
-	m_StoredSprite->setOrigin(m_StoredSprite->getLocalBounds().left + m_StoredSprite->getLocalBounds().width / 2.f,
-		m_StoredSprite->getLocalBounds().top + m_StoredSprite->getLocalBounds().height / 2.f);
-	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width * 1.1f, m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - Settings::get().GetStorageBoxHeight() / 2.f);
+	m_StoredSprite->setScale((Settings::get().GetStorageBoxWidth() / size.x), Settings::get().GetStorageBoxHeight() / size.y);
+
+	sf::FloatRect localBounds = m_StoredSprite->getLocalBounds();
+	m_StoredSprite->setOrigin(localBounds.left + localBounds.width / 2.f,
+	                          localBounds.top + localBounds.height / 2.f);
+
+	m_StoredSprite->setPosition(m_Frame->getGlobalBounds().left + m_Frame->getGlobalBounds().width * 1.1f, m_Frame->getGlobalBounds().top + m_Frame->getGlobalBounds().height - m_StoredSprite->getGlobalBounds().height / 2.f);
 
 	m_MovingStorageSprite = std::make_unique<sf::Sprite>();
 	m_MovingStorageSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-	m_MovingStorageSprite->setOrigin(m_MovingStorageSprite->getLocalBounds().left + m_MovingStorageSprite->getLocalBounds().width / 2.f,
-		m_MovingStorageSprite->getLocalBounds().top + m_MovingStorageSprite->getLocalBounds().height / 2.f);
+
+	localBounds = m_MovingStorageSprite->getLocalBounds();
+	m_MovingStorageSprite->setOrigin(localBounds.left + localBounds.width / 2.f,
+									localBounds.top + localBounds.height / 2.f);
 
 	m_StorageText = std::make_unique<sf::Text>();
 	m_StorageText->setFont(*m_Font);
 	m_StorageText->setOutlineColor(sf::Color(192, 102, 71, 255));
-	m_StorageText->setOutlineThickness(3);
-	m_StorageText->setCharacterSize(35);
+	m_StorageText->setOutlineThickness(3 * Settings::get().GetScaleY());
+	m_StorageText->setCharacterSize(35 * Settings::get().GetScaleY());
 	m_StorageText->setFillColor(sf::Color::White);
 	m_StorageText->setStyle(sf::Text::Bold);
 	m_StorageText->setString("Storage:");
-	m_StorageText->setOrigin(m_StorageText->getLocalBounds().left + m_StorageText->getLocalBounds().width / 2.f,
-		m_StorageText->getLocalBounds().top);
-	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height * 0.8f);
+
+	localBounds = m_StorageText->getLocalBounds();
+	m_StorageText->setOrigin(localBounds.left + localBounds.width / 2.f,
+		localBounds.top);
+	m_StorageText->setPosition(m_StoredSprite->getPosition().x, m_StoredSprite->getPosition().y - m_StoredSprite->getGlobalBounds().height * 0.5f);
 
 
 	m_InstructionTexture = std::make_unique<sf::Texture>();
@@ -1132,10 +1140,10 @@ void Rendering::CreateStorageSprites()
 	m_InstructionShape = std::make_unique<sf::Sprite>();
 	m_InstructionShape->setTexture(*m_InstructionTexture);
 	m_InstructionShape->setOrigin(m_InstructionShape->getLocalBounds().width / 2.f, m_InstructionShape->getLocalBounds().height / 2.f);
-	m_InstructionShape->setScale(sf::Vector2f(0.35f, 0.35f));
+	m_InstructionShape->setScale(sf::Vector2f(0.35f * Settings::get().GetScaleX(), 0.35f * Settings::get().GetScaleY()));
 
-	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width + m_InstructionShape->getGlobalBounds().width / 2.f;
-	m_InstructionShape->setPosition(x, m_StoredSprite->getPosition().y - 20);
+	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width / 1.5f + m_InstructionShape->getGlobalBounds().width / 2.f;
+	m_InstructionShape->setPosition(x, m_StoredSprite->getPosition().y);
 }
 
 void Rendering::CreateCycleBottle()
