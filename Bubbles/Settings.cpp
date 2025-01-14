@@ -158,7 +158,8 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
 {
     float xScale = a_WindowX / m_WindowWidth;
     float yScale = a_WindowY / m_WindowHeight;
-
+    m_ScaleX = xScale;
+    m_ScaleY = yScale;
     m_WindowWidth *= xScale;
     m_WindowHeight *= yScale;
     m_ContainerWidth *= xScale;
