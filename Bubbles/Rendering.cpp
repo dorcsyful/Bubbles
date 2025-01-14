@@ -985,14 +985,14 @@ void Rendering::CreateConfirmationWindow()
 	basePos.y += m_ConfirmationWindow->getGlobalBounds().height / 1.3f;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Yes");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ConfirmConfirm", std::move(newButton)));
 
 	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 2;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("No");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("CancelConfirm", std::move(newButton)));
 
@@ -1009,18 +1009,20 @@ void Rendering::CreateConfirmationWindow()
 
 void Rendering::CreateSettingsButtons()
 {
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(m_MenuButtons.at("Back to menu")->GetPosition(), *m_Font, m_BaseButtonTexture.get());
+	sf::Vector2f position = m_MenuButtons.at("Back to menu")->GetPosition();
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Apply");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.f), Settings::get().GetButtonHeight() / (BBTextureSize.y));
 
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
 
-	newButton = std::make_unique<Button>(m_MenuButtons.at("Restart")->GetPosition(), *m_Font, m_BaseButtonTexture.get());
+	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 1.75f;
+	newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Revert");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
 }

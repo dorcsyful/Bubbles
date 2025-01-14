@@ -21,6 +21,7 @@ public:
     void ResizeCharacters(unsigned int a_Size) const;
     sf::Vector2f GetPosition() const { return m_Shape->getPosition(); }
     float GetTextWidth() const { return m_Text->getGlobalBounds().width; }
+    float GetWidth() const { return m_Shape->getGlobalBounds().width; }
 	void Draw(sf::RenderTarget& a_Target) 
 	{
         a_Target.draw(*m_Shape);
