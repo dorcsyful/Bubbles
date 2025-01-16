@@ -42,8 +42,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateHighScoreSprites();
 	CreateScoreText();
 
-	CreateGameOverSprite();
-
 	CreateDuck();
 	CreatePlayModeButtons();
 	CreateConfirmationWindow();
@@ -52,6 +50,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	CreateStorageSprites();
 	CreateNextUpSprites();
 	CreateScoreNumberSprites();
+
+	CreateGameOverSprite();
 }
 
 void Rendering::FinishMoveToStorage()
@@ -84,8 +84,8 @@ void Rendering::PlayDraw(float a_Delta)
 
 	m_Duck->Draw(*m_Window);
 
-	//m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
-	//m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
+	m_Window->draw(*m_NextUpBubbles.at(m_ActiveNextUp));
+	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
 	for (auto& element : m_RenderedBubbles)
 	{
 		element->Draw(*m_Window);
@@ -191,10 +191,20 @@ void Rendering::GameOverDraw() const
 	m_Window->draw(*m_BackgroundSprite);
 
 	m_Window->draw(*m_GameOver);
+
+	float lastPosition = m_GOStartPosition;
+	std::string scoreString = m_Score->getString();
+	for (size_t i = 0; i < scoreString.size(); i++)
+	{
+		unsigned char asChar = scoreString[i];
+		int value = asChar - '0';
+		m_GOScoreNumberSprites[value]->setPosition(lastPosition, m_GOScoreNumberSprites[value]->getPosition().y);
+		m_Window->draw(*m_GOScoreNumberSprites[value]);
+		lastPosition += m_GOScoreNumberSprites[value]->getGlobalBounds().width + 2;
+	}
+	m_Window->draw(*m_GOScoreCloudSprite);
 	m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-	m_Window->draw(*m_GOScoreSprite);
-	m_Window->draw(*m_GameOverScoreText);
 	m_MenuButtons.at("BackToMenu")->Draw(*m_Window);
 	m_MenuButtons.at("PlayAgain")->Draw(*m_Window);
 	//m_Duck->Draw(*m_Window);
@@ -630,40 +640,45 @@ void Rendering::CreateGameOverSprite()
 	float scale = titleSize.y / gameOverTextureSize.y;
 	titleSize.x = gameOverTextureSize.x * scale;
 	m_GameOver->setSize(titleSize);
-
 	m_GameOver->setOrigin(titleSize.x / 2, titleSize.y / 2);
-
 	m_GameOver->setPosition(sf::Vector2f(m_Title->getPosition()));
 
-	sf::Vector2f basePos = m_GameOver->getPosition();
-	basePos.y = m_GameOver->getGlobalBounds().top + m_GameOver->getGlobalBounds().height;
-	m_GOScoreSprite = std::make_unique<sf::RectangleShape>();
-	m_GOScoreSprite->setTexture(m_ScoreBackgroundTexture.get());
-	m_GOScoreSprite->setSize(BubbleMath::ToVector2f(m_ScoreBackgroundTexture->getSize()));
-	basePos.y += m_GOScoreSprite->getGlobalBounds().height / 2.f + 20.f;
-	m_GOScoreSprite->setOrigin(m_GOScoreSprite->getSize().x / 2.f, m_GOScoreSprite->getSize().y / 2.f);
-	m_GOScoreSprite->setPosition(basePos);
-
-	m_GameOverScoreText = std::make_unique<sf::Text>();
-	m_GameOverScoreText->setString("Your score: 0 \n");
-	m_GameOverScoreText->setPosition(m_GOScoreSprite->getGlobalBounds().left + 50, m_GOScoreSprite->getGlobalBounds().top + 50);
-
-	basePos.y = m_GOScoreSprite->getGlobalBounds().top + m_GOScoreSprite->getGlobalBounds().height;
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.7f), Settings::get().GetMenuButtonHeight() / BBTextureSize.y);
 
+	sf::Vector2f basePos = m_GameOver->getPosition();
+	basePos.x = m_GameOver->getGlobalBounds().left + Settings::get().GetMenuButtonWidth();
+	basePos.y += m_GameOver->getGlobalBounds().height / 2 + m_ScoreNumberSprites[0]->getGlobalBounds().height + m_ScoreBackgroundInPlaySprite->getGlobalBounds().height;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(38 * Settings::get().GetScaleY());
 	newButton->SetScale(buttonScale);
+	
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
-	basePos.y += Settings::get().GetMenuButtonHeight();
+	basePos.x += m_MenuButtons.at("PlayAgain")->GetWidth() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Back to menu");
-	newButton->ResizeCharacters(30);
+	newButton->ResizeCharacters(38 * Settings::get().GetScaleY());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("BackToMenu", std::move(newButton)));
+
+	m_GOScoreNumberSprites = std::vector<std::unique_ptr<sf::Sprite>>(10);
+	for (int i = 0; i < 10; i++)
+	{
+		m_GOScoreNumberSprites[i] = std::make_unique<sf::Sprite>();
+		m_GOScoreNumberSprites[i]->setTexture(*m_ScoreNumberTextures[i]);
+		m_GOScoreNumberSprites[i]->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+		m_GOScoreNumberSprites[i]->setPosition(m_GameOver->getGlobalBounds().left, m_GameOver->getPosition().y + m_GameOver->getGlobalBounds().height);
+	}
+	m_GOScoreCloudSprite = std::make_unique<sf::Sprite>();
+
+	m_GOScoreCloudSprite->setTexture(*m_ScoreBackgroundInPlayTexture);
+	m_GOScoreCloudSprite->setOrigin(m_GOScoreCloudSprite->getLocalBounds().width / 2, m_GOScoreCloudSprite->getLocalBounds().height / 2);
+	m_GOScoreCloudSprite->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+	float y = m_GOScoreNumberSprites[0]->getGlobalBounds().top + m_GOScoreNumberSprites[0]->getGlobalBounds().height - m_GOScoreCloudSprite->getGlobalBounds().height / 3.f;
+	m_GOScoreCloudSprite->setPosition(m_GameOver->getGlobalBounds().left + m_GOScoreCloudSprite->getGlobalBounds().width / 2, y);
+
 
 }
 

@@ -4,7 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-
+#include <SFML/Graphics/RenderTexture.hpp>
 #include "AnimatedSprite.h"
 #include "BubbleObject.h"
 #include "Button.h"
@@ -46,8 +46,7 @@ public:
 		}
 
 		m_ScoreStartPosition = m_ScoreTitle->getPosition().x - size / 2;
-
-		m_GameOverScoreText->setString("Your score: " + scoreString);
+		m_GOStartPosition = m_GOScoreCloudSprite->getPosition().x - size / 2;
 	}
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
@@ -175,8 +174,10 @@ private:
 	//Game over mode
 	std::unique_ptr<sf::RectangleShape> m_GameOver;
 	std::unique_ptr<sf::Texture> m_GameOverTexture;
-	std::unique_ptr<sf::RectangleShape> m_GOScoreSprite;
 	std::unique_ptr<sf::Text> m_GameOverScoreText;
+	std::vector<std::unique_ptr<sf::Sprite>> m_GOScoreNumberSprites;
+	std::unique_ptr<sf::Sprite> m_GOScoreCloudSprite;
+	float m_GOStartPosition;
 
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;
