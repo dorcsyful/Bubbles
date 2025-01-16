@@ -186,4 +186,9 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_NextUpWidth *= xScale;
     m_NextUpHeight *= yScale;
     m_Correction *= yScale;
+
+    for(int i = 0; i < 10; i++)
+    {
+        m_BubbleSizes[static_cast<EBUBBLE_TYPE>(i)] *= yScale;
+    }
 }
