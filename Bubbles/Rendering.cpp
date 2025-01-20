@@ -518,7 +518,7 @@ void Rendering::LoadBackground()
 	//Game Background
 	m_BackgroundTexture = std::make_unique<sf::Texture>();
 	m_BackgroundTexture->loadFromFile(GAME_BACKGROUND_FILENAME);
-	m_BackgroundTexture->setRepeated(true);
+	m_BackgroundTexture->setRepeated(false);
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
@@ -527,7 +527,7 @@ void Rendering::LoadBackground()
 	//Main Background
 	m_MainBackgroundTexture = std::make_unique<sf::Texture>();
 	m_MainBackgroundTexture->loadFromFile(MENU_BACKGROUND_FILENAME);
-	m_MainBackgroundTexture->setRepeated(true);
+	m_MainBackgroundTexture->setRepeated(false);
 	m_MainBackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_MainBackgroundSprite->setTexture(m_MainBackgroundTexture.get());
 	// Calculate scaling factors and set sprite size and origin
@@ -544,8 +544,9 @@ void Rendering::LoadBackground()
 	m_MainBackgroundExtendedTexture = std::make_unique<sf::Texture>();
 	m_MainBackgroundExtendedTexture->loadFromFile(MENU_BACKGROUND_EXTENDED_FILENAME);
 	m_MainBackgroundExtendedTexture->setRepeated(true);
-	m_MainBackgroundExtendedSprite = std::make_unique<sf::Sprite>();
-	m_MainBackgroundExtendedSprite->setTexture(*m_MainBackgroundExtendedTexture);
+	m_MainBackgroundExtendedSprite = std::make_unique<sf::RectangleShape>();
+	m_MainBackgroundExtendedSprite->setTexture(m_MainBackgroundExtendedTexture.get());
+	m_MainBackgroundExtendedSprite->setSize(sf::Vector2f(m_Window->getSize().x, m_Window->getSize().y));
 
 	//Container
 	m_ContainerTexture = std::make_unique<sf::Texture>();
@@ -651,7 +652,7 @@ void Rendering::CreateGameOverSprite()
 	basePos.y += m_GameOver->getGlobalBounds().height / 2 + m_ScoreNumberSprites[0]->getGlobalBounds().height + m_ScoreBackgroundInPlaySprite->getGlobalBounds().height;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
-	newButton->ResizeCharacters(38 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(38 * Settings::get().GetScale());
 	newButton->SetScale(buttonScale);
 	
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
@@ -659,7 +660,7 @@ void Rendering::CreateGameOverSprite()
 	basePos.x += m_MenuButtons.at("PlayAgain")->GetWidth() * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Back to menu");
-	newButton->ResizeCharacters(38 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(38 * Settings::get().GetScale());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("BackToMenu", std::move(newButton)));
 
@@ -668,14 +669,14 @@ void Rendering::CreateGameOverSprite()
 	{
 		m_GOScoreNumberSprites[i] = std::make_unique<sf::Sprite>();
 		m_GOScoreNumberSprites[i]->setTexture(*m_ScoreNumberTextures[i]);
-		m_GOScoreNumberSprites[i]->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+		m_GOScoreNumberSprites[i]->setScale(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale());
 		m_GOScoreNumberSprites[i]->setPosition(m_GameOver->getGlobalBounds().left, m_GameOver->getPosition().y + m_GameOver->getGlobalBounds().height);
 	}
 	m_GOScoreCloudSprite = std::make_unique<sf::Sprite>();
 
 	m_GOScoreCloudSprite->setTexture(*m_ScoreBackgroundInPlayTexture);
 	m_GOScoreCloudSprite->setOrigin(m_GOScoreCloudSprite->getLocalBounds().width / 2, m_GOScoreCloudSprite->getLocalBounds().height / 2);
-	m_GOScoreCloudSprite->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+	m_GOScoreCloudSprite->setScale(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale());
 	float y = m_GOScoreNumberSprites[0]->getGlobalBounds().top + m_GOScoreNumberSprites[0]->getGlobalBounds().height - m_GOScoreCloudSprite->getGlobalBounds().height / 3.f;
 	m_GOScoreCloudSprite->setPosition(m_GameOver->getGlobalBounds().left + m_GOScoreCloudSprite->getGlobalBounds().width / 2, y);
 
@@ -879,11 +880,11 @@ void Rendering::CreateHighScoreSpriteInPlay(sf::Vector2f& position)
 	m_HighScoreTitleInPlay = std::make_unique<sf::Sprite>();
 	m_HighScoreTitleInPlay->setTexture(*m_HighScoreTitleTextureInPlay);
 	m_HighScoreTitleInPlay->setOrigin(m_HighScoreTitleInPlay->getLocalBounds().width / 2.f, m_HighScoreTitleInPlay->getLocalBounds().height / 2.f);
-	float scaleX = Settings::get().GetScaleX();
-	m_HighScoreTitleInPlay->setScale(0.3f * scaleX, 0.3f * Settings::get().GetScaleY());
+	float scaleX = Settings::get().GetScale();
+	m_HighScoreTitleInPlay->setScale(0.3f * scaleX, 0.3f * Settings::get().GetScale());
 
 	position = m_ScoreTitle->getPosition();
-	position.y += 250 *Settings::get().GetScaleY();
+	position.y += 250 *Settings::get().GetScale();
 	m_HighScoreTitleInPlay->setPosition(position);
 
 	m_HighScoreTextureInPlay = std::make_unique<sf::Texture>();
@@ -892,7 +893,7 @@ void Rendering::CreateHighScoreSpriteInPlay(sf::Vector2f& position)
 	m_HighScoreSpriteInPlay = std::make_unique<sf::Sprite>();
 	m_HighScoreSpriteInPlay->setTexture(*m_HighScoreTextureInPlay);
 	m_HighScoreSpriteInPlay->setOrigin(m_HighScoreSpriteInPlay->getLocalBounds().width / 2.f, m_HighScoreSpriteInPlay->getLocalBounds().height / 2.f);
-	m_HighScoreSpriteInPlay->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+	m_HighScoreSpriteInPlay->setScale(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale());
 	m_HighScoreSpriteInPlay->setPosition(m_HighScoreTitleInPlay->getPosition().x, m_HighScoreTitleInPlay->getPosition().y + m_HighScoreSpriteInPlay->getGlobalBounds().height / 2.f - 20);
 }
 
@@ -903,7 +904,7 @@ void Rendering::CreatePlayScoreSprites()
 
 	m_ScoreTitle = std::make_unique<sf::Sprite>();
 	m_ScoreTitle->setTexture(*m_ScoreTitleTexture);
-	m_ScoreTitle->setScale(0.5f * Settings::get().GetScaleX(), 0.5f * Settings::get().GetScaleY());
+	m_ScoreTitle->setScale(0.5f * Settings::get().GetScale(), 0.5f * Settings::get().GetScale());
 	m_ScoreTitle->setOrigin(m_ScoreTitle->getLocalBounds().width / 2.f, m_ScoreTitle->getLocalBounds().height / 2.f);
 
 	auto position = sf::Vector2f(m_Frame->getGlobalBounds().left, m_Frame->getGlobalBounds().top);
@@ -923,35 +924,35 @@ void Rendering::CreatePlayScoreSprites()
 	m_HighScoresInPlay[0] = std::make_unique<sf::Text>();
 
 	m_HighScoresInPlay[0]->setString(std::to_string(rand()));
-	position.x -= 78 * Settings::get().GetScaleX();
-	position.y = m_HighScoreSpriteInPlay->getGlobalBounds().top + (m_HighScoreSpriteInPlay->getGlobalBounds().height / 2.f) - 38 * Settings::get().GetScaleY() / 2;
+	position.x -= 78 * Settings::get().GetScale();
+	position.y = m_HighScoreSpriteInPlay->getGlobalBounds().top + (m_HighScoreSpriteInPlay->getGlobalBounds().height / 2.f) - 38 * Settings::get().GetScale() / 2;
 	m_HighScoresInPlay[0]->setPosition(position);
 	m_HighScoresInPlay[0]->setFont(*m_Font);
 	m_HighScoresInPlay[0]->setFillColor(textColor);
 	m_HighScoresInPlay[0]->setOutlineColor(sf::Color::White);
 	m_HighScoresInPlay[0]->setOutlineThickness(3);
-	m_HighScoresInPlay[0]->setCharacterSize(38 * Settings::get().GetScaleY());
+	m_HighScoresInPlay[0]->setCharacterSize(38 * Settings::get().GetScale());
 
 	m_HighScoresInPlay[1] = std::make_unique<sf::Text>();
 	m_HighScoresInPlay[1]->setString(std::to_string(rand()));
-	position.y += 38 * Settings::get().GetScaleY();
+	position.y += 38 * Settings::get().GetScale();
 	m_HighScoresInPlay[1]->setPosition(position);
 	m_HighScoresInPlay[1]->setFont(*m_Font);
 	m_HighScoresInPlay[1]->setFillColor(textColor);
 	m_HighScoresInPlay[1]->setOutlineColor(sf::Color::White);
 	m_HighScoresInPlay[1]->setOutlineThickness(3);
-	m_HighScoresInPlay[1]->setCharacterSize(38 * Settings::get().GetScaleY());
+	m_HighScoresInPlay[1]->setCharacterSize(38 * Settings::get().GetScale());
 
 
 	m_HighScoresInPlay[2] = std::make_unique<sf::Text>();
 	m_HighScoresInPlay[2]->setString(std::to_string(rand()));
-	position.y += 40 * Settings::get().GetScaleY();
+	position.y += 40 * Settings::get().GetScale();
 	m_HighScoresInPlay[2]->setPosition(position);
 	m_HighScoresInPlay[2]->setFont(*m_Font);
 	m_HighScoresInPlay[2]->setFillColor(textColor);
 	m_HighScoresInPlay[2]->setOutlineColor(sf::Color::White);
 	m_HighScoresInPlay[2]->setOutlineThickness(3);
-	m_HighScoresInPlay[2]->setCharacterSize(38 * Settings::get().GetScaleY());
+	m_HighScoresInPlay[2]->setCharacterSize(38 * Settings::get().GetScale());
 
 }
 
@@ -965,7 +966,7 @@ void Rendering::CreatePlayModeButtons()
 
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("menu");
-	newButton->ResizeCharacters(35 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(35 * Settings::get().GetScale());
 	sf::Vector2f buttonScale = sf::Vector2f(buttonWidth, Settings::get().GetButtonHeight() / (BBTextureSize.y));
 
 	newButton->SetScale(buttonScale);
@@ -974,7 +975,7 @@ void Rendering::CreatePlayModeButtons()
 	basePos.x += (Settings::get().GetButtonWidth() + 15.f) * 1.1f;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("restart");
-	newButton->ResizeCharacters(35 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(35 * Settings::get().GetScale());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Restart", std::move(newButton)));
 
@@ -1001,14 +1002,14 @@ void Rendering::CreateConfirmationWindow()
 	basePos.y += m_ConfirmationWindow->getGlobalBounds().height / 1.3f;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Yes");
-	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(30 * Settings::get().GetScale());
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ConfirmConfirm", std::move(newButton)));
 
 	basePos.x += m_ConfirmationWindow->getGlobalBounds().width / 2;
 	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("No");
-	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(30 * Settings::get().GetScale());
 	newButton->SetScale(sf::Vector2f(buttonScale));
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("CancelConfirm", std::move(newButton)));
 
@@ -1028,7 +1029,7 @@ void Rendering::CreateSettingsButtons()
 	sf::Vector2f position = m_MenuButtons.at("Back to menu")->GetPosition();
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Apply");
-	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(30 * Settings::get().GetScale());
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.f), Settings::get().GetButtonHeight() / (BBTextureSize.y));
 
@@ -1038,7 +1039,7 @@ void Rendering::CreateSettingsButtons()
 	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 1.75f;
 	newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Revert");
-	newButton->ResizeCharacters(30 * Settings::get().GetScaleY());
+	newButton->ResizeCharacters(30 * Settings::get().GetScale());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Revert", std::move(newButton)));
 }
@@ -1138,8 +1139,8 @@ void Rendering::CreateStorageSprites()
 	m_StorageText = std::make_unique<sf::Text>();
 	m_StorageText->setFont(*m_Font);
 	m_StorageText->setOutlineColor(sf::Color(192, 102, 71, 255));
-	m_StorageText->setOutlineThickness(3 * Settings::get().GetScaleY());
-	m_StorageText->setCharacterSize(35 * Settings::get().GetScaleY());
+	m_StorageText->setOutlineThickness(3 * Settings::get().GetScale());
+	m_StorageText->setCharacterSize(35 * Settings::get().GetScale());
 	m_StorageText->setFillColor(sf::Color::White);
 	m_StorageText->setStyle(sf::Text::Bold);
 	m_StorageText->setString("Storage:");
@@ -1155,7 +1156,7 @@ void Rendering::CreateStorageSprites()
 	m_InstructionShape = std::make_unique<sf::Sprite>();
 	m_InstructionShape->setTexture(*m_InstructionTexture);
 	m_InstructionShape->setOrigin(m_InstructionShape->getLocalBounds().width / 2.f, m_InstructionShape->getLocalBounds().height / 2.f);
-	m_InstructionShape->setScale(sf::Vector2f(0.35f * Settings::get().GetScaleX(), 0.35f * Settings::get().GetScaleY()));
+	m_InstructionShape->setScale(sf::Vector2f(0.35f * Settings::get().GetScale(), 0.35f * Settings::get().GetScale()));
 
 	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width / 1.5f + m_InstructionShape->getGlobalBounds().width / 2.f;
 	m_InstructionShape->setPosition(x, m_StoredSprite->getPosition().y);
@@ -1196,7 +1197,7 @@ void Rendering::CreateScoreNumberSprites()
 	{
 		m_ScoreNumberSprites[i] = std::make_unique<sf::Sprite>();
 		m_ScoreNumberSprites[i]->setTexture(*m_ScoreNumberTextures[i]);
-		m_ScoreNumberSprites[i]->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+		m_ScoreNumberSprites[i]->setScale(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale());
 		m_ScoreNumberSprites[i]->setPosition(m_ScoreTitle->getPosition().x, m_ScoreTitle->getPosition().y + m_ScoreTitle->getGlobalBounds().height / 2 + 10);
 		
 	}
@@ -1206,7 +1207,7 @@ void Rendering::CreateScoreNumberSprites()
 	m_ScoreBackgroundInPlaySprite = std::make_unique<sf::Sprite>();
 	m_ScoreBackgroundInPlaySprite->setTexture(*m_ScoreBackgroundInPlayTexture);
 	m_ScoreBackgroundInPlaySprite->setOrigin(m_ScoreBackgroundInPlaySprite->getLocalBounds().width / 2, m_ScoreBackgroundInPlaySprite->getLocalBounds().height / 2);
-	m_ScoreBackgroundInPlaySprite->setScale(0.3f * Settings::get().GetScaleX(), 0.3f * Settings::get().GetScaleY());
+	m_ScoreBackgroundInPlaySprite->setScale(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale());
 	m_ScoreBackgroundInPlaySprite->setPosition(m_ScoreTitle->getPosition().x, m_ScoreTitle->getPosition().y + m_ScoreTitle->getGlobalBounds().height / 2 
 											+ m_ScoreBackgroundInPlaySprite->getGlobalBounds().height / 4);
 }

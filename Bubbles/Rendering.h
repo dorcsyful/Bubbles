@@ -117,7 +117,7 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_MainBackgroundSprite;
 	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
 	std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;
-	std::unique_ptr<sf::Sprite> m_MainBackgroundExtendedSprite;
+	std::unique_ptr<sf::RectangleShape> m_MainBackgroundExtendedSprite;
 
 
 	//Play mode

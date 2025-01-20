@@ -68,16 +68,14 @@ public:
     [[nodiscard]] float GetStorageBoxWidth() const { return m_StorageSpriteWidth; }
     [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
 
-    [[nodiscard]] float GetScaleX() const { return m_ScaleX; }
-    [[nodiscard]] float GetScaleY() const { return m_ScaleY; }
+    [[nodiscard]] float GetScale() const { return m_Scale; }
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
 
 private:
 
     bool m_FullScreen = false;
-    float m_ScaleX = 1;
-    float m_ScaleY = 1;
+    float m_Scale = 1;
     float m_WindowWidth = 0;
     float m_WindowHeight = 0;
     float m_ContainerWidth = 0;

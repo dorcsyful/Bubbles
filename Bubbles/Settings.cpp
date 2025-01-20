@@ -158,37 +158,39 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
 {
     float xScale = a_WindowX / m_WindowWidth;
     float yScale = a_WindowY / m_WindowHeight;
-    m_ScaleX = xScale;
-    m_ScaleY = yScale;
-    m_WindowWidth *= xScale;
-    m_WindowHeight *= yScale;
-    m_ContainerWidth *= xScale;
-    m_ContainerHeight *= yScale;
-    m_FrameWidth *= xScale;
-    m_FrameHeight *= yScale;
-    m_ConfirmationWidth *= xScale;
-    m_ConfirmationHeight *= yScale;
-    m_TitleWidth *= xScale;
-    m_TitleHeight *= yScale;
-    m_MenuButtonWidth *= xScale;
-    m_MenuButtonHeight *= yScale;
-    m_ButtonWidth *= xScale;
-    m_ButtonHeight *= yScale;
-    m_ScoreTitleWidth *= xScale;
-    m_StorageSpriteWidth *= xScale;
-    m_StorageSpriteHeight *= yScale;
-    m_HighScoreItemWidth *= xScale;
-    m_HighScoreItemHeight *= yScale;
-    m_DuckHeight *= yScale;
-    float MainButtonFontSize = static_cast<float>(m_MainButtonFontSize) * yScale;
+
+    if (xScale > yScale) { m_Scale = yScale; }
+    else m_Scale = xScale;
+
+	m_WindowWidth *= m_Scale;
+    m_WindowHeight *= m_Scale;
+    m_ContainerWidth *= m_Scale;
+    m_ContainerHeight *= m_Scale;
+    m_FrameWidth *= m_Scale;
+    m_FrameHeight *= m_Scale;
+    m_ConfirmationWidth *= m_Scale;
+    m_ConfirmationHeight *= m_Scale;
+    m_TitleWidth *= m_Scale;
+    m_TitleHeight *= m_Scale;
+    m_MenuButtonWidth *= m_Scale;
+    m_MenuButtonHeight *= m_Scale;
+    m_ButtonWidth *= m_Scale;
+    m_ButtonHeight *= m_Scale;
+    m_ScoreTitleWidth *= m_Scale;
+    m_StorageSpriteWidth *= m_Scale;
+    m_StorageSpriteHeight *= m_Scale;
+    m_HighScoreItemWidth *= m_Scale;
+    m_HighScoreItemHeight *= m_Scale;
+    m_DuckHeight *= m_Scale;
+    float MainButtonFontSize = static_cast<float>(m_MainButtonFontSize) * m_Scale;
     m_MainButtonFontSize = static_cast<int>(MainButtonFontSize);
-    m_DuckWidth *= xScale;
-    m_NextUpWidth *= xScale;
-    m_NextUpHeight *= yScale;
-    m_Correction *= yScale;
+    m_DuckWidth *= m_Scale;
+    m_NextUpWidth *= m_Scale;
+    m_NextUpHeight *= m_Scale;
+    m_Correction *= m_Scale;
 
     for(int i = 0; i < 10; i++)
     {
-        m_BubbleSizes[static_cast<EBUBBLE_TYPE>(i)] *= yScale;
+        m_BubbleSizes[static_cast<EBUBBLE_TYPE>(i)] *= m_Scale;
     }
 }
