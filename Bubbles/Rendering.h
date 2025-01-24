@@ -113,7 +113,9 @@ private:
 	std::unique_ptr<sf::RenderWindow> m_Window;
 
 	std::unique_ptr<sf::RectangleShape> m_BackgroundSprite;
+	std::unique_ptr<sf::RectangleShape> m_BackgroundExtendedSprite;
 	std::unique_ptr<sf::Texture> m_BackgroundTexture;
+	std::unique_ptr<sf::Texture> m_BackgroundExtendedTexture;
 	std::unique_ptr<sf::RectangleShape> m_MainBackgroundSprite;
 	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
 	std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;

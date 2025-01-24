@@ -52,6 +52,7 @@ public:
 		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
 		return temp;
 	}
+	void EmptyStorage() { m_Storage = EBUBBLE_TYPE::TYPE_NULL; }
 
 private:
 

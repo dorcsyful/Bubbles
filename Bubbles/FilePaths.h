@@ -27,6 +27,7 @@
 #define CHECKBOX_FILENAME "Assets/Menu/Checkbox.png"
 #define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
 #define GAME_BACKGROUND_FILENAME "Assets/background.png"
+#define GAME_BACKGROUND_EXTENDED_FILENAME "Assets/background-orange.png"
 #define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
 #define MENU_BACKGROUND_EXTENDED_FILENAME "Assets/background-main-pink.png"
 #define SOAP_BOTTLE_FILENAME "Assets/PlayMode/soapbottle.png"

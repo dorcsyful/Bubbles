@@ -72,6 +72,7 @@ void Rendering::FinishMoveToStorage()
 
 void Rendering::PlayDraw(float a_Delta)
 {
+	m_Window->draw(*m_BackgroundExtendedSprite);
 	m_Window->draw(*m_BackgroundSprite);
 
 	sf::Vector2f mousePosition = m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window));
@@ -278,19 +279,25 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 	{
 		if(CallAfterDelay::getInstance().HasFunction("SetPlayState"))
 		{
+			m_Window->draw(*m_BackgroundExtendedSprite);
 			m_Window->draw(*m_BackgroundSprite);
 			m_BackgroundSprite->setFillColor(sf::Color::White);
 			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetPlayState");
 			m_MainBackgroundSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
+			m_MainBackgroundExtendedSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
+			m_Window->draw(*m_MainBackgroundExtendedSprite);
 			m_Window->draw(*m_MainBackgroundSprite);
 
 		}
 		else
 		{
+			m_Window->draw(*m_MainBackgroundExtendedSprite);
 			m_Window->draw(*m_MainBackgroundSprite);
 			m_MainBackgroundSprite->setFillColor(sf::Color::White);
 			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetMenuState");
 			m_BackgroundSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
+			m_BackgroundExtendedSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
+			m_Window->draw(*m_BackgroundExtendedSprite);
 			m_Window->draw(*m_BackgroundSprite);
 
 		}
@@ -373,6 +380,7 @@ void Rendering::ResetButtons() const
 
 void Rendering::Reset()
 {
+	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
 }
 
@@ -522,7 +530,21 @@ void Rendering::LoadBackground()
 	m_BackgroundSprite = std::make_unique<sf::RectangleShape>();
 	m_BackgroundSprite->setTexture(m_BackgroundTexture.get());
 	sf::Vector2f windowSize = sf::Vector2f(static_cast<float>(m_Window->getSize().x),static_cast<float>(m_Window->getSize().y));
-	m_BackgroundSprite->setSize(windowSize);
+
+	float verticalScale = windowSize.y / m_BackgroundTexture->getSize().y;
+	float horizontalScale = verticalScale;
+
+	m_BackgroundSprite->setSize(BubbleMath::ToVector2f(m_BackgroundTexture->getSize()));
+	m_BackgroundSprite->setScale(horizontalScale, verticalScale);
+	m_BackgroundSprite->setOrigin(m_BackgroundSprite->getLocalBounds().width / 2, m_BackgroundSprite->getLocalBounds().height / 2);
+	m_BackgroundSprite->setPosition(windowSize.x / 2, windowSize.y / 2);
+
+	m_BackgroundExtendedTexture = std::make_unique<sf::Texture>();
+	m_BackgroundExtendedTexture->loadFromFile(MENU_BACKGROUND_EXTENDED_FILENAME);
+	m_BackgroundExtendedTexture->setRepeated(true);
+	m_BackgroundExtendedSprite = std::make_unique<sf::RectangleShape>();
+	m_BackgroundExtendedSprite->setTexture(m_MainBackgroundExtendedTexture.get());
+	m_BackgroundExtendedSprite->setSize(sf::Vector2f(m_Window->getSize().x, m_Window->getSize().y));
 
 	//Main Background
 	m_MainBackgroundTexture = std::make_unique<sf::Texture>();
@@ -533,8 +555,8 @@ void Rendering::LoadBackground()
 	// Calculate scaling factors and set sprite size and origin
 	sf::Vector2f backgroundTextureSize = BubbleMath::ToVector2f(m_MainBackgroundTexture->getSize());
 
-	float verticalScale = (float)windowSize.y / backgroundTextureSize.y;
-	float horizontalScale = verticalScale;
+	verticalScale = (float)windowSize.y / backgroundTextureSize.y;
+	horizontalScale = verticalScale;
 	m_MainBackgroundSprite->setSize(backgroundTextureSize);
 	m_MainBackgroundSprite->setScale(horizontalScale, verticalScale);
 	m_MainBackgroundSprite->setOrigin(m_MainBackgroundSprite->getSize().x / 2.f, m_MainBackgroundSprite->getSize().y / 2.f);
