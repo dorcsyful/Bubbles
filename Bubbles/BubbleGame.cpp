@@ -34,9 +34,9 @@ void BubbleGame::PlayUpdate(float a_Delta)
 {
 	m_Gameplay->Update(a_Delta);
 	m_Physics->Update(a_Delta);
+
 	for (size_t i = 0; i < m_Physics->m_BubblesToCombine.size(); i++)
 	{
-		
 		const BubbleObject* bubble1 = m_Physics->m_BubblesToCombine[i].first;
 		auto bubble2 = m_Physics->m_BubblesToCombine[i].second;
 

@@ -14,7 +14,6 @@ public:
 	void SetFrame(int a_Frame);
 	void SetPosition(const sf::Vector2f& a_Position) const { m_Sprite->setPosition(a_Position); }
 	void SetRotation(const float a_Rotation) const { m_Sprite->setRotation(a_Rotation); }
-	void SetScale(const float a_Scale) const { m_Sprite->setScale(std::min(a_Scale,1.0f), std::min(a_Scale, 1.0f)); }
 
 	void SetTotalTime(float a_Time) { m_FrameTime = a_Time; }
 

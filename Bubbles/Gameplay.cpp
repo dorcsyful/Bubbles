@@ -1,7 +1,4 @@
 #include "Gameplay.h"
-
-#include <random>
-
 #include "BubbleMath.h"
 #include "Random.h"
 
@@ -81,7 +78,6 @@ void Gameplay::Reset(float a_WindowWidth)
 
 EBUBBLE_TYPE Gameplay::GenerateRandom()
 {
-	std::uniform_int_distribution<> dis(0, 99);
 
 	int randomNum = Random::getInstance().GetRandomNumber(0,100);
 
