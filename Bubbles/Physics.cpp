@@ -99,7 +99,7 @@ void Physics::CreateContainerLines()
 {
 	float containerWidth = Settings::get().GetContainerWidth();
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f basePos = sf::Vector2f(m_WindowWidth / 2.f - (containerWidth / 2.f), ((m_WindowHeight - containerHeight) / 1.755f));
+	sf::Vector2f basePos = sf::Vector2f(m_WindowWidth / 2.f - (containerWidth / 2.f), ((m_WindowHeight - containerHeight) / 1.75f));
 
 	sf::Vector2f start = basePos;
 	float pixelToMeter = Settings::get().GetPixelToMeter();
@@ -130,8 +130,7 @@ void Physics::CreateContainerLines()
 	temp = std::make_unique<LineObject>(start, end);
 	m_Lines.push_back(std::move(temp));
 
-	sf::Vector2f start1 = sf::Vector2f((m_WindowWidth / 2.f) - containerWidth / 2.f, ((m_WindowHeight -
-							containerHeight) / 2.f));
+	sf::Vector2f start1 = basePos;
 	start1.y /= pixelToMeter;
 	start1.x /= pixelToMeter;
 	start1.y *= -1;
