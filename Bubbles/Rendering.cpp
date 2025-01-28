@@ -282,6 +282,7 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 			m_Window->draw(*m_BackgroundExtendedSprite);
 			m_Window->draw(*m_BackgroundSprite);
 			m_BackgroundSprite->setFillColor(sf::Color::White);
+			m_BackgroundExtendedSprite->setFillColor(sf::Color::White);
 			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetPlayState");
 			m_MainBackgroundSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
 			m_MainBackgroundExtendedSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
@@ -294,6 +295,7 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 			m_Window->draw(*m_MainBackgroundExtendedSprite);
 			m_Window->draw(*m_MainBackgroundSprite);
 			m_MainBackgroundSprite->setFillColor(sf::Color::White);
+			m_MainBackgroundExtendedSprite->setFillColor(sf::Color::White);
 			float remainingTime = CallAfterDelay::getInstance().GetRemainingTimeAsPercentage("SetMenuState");
 			m_BackgroundSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
 			m_BackgroundExtendedSprite->setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(remainingTime * 255.f)));
@@ -888,7 +890,7 @@ void Rendering::CreateNextUpSprites()
 	sprite->setScale(Settings::get().GetNextUpWidth() / size.x, factorX);
 	sprite->setPosition(m_CycleSprite->getGlobalBounds().left + 5, m_CycleSprite->getGlobalBounds().top + 10);
 
-	std::unique_ptr<sf::Sprite>& sprite2 = m_NextUpBubbles.at(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
+	std::unique_ptr<sf::Sprite>& sprite2 = m_NextUpBubbles.at(EBUBBLE_TYPE::TYPE_BATH_BOMB);
 	size = BubbleMath::ToVector2f(sprite2->getTexture()->getSize());
 	sprite2->setScale(Settings::get().GetNextUpWidth() / size.x, factorX);
 	sprite2->setPosition(m_CycleSprite->getGlobalBounds().left + 5, m_CycleSprite->getGlobalBounds().top + 10);
@@ -1180,7 +1182,7 @@ void Rendering::CreateStorageSprites()
 	m_InstructionShape->setOrigin(m_InstructionShape->getLocalBounds().width / 2.f, m_InstructionShape->getLocalBounds().height / 2.f);
 	m_InstructionShape->setScale(sf::Vector2f(0.35f * Settings::get().GetScale(), 0.35f * Settings::get().GetScale()));
 
-	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width / 1.5f + m_InstructionShape->getGlobalBounds().width / 2.f;
+	float x = m_StoredSprite->getPosition().x + m_StoredSprite->getGlobalBounds().width / 1.3f + m_InstructionShape->getGlobalBounds().width / 2.f;
 	m_InstructionShape->setPosition(x, m_StoredSprite->getPosition().y);
 }
 
