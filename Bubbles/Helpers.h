@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 #include <chrono>
-#include <iostream>
 class CallAfterDelay {
 
     struct FunctionData {
@@ -80,7 +79,7 @@ public:
 		    if(current.m_Name == a_Name)
 		    {
 				auto duration = std::chrono::duration_cast<std::chrono::milliseconds>((current.m_TargetTime - std::chrono::steady_clock::now())).count();
-				return  ((duration / 1000.f) / current.m_Delay);
+				return  (static_cast<float>(duration) / 1000.f) / static_cast<float>(current.m_Delay);
 		    }
 	    }
 		return 0;

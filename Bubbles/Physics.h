@@ -30,7 +30,7 @@ public:
 	void ShakeBox(float shakeIntensity, float decayFactor) {
 		for (auto& circle : m_GameObjects) {
 			// Generate random force
-			float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14;
+			float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * 3.14f;
 			float forceMagnitude = shakeIntensity * static_cast<float>(rand()) / RAND_MAX;
 			float forceX = forceMagnitude * cos(angle);
 			float forceY = forceMagnitude * sin(angle);

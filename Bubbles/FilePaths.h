@@ -5,6 +5,7 @@
 #define SPIKY_BUBBLE_FILENAME "Assets/Shapes/spiky.png"
 
 #define NEXT_UP_PATH "Assets/Shapes/NextUp/"
+#define NEXT_UP_FILENAME "Assets/Shapes/NextUp/upnext.png"
 #define NEXT_UP_SPECIAL_PATH "Assets/Shapes/NextUp/special.png"
 
 #define STORAGE_PATH "Assets/Shapes/Storage/"

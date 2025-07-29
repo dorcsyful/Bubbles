@@ -12,7 +12,7 @@ public:
 
     Particle(const unsigned int a_Count) :
         m_Particles(a_Count),
-        m_Vertices(sf::Points, a_Count),
+        m_Vertices(sf::PrimitiveType::Points,a_Count),
         m_Lifetime(sf::seconds(3.f)),
         m_emitter(0.f, 0.f)
     {
@@ -40,7 +40,7 @@ public:
 
             // update the alpha (transparency) of the particle according to its lifetime
             float ratio = p.m_Lifetime.asSeconds() / m_Lifetime.asSeconds();
-            m_Vertices[i].color.a = static_cast<sf::Uint8>(ratio * 255);
+            m_Vertices[i].color.a = static_cast<uint8_t>(ratio * 255);
         }
     }
 

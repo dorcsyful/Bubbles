@@ -13,19 +13,17 @@ void Audio::Initialize()
 
 	m_BackgroundMusic = std::make_unique<sf::Music>();
 	m_BackgroundMusic->openFromFile(AUDIO_BACKGROUND_MUSIC);
-	m_BackgroundMusic->setLoop(true);
+	m_BackgroundMusic->setPitch(1.0f); // Set pitch to normal speed
+	m_BackgroundMusic->setLooping(true);
 	m_BackgroundMusic->setVolume(30);
 	m_BackgroundMusic->play();
 
-	m_Click = std::make_unique<sf::Sound>();
-	m_Click->setBuffer(*m_ClickBuffer);
+	m_Click = std::make_unique<sf::Sound>(*m_ClickBuffer);
 
-	m_BubbleDrop = std::make_unique<sf::Sound>();
-	m_BubbleDrop->setBuffer(*m_BubbleDropBuffer);
+	m_BubbleDrop = std::make_unique<sf::Sound>(*m_BubbleDropBuffer);
 
 	m_SadGameOverBuffer = std::make_unique<sf::SoundBuffer>();
 	m_SadGameOverBuffer->loadFromFile(AUDIO_SAD_GAME_OVER);
 
-	m_SadGameOver = std::make_unique<sf::Sound>();
-	m_SadGameOver->setBuffer(*m_SadGameOverBuffer);
+	m_SadGameOver = std::make_unique<sf::Sound>(*m_SadGameOverBuffer);
 }

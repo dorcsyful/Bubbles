@@ -12,7 +12,7 @@ AnimatedSprite::AnimatedSprite(sf::Texture* a_Texture, const float a_TotalTime, 
 	m_Sprite = std::make_unique<sf::Sprite>(*m_Texture);
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;
-	m_Sprite->setTextureRect(sf::IntRect(0, 0, size.x, size.y));
+	m_Sprite->setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(size.x, size.y)));
 	m_LastSwitch = std::chrono::steady_clock::now();
 	m_Animate = a_Animate;
 	m_IsLooping = a_Looping;
@@ -28,7 +28,7 @@ void AnimatedSprite::SetNextFrame(const std::chrono::steady_clock::time_point a_
 	}
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;
-	m_Sprite->setTextureRect(sf::IntRect(size.x * m_CurrentFrame, 0, size.x, size.y));
+	m_Sprite->setTextureRect(sf::IntRect(sf::Vector2i(size.x * m_CurrentFrame, 0), sf::Vector2i(size.x, size.y)));
 	m_LastSwitch = a_Now;
 }
 
@@ -46,7 +46,7 @@ void AnimatedSprite::SetFrame(int a_Frame)
 {
 	sf::Vector2i size = static_cast<sf::Vector2i>(m_Texture->getSize());
 	size.x /= m_FrameCount;
-	m_Sprite->setTextureRect(sf::IntRect(size.x * a_Frame, 0, size.x, size.y));
+	m_Sprite->setTextureRect(sf::IntRect(sf::Vector2i(size.x * a_Frame, 0),sf::Vector2i( size.x, size.y)));
 
 }
 

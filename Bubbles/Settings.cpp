@@ -126,8 +126,8 @@ void Settings::SetSoundEnabled(float a_Music, float a_Effects)
     std::vector<std::string> lines;
     std::ifstream infile("Assets/Settings.save");
     std::string line;
-    int musicLineIndex = INFINITY;
-    int effectsLineIndex = INFINITY;
+    int musicLineIndex = static_cast<int>(INFINITY);
+    int effectsLineIndex = static_cast<int>(INFINITY);
     int counter = 0;
     while (getline(infile, line)) {
         if(line.starts_with("MUSIC_VOLUME|"))

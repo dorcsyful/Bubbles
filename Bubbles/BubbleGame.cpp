@@ -117,7 +117,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 void BubbleGame::RestartGame()
 {
-	m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
+	m_Gameplay->Reset(static_cast<float>(m_Rendering->GetWindow()->getSize().x));
 	m_Physics->Reset();
 	m_Rendering->Reset();
 	m_Wrapper->Clear();
@@ -138,36 +138,35 @@ void BubbleGame::Update()
 		}
 		float delta = dtClock.restart().asSeconds();
 
-		sf::Event event;
-		while (m_Rendering->GetWindow()->pollEvent(event))
+		while (const std::optional event = m_Rendering->GetWindow()->pollEvent())
 		{
-
-			if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			sf::Event value = event.value();
+			if(event->is<sf::Event::MouseButtonPressed>()&& event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left)
 			{
 				m_IsMouseButtonPressed = true;
 			}
-			else if(event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+			else if(event->is<sf::Event::MouseButtonReleased>() && event->getIf<sf::Event::MouseButtonReleased>()->button == sf::Mouse::Button::Left)
 			{
 				m_IsMouseButtonPressed = false;
 			}
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-				m_Rendering->GetWindow()->close();
+			//if (event->is<sf::Event::Closed>())
+			//	m_Rendering->GetWindow()->close();
 
 			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
-				PlayInput(event,delta);
+				PlayInput(value,delta);
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
-				MenuInput(event);
+				MenuInput(value);
 			}
 			else if(m_State == EGAME_STATE::STATE_GAME_OVER_ANIMATION)
 			{
-				GameOverAnimationInput(event);
+				GameOverAnimationInput(value);
 			}
 			else if(m_State == EGAME_STATE::STATE_GAME_OVER)
 			{
-				GameOverInput(event);
+				GameOverInput(value);
 			}
 			else if(m_State == EGAME_STATE::STATE_HIGH_SCORE)
 			{
@@ -180,11 +179,11 @@ void BubbleGame::Update()
 			else if(m_State == EGAME_STATE::STATE_MENU_CONFIRM || m_State == EGAME_STATE::STATE_RESTART_CONFIRM
 				|| m_State == EGAME_STATE::STATE_EXIT_CONFIRM || m_State == EGAME_STATE::STATE_SETTINGS_CONFIRM)
 			{
-				ConfirmInput(event);
+				ConfirmInput(value);
 			}
 			else if(m_State == EGAME_STATE::STATE_SETTINGS)
 			{
-				SettingsInput(event);
+				SettingsInput(value);
 			}
 			
 		}
@@ -265,7 +264,7 @@ void BubbleGame::BackToMenu()
 {
 	m_Rendering->Reset();
 		
-	m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
+	m_Gameplay->Reset(static_cast<float>(m_Rendering->GetWindow()->getSize().x));
 	m_Physics->Reset();
 	m_Wrapper->Clear();
 
@@ -299,19 +298,49 @@ void BubbleGame::NextComboText()
 
 void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 {
-	if(!m_IsSpacePressed && a_Event.type == sf::Event::KeyPressed && a_Event.key.code == sf::Keyboard::Space)
-	{
-		m_IsSpacePressed = true;
-		if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
+
+	if (const auto* keyEvent = a_Event.getIf<sf::Event::KeyPressed>()) {
+		sf::Keyboard::Key pressedCode = keyEvent->code;
+
+		if (pressedCode == sf::Keyboard::Key::Space && !m_IsSpacePressed) 
 		{
-			m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
-			AddBubble();
-			m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
+			m_IsSpacePressed = true;
+			if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
+			{
+				m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
+				AddBubble();
+				m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
+			}			
 		}
-	}
-	if(m_IsSpacePressed && a_Event.type == sf::Event::KeyReleased && a_Event.key.code == sf::Keyboard::Space)
-	{
-		m_IsSpacePressed = false;
+		else if (pressedCode == sf::Keyboard::Key::D || pressedCode == sf::Keyboard::Key::Right)
+		{
+			m_Gameplay->UpdateMoveDirection(1.f);
+		}
+		else if (pressedCode == sf::Keyboard::Key::A || pressedCode == sf::Keyboard::Key::Left)
+		{
+			m_Gameplay->UpdateMoveDirection(-1.f);
+		}
+		else if (pressedCode == sf::Keyboard::Key::S || pressedCode == sf::Keyboard::Key::Down && !m_IsStorageButtonPressed)
+		{
+			if (m_Gameplay->GetStorage() != EBUBBLE_TYPE::TYPE_NULL)
+			{
+				std::cout << "Storage full! \n";
+			}
+			else
+			{
+				m_IsStorageButtonPressed = true;
+				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
+
+				m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
+			}
+		}
+		else if ((pressedCode == sf::Keyboard::Key::W || pressedCode == sf::Keyboard::Key::Up) && !m_IsStorageButtonPressed)
+		{
+			m_IsStorageButtonPressed = true;
+			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
+
+			m_Gameplay->PullUpStorage();
+		}
 	}
 
 	if(m_IsMouseButtonPressed)
@@ -329,78 +358,44 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_RESTART_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_RESTART_CONFIRM); },
 				"SetConfirmState2", 0.1f, false);
 
-			//RestartGame();
+			RestartGame();
 		}
 	}
 
-	if (a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::A
-		|| a_Event.key.code == sf::Keyboard::Left || a_Event.key.code == sf::Keyboard::Right))
-	{
-		m_Gameplay->UpdateMoveDirection(0.f);
-	}
 
-	if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::D || a_Event.key.code == sf::Keyboard::Right))
+	if (const auto* keyEvent = a_Event.getIf<sf::Event::KeyReleased>()) 
 	{
-		m_Gameplay->UpdateMoveDirection(1.f);
-	}
-	else if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::A || a_Event.key.code == sf::Keyboard::Left))
-	{
-		m_Gameplay->UpdateMoveDirection(-1.f);
-	}
+		sf::Keyboard::Key releasedCode = keyEvent->code;
 
-	if(!m_IsStorageButtonPressed)
-	{
-		if(a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::S || a_Event.key.code == sf::Keyboard::Down))
+		if (releasedCode == sf::Keyboard::Key::Space && m_IsSpacePressed)
 		{
-			if(m_Gameplay->GetStorage() != EBUBBLE_TYPE::TYPE_NULL)
-			{
-				std::cout << "Storage full! \n";
-			}
-			else
-			{
-				m_IsStorageButtonPressed = true;
-				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), true);
-
-				m_Gameplay->AddToStorage(m_Gameplay->GetCurrentBubble());
-			}
+			m_IsSpacePressed = false;
 		}
-
-		if (a_Event.type == sf::Event::KeyPressed && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::Up))
+		else if (releasedCode == sf::Keyboard::Key::D || releasedCode == sf::Keyboard::Key::A
+			|| releasedCode == sf::Keyboard::Key::Left || releasedCode == sf::Keyboard::Key::Right)
 		{
-			if (m_Gameplay->GetStorage() == EBUBBLE_TYPE::TYPE_NULL)
-			{
-				std::cout << "Storage empty! \n";
-			}
-			else
-			{
-				m_IsStorageButtonPressed = true;
-				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
-
-				m_Gameplay->PullUpStorage();
-			}
+			m_Gameplay->UpdateMoveDirection(0.f);
 		}
+		else if (releasedCode == sf::Keyboard::Key::W || releasedCode == sf::Keyboard::Key::S
+			|| releasedCode == sf::Keyboard::Key::Down || releasedCode == sf::Keyboard::Key::Up)
+		{
+			m_IsStorageButtonPressed = false;
+		}
+
+		if (releasedCode == sf::Keyboard::Key::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
+		if (releasedCode == sf::Keyboard::Key::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
+		if (releasedCode == sf::Keyboard::Key::Num2) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FISH);
+		if (releasedCode == sf::Keyboard::Key::Num3) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FROG);
+		if (releasedCode == sf::Keyboard::Key::Num4) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_JELLY);
+		if (releasedCode == sf::Keyboard::Key::Num5) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_KRILL);
+		if (releasedCode == sf::Keyboard::Key::Num6) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SEAL);
+		if (releasedCode == sf::Keyboard::Key::Num7) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SHARK);
+		if (releasedCode == sf::Keyboard::Key::Num8) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SQUID);
+		if (releasedCode == sf::Keyboard::Key::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
+		if (releasedCode == sf::Keyboard::Key::Q) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_BATH_BOMB);
+		if (releasedCode == sf::Keyboard::Key::E) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
+		if (releasedCode == sf::Keyboard::Key::P) GameOver();
 	}
-
-	if ( m_IsStorageButtonPressed && a_Event.type == sf::Event::KeyReleased && (a_Event.key.code == sf::Keyboard::W || a_Event.key.code == sf::Keyboard::S
-		|| a_Event.key.code == sf::Keyboard::Down || a_Event.key.code == sf::Keyboard::Up))
-	{
-		m_IsStorageButtonPressed = false;
-	}
-
-
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num2) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FISH);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num3) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FROG);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num4) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_JELLY);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num5) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_KRILL);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num6) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SEAL);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num7) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SHARK);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num8) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SQUID);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::Q) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_BATH_BOMB);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::E) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
-	if (a_Event.type == sf::Event::KeyPressed && a_Event.key.scancode == sf::Keyboard::Scan::P) GameOver();
 }
 
 void BubbleGame::MenuInput(const sf::Event& a_Event)
@@ -432,7 +427,7 @@ void BubbleGame::MenuInput(const sf::Event& a_Event)
 
 void BubbleGame::GameOverAnimationInput(const sf::Event& a_Event)
 {
-	if (a_Event.type == sf::Event::KeyPressed)
+	if (a_Event.is<sf::Event::KeyPressed>())
 	{
 		m_State = EGAME_STATE::STATE_GAME_OVER;
 	}
@@ -449,7 +444,7 @@ void BubbleGame::GameOverInput(const sf::Event& a_Event)
 		}
 		if (m_Rendering->GetMenuButtons().at("BackToMenu")->DetectClick(mousePosition))
 		{
-			m_Gameplay->Reset(m_Rendering->GetWindow()->getSize().x);
+			m_Gameplay->Reset(static_cast<float>(m_Rendering->GetWindow()->getSize().x));
 			m_Physics->Reset();
 			m_Rendering->Reset();
 			m_Wrapper->Clear();

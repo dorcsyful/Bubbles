@@ -13,7 +13,7 @@ public:
 	void UpdateFrameByTime();
 	void SetFrame(int a_Frame);
 	void SetPosition(const sf::Vector2f& a_Position) const { m_Sprite->setPosition(a_Position); }
-	void SetRotation(const float a_Rotation) const { m_Sprite->setRotation(a_Rotation); }
+	void SetRotation(const float a_Rotation) const { sf::Angle a = sf::degrees(a_Rotation); m_Sprite->setRotation(a); }
 
 	void SetTotalTime(float a_Time) { m_FrameTime = a_Time; }
 

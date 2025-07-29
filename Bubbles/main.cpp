@@ -1,7 +1,7 @@
 #include "Audio.h"
 #include "BubbleGame.h"
 
-int WinMain()
+int main()
 {
 
     Settings::get().LoadSettings();

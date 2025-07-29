@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -39,10 +38,10 @@ public:
 		m_Score->setString(scoreString);
 
 		float size = 0;
-		for(int i = 0; i < scoreString.size(); i++)
+		for(unsigned  i = 0; i < scoreString.size(); i++)
 		{
 			int value = scoreString[i] - '0';
-			size += m_ScoreNumberSprites[value]->getGlobalBounds().width;
+			size += m_ScoreNumberSprites[value]->getGlobalBounds().size.x;
 		}
 
 		m_ScoreStartPosition = m_ScoreTitle->getPosition().x - size / 2;
@@ -51,6 +50,7 @@ public:
 	void UpdateHighScores(const std::vector<unsigned int>& a_Scores) const;
 	void UpdateCombo(unsigned int a_Combo) const
 	{
+
 		if (a_Combo > 5)
 		{
 			std::string basicString = std::to_string(a_Combo);
@@ -61,8 +61,20 @@ public:
 			m_ComboText->setString("");
 		}
 	}
-	void UpScaleComboText(float a_Amount) const { m_ComboText->setScale(a_Amount, a_Amount); }
-	void UpdateNextUp(EBUBBLE_TYPE a_Type) { m_ActiveNextUp = a_Type; }
+	void UpScaleComboText(float a_Amount) const { m_ComboText->setScale(sf::Vector2f(a_Amount, a_Amount)); }
+	void UpdateNextUp(EBUBBLE_TYPE a_Type)
+	{
+		int position = static_cast<int>(m_NextUpBubble->getTexture().getSize().y);
+		if(a_Type == EBUBBLE_TYPE::TYPE_BATH_BOMB || a_Type ==EBUBBLE_TYPE::TYPE_SPIKY_BOMB)
+		{
+			m_NextUpBubble->setTextureRect(sf::IntRect(sf::Vector2(position * 5, 0),sf::Vector2<int>(position, position)));
+		}
+		else
+		{
+			m_NextUpBubble->setTextureRect(sf::IntRect(sf::Vector2(position * static_cast<int>(a_Type), 0), sf::Vector2<int>(position, position)));
+		}
+		m_ActiveNextUp = a_Type;
+	}
 	void UpdateConfirmText(EGAME_STATE a_NewState) const;
 	void UpdateComboPosition(const sf::Vector2f& a_NewPos) const;
 	void UpdateHighScore(const std::vector<unsigned int>& a_Scores) const;
@@ -130,11 +142,11 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_Frame;
 
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
-	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_NextUpTextures;
+	std::unique_ptr<sf::Texture> m_NextUpTexture;
 	EBUBBLE_TYPE m_ActiveBubble;
 	EBUBBLE_TYPE m_ActiveNextUp;
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
-	std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Sprite>> m_NextUpBubbles;
+	std::unique_ptr<sf::Sprite> m_NextUpBubble;
 
 	std::unique_ptr<sf::RectangleShape> m_Line;
 	std::unique_ptr<sf::Texture> m_DuckTexture;
