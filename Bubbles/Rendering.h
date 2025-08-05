@@ -10,7 +10,7 @@
 #include "Checkbox.h"
 #include "Slider.h"
 #include "SpriteWithText.h"
-
+#include <SFML/Graphics/Image.hpp>
 class LineObject;
 
 class Rendering
@@ -226,5 +226,7 @@ private:
 	std::vector<std::unique_ptr<sf::Texture>> m_TutorialTextures;
 	std::vector<std::unique_ptr<sf::RectangleShape>> m_TutorialSprites;
 	std::vector<std::unique_ptr<sf::Text>> m_TutorialTexts;
+
+	std::unique_ptr<sf::Image> m_Icon;
 };
 

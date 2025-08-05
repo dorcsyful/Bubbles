@@ -137,10 +137,18 @@ void BubbleGame::Update()
 			Initialize();
 		}
 		float delta = dtClock.restart().asSeconds();
-
+		
 		while (const std::optional event = m_Rendering->GetWindow()->pollEvent())
 		{
 			sf::Event value = event.value();
+			if(event->is<sf::Event::Closed>())
+			{
+				m_Rendering->GetWindow()->close();
+			}
+			else if(event->is<sf::Event::Resized>())
+			{
+				m_Rendering = std::make_unique<Rendering>(m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y, m_Wrapper->GetRendered());
+			}
 			if(event->is<sf::Event::MouseButtonPressed>()&& event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left)
 			{
 				m_IsMouseButtonPressed = true;
@@ -149,8 +157,8 @@ void BubbleGame::Update()
 			{
 				m_IsMouseButtonPressed = false;
 			}
-			//if (event->is<sf::Event::Closed>())
-			//	m_Rendering->GetWindow()->close();
+			if (event->is<sf::Event::Closed>())
+				m_Rendering->GetWindow()->close();
 
 			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
@@ -336,10 +344,14 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		}
 		else if ((pressedCode == sf::Keyboard::Key::W || pressedCode == sf::Keyboard::Key::Up) && !m_IsStorageButtonPressed)
 		{
-			m_IsStorageButtonPressed = true;
-			m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
+			if(m_Gameplay->GetStorage() !=EBUBBLE_TYPE::TYPE_NULL)
+			{
+				m_IsStorageButtonPressed = true;
+				m_Rendering->StartMoveToStorage(m_Gameplay->GetCurrentBubble(), false);
 
-			m_Gameplay->PullUpStorage();
+				m_Gameplay->PullUpStorage();
+				
+			}
 		}
 	}
 

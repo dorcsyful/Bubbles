@@ -8,7 +8,6 @@ void GameObject::Integrate(float a_Delta)
 {
 	m_Position += m_LinearVelocity * a_Delta;
 	m_Rotation += m_AngularVelocity * a_Delta;
-	IntegrateForces(a_Delta);
 }
 
 void GameObject::IntegrateForces(float a_Delta)
