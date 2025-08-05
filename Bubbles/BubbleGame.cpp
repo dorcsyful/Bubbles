@@ -128,16 +128,18 @@ void BubbleGame::RestartGame()
 
 void BubbleGame::Update()
 {
-	sf::Clock dtClock;
-
-	while(m_Rendering->GetWindow()->isOpen())
+	const float dt = 1.0f / 60.0f;
+	float accumulator = 0.0f;
+	sf::Clock dtClock;	while(m_Rendering->GetWindow()->isOpen())
 	{
 		if(m_State == EGAME_STATE::STATE_START)
 		{
 			Initialize();
 		}
-		float delta = dtClock.restart().asSeconds();
-		
+		float frameTime = dtClock.restart().asSeconds();
+		frameTime = std::min(frameTime, 0.1f); // clamp to avoid spiral of death
+		accumulator += frameTime;
+
 		while (const std::optional event = m_Rendering->GetWindow()->pollEvent())
 		{
 			sf::Event value = event.value();
@@ -162,7 +164,7 @@ void BubbleGame::Update()
 
 			if (m_State == EGAME_STATE::STATE_PLAY )
 			{
-				PlayInput(value,delta);
+				PlayInput(value,dt);
 			}
 			else if(m_State == EGAME_STATE::STATE_MENU)
 			{
@@ -195,14 +197,20 @@ void BubbleGame::Update()
 			}
 			
 		}
-
-		if (m_State == EGAME_STATE::STATE_PLAY)
+		while (accumulator >= dt)
 		{
-			PlayUpdate(delta);
-		}
+			if (m_State == EGAME_STATE::STATE_PLAY)
+			{
+				PlayUpdate(dt);
+			}
 
-		CallAfterDelay::getInstance().LoopThroughFunctions();
-		m_Rendering->Draw(m_State, delta);
+			CallAfterDelay::getInstance().LoopThroughFunctions();
+			accumulator -= dt;
+
+		}
+		float alpha = accumulator / dt;
+
+		m_Rendering->Draw(m_State, alpha);
 	}
 }
 

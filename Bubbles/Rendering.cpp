@@ -1126,8 +1126,8 @@ void Rendering::CreateTutorial()
 void Rendering::CreateStorageSprites()
 {
 	m_StoredSprite = std::make_unique<sf::Sprite>(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
-	sf::Vector2f size = BubbleMath::ToVector2f(m_StoredSprite->getTexture().getSize());
-	m_StoredSprite->setScale(sf::Vector2f((Settings::get().GetStorageBoxWidth() / size.x), Settings::get().GetStorageBoxHeight() / size.y));
+	float size = Settings::get().GetStorageBoxWidth() / m_StoredSprite->getTexture().getSize().x;
+	m_StoredSprite->setScale(sf::Vector2f(size, size));
 
 	sf::FloatRect localBounds = m_StoredSprite->getLocalBounds();
 	m_StoredSprite->setOrigin(sf::Vector2f(localBounds.position.x + localBounds.size.x / 2.f,

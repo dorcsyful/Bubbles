@@ -1,6 +1,6 @@
 #pragma once
 //Gameplay
-#define GRAVITY (-9.81f)
+#define GRAVITY (-19.f)
 
 #define NAIL_LENGTH 0.3f
 #define NAIL_WEIGHT 0.3f
