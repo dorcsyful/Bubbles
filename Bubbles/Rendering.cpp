@@ -87,6 +87,8 @@ void Rendering::FinishMoveToStorage()
 
 void Rendering::PlayDraw(float a_Delta)
 {
+	m_ParticleSystem->Update(a_Delta);
+
 	m_Window->draw(*m_BackgroundExtendedSprite);
 	m_Window->draw(*m_BackgroundSprite);
 
@@ -151,6 +153,7 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_HighScoresInPlay[1]);
 	m_Window->draw(*m_HighScoresInPlay[2]);
 	m_Window->draw(*m_NextUpBubble);
+	m_ParticleSystem->Draw(*m_Window);
 
 }
 
@@ -448,6 +451,9 @@ void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 
 	// Position the text
 	m_ComboText->setPosition(adjustedCoord);
+	sf::Color comboColor = sf::Color::Red;
+	m_ParticleSystem->SpawnBurst(adjustedCoord, 10, comboColor);
+
 
 }
 
@@ -798,7 +804,7 @@ void Rendering::CreateScoreText()
 	position.x += Settings::get().GetContainerWidth();
 	position.y += 100;
 	m_ComboText->setPosition(position);
-
+	m_ParticleSystem = std::make_unique<ParticleSystem>();
 }
 
 void Rendering::CreateHighScoreSprites()

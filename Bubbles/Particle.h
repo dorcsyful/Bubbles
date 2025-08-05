@@ -1,84 +1,40 @@
 #pragma once
-#include <vector>
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
-class Particle : public sf::Drawable, public sf::Transformable
-{
-public:
+struct Particle {
+    sf::CircleShape shape;
+    sf::Vector2f velocity;
+    float lifetime = 2.0f;
+    float age = 0.0f;
 
-    Particle(const unsigned int a_Count) :
-        m_Particles(a_Count),
-        m_Vertices(sf::PrimitiveType::Points,a_Count),
-        m_Lifetime(sf::seconds(3.f)),
-        m_emitter(0.f, 0.f)
-    {
+    Particle(sf::Vector2f position, sf::Color color) {
+        shape.setRadius(10.0f);
+        shape.setFillColor(color);
+        shape.setPosition(position);
+
+        // Random velocity (burst in all directions)
+        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * 3.14159f;
+        float speed = 50.f + static_cast<float>(rand()) / RAND_MAX * 100.f;
+        velocity = sf::Vector2f(std::cos(angle), std::sin(angle)) * speed;
     }
 
-    void SetEmitter(const sf::Vector2f a_Position)
-    {
-        m_emitter = a_Position;
+    bool update(float dt) {
+        age += dt;
+        float t = age / lifetime;
+
+        // Move particle
+        shape.move(velocity * dt);
+
+        // Fade out
+        sf::Color c = shape.getFillColor();
+        c.a = static_cast<uint8_t>(255 * (1.f - t));
+        shape.setFillColor(c);
+
+        return age >= lifetime;
     }
 
-    void Update(const sf::Time a_Elapsed)
-    {
-        for (std::size_t i = 0; i < m_Particles.size(); ++i)
-        {
-            // update the particle lifetime
-            SingularParticle& p = m_Particles[i];
-            p.m_Lifetime -= a_Elapsed;
-
-            // if the particle is dead, respawn it
-            if (p.m_Lifetime <= sf::Time::Zero)
-                ResetParticle(i);
-
-            // update the position of the corresponding vertex
-            m_Vertices[i].position += p.m_Velocity * a_Elapsed.asSeconds();
-
-            // update the alpha (transparency) of the particle according to its lifetime
-            float ratio = p.m_Lifetime.asSeconds() / m_Lifetime.asSeconds();
-            m_Vertices[i].color.a = static_cast<uint8_t>(ratio * 255);
-        }
+    void draw(sf::RenderWindow& window) {
+        window.draw(shape);
     }
-
-private:
-    void draw(sf::RenderTarget& a_Target, sf::RenderStates a_States) const override
-    {
-        // apply the transform
-        a_States.transform *= getTransform();
-
-        // our particles don't use a texture
-        a_States.texture = nullptr;
-
-        // draw the vertex array
-        a_Target.draw(m_Vertices, a_States);
-    }
-
-private:
-
-    struct SingularParticle
-    {
-        sf::Vector2f m_Velocity;
-        sf::Time m_Lifetime;
-    };
-
-    void ResetParticle(const std::size_t a_Index)
-    {
-        // give a random velocity and lifetime to the particle
-        float angle = static_cast<float>(std::rand() % 360) * 3.14f / 180.f;
-        float speed = static_cast<float>(std::rand() % 50) + 50.f;
-        m_Particles[a_Index].m_Velocity = sf::Vector2f(cosf(angle) * speed, sinf(angle) * speed);
-        m_Particles[a_Index].m_Lifetime = sf::milliseconds((std::rand() % 2000) + 1000);
-
-        // reset the position of the corresponding vertex
-        m_Vertices[a_Index].position = m_emitter;
-    }
-
-    std::vector<SingularParticle> m_Particles;
-    sf::VertexArray m_Vertices;
-    sf::Time m_Lifetime;
-    sf::Vector2f m_emitter;
 };

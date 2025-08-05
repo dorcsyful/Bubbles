@@ -11,6 +11,7 @@
 #include "Slider.h"
 #include "SpriteWithText.h"
 #include <SFML/Graphics/Image.hpp>
+#include "ParticleSystem.h"
 class LineObject;
 
 class Rendering
@@ -140,7 +141,7 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_Container;
 	std::unique_ptr<sf::Texture> m_FrameTexture;
 	std::unique_ptr<sf::RectangleShape> m_Frame;
-
+	std::unique_ptr<ParticleSystem> m_ParticleSystem;
 	std::map<EBUBBLE_TYPE,std::unique_ptr<sf::Texture>> m_BubbleTextures;
 	std::unique_ptr<sf::Texture> m_NextUpTexture;
 	EBUBBLE_TYPE m_ActiveBubble;
