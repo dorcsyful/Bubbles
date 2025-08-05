@@ -9,7 +9,7 @@
 class Gameplay
 {
 public:
-	Gameplay(float a_WindowWidth) {
+	explicit Gameplay(float a_WindowWidth) {
 		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
 		m_NextBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
 		m_ContainerEdges[0] = (a_WindowWidth / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
@@ -36,7 +36,7 @@ public:
 	void UpdateMoveDirection(float a_Direction) { m_MoveDirection = a_Direction; }
 	void Reset(float a_WindowWidth);
 
-	EBUBBLE_TYPE GetStorage() { return m_Storage; }
+	EBUBBLE_TYPE GetStorage() const { return m_Storage; }
 	void AddToStorage(EBUBBLE_TYPE a_Type)
 	{
 		m_Storage = a_Type;

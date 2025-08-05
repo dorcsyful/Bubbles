@@ -383,8 +383,10 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		{
 			m_IsSpacePressed = false;
 		}
-		else if (releasedCode == sf::Keyboard::Key::D || releasedCode == sf::Keyboard::Key::A
-			|| releasedCode == sf::Keyboard::Key::Left || releasedCode == sf::Keyboard::Key::Right)
+		else if ((releasedCode == sf::Keyboard::Key::D && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+			|| (releasedCode == sf::Keyboard::Key::A && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+			|| (releasedCode == sf::Keyboard::Key::Left && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) 
+			|| (releasedCode == sf::Keyboard::Key::Right && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)))
 		{
 			m_Gameplay->UpdateMoveDirection(0.f);
 		}
