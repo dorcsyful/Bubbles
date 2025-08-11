@@ -5,14 +5,14 @@
 struct Particle {
     sf::CircleShape shape;
     sf::Vector2f velocity;
-    float lifetime = 2.0f;
+    float lifetime = 1.0f;
     float age = 0.0f;
 
-    Particle(sf::Vector2f position, sf::Color color) {
-        shape.setRadius(10.0f);
-        shape.setFillColor(color);
+    Particle(sf::Vector2f position, sf::Texture* a_Texture) {
+        shape.setTexture(a_Texture);
+    	shape.setRadius(20.0f);
         shape.setPosition(position);
-
+        
         // Random velocity (burst in all directions)
         float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * 3.14159f;
         float speed = 50.f + static_cast<float>(rand()) / RAND_MAX * 100.f;

@@ -36,7 +36,7 @@
 #define PLAY_MODE_SCOREBOARD "Assets/PlayMode/scoreboard.png"
 #define PLAY_MODE_SCORE_TITLE_FILENAME "Assets/PlayMode/TextScore.png"
 #define PLAY_MODE_HIGHSCORE_TITLE_FILENAME "Assets/PlayMode/TextHighScores.png"
-
+#define COMBO_STAR "Assets/PlayMode/ComboStar.png"
 #define CONTAINER_FILENAME "Assets/PlayMode/ContainerBackground.png"
 #define FRAME_FILENAME "Assets/PlayMode/ContainerFrame.png"
 #define DUCK_FILENAME "Assets/PlayMode/Duck.png"

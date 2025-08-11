@@ -789,14 +789,18 @@ void Rendering::CreateScoreText()
 	m_ScoreBackgroundTexture->loadFromFile(GENERIC_BACKGROUND_FILENAME);
 
 	m_Score = std::make_unique<sf::Text>(*m_Font);
-	m_Score->setFillColor(sf::Color::Black);
+	m_Score->setFillColor(sf::Color(201,180,211));
+	m_ComboText->setOutlineColor(sf::Color::White);
+	m_ComboText->setOutlineThickness(4);
 	m_Score->setCharacterSize(70);
 	m_Score->setString("0");
 	m_Score->setPosition(position);
 
 	m_ComboText = std::make_unique<sf::Text>(*m_Font);
 	m_ComboText->setCharacterSize(40);
-	m_ComboText->setFillColor(sf::Color::Black);
+	m_ComboText->setFillColor(sf::Color(201, 180, 211));
+	m_ComboText->setOutlineColor(sf::Color::White);
+	m_ComboText->setOutlineThickness(4);
 	m_ComboText->setStyle(sf::Text::Bold);
 	m_ComboText->setString("Combo:\n 0");
 	m_ComboText->setOrigin(sf::Vector2f(m_ComboText->getGlobalBounds().position.y + m_ComboText->getGlobalBounds().size.y, 0));
