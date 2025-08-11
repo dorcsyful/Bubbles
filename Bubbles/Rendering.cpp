@@ -23,7 +23,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	if(Settings::get().IsFullscreen())
 	{
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(sf::VideoMode::getDesktopMode().size.x, sf::VideoMode::getDesktopMode().size.y)), "Bubbles!",
-													 sf::Style::None,sf::State::Fullscreen, context);
+													 sf::Style::Default,sf::State::Fullscreen, context);
 		Settings::get().IncreaseIfFullScreen(static_cast<float>(sf::VideoMode::getDesktopMode().size.x), static_cast<float>(sf::VideoMode::getDesktopMode().size.y));
 
 	}
@@ -67,7 +67,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	m_Window->setIcon(m_Icon->getSize(), m_Icon->getPixelsPtr());
 
 }
-
 
 void Rendering::FinishMoveToStorage()
 {
@@ -469,6 +468,12 @@ void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
 	m_HighScoresInPlay[2]->setString(std::to_string(a_Scores[2]));
 }
 
+void Rendering::ResetAllBackground()
+{
+	m_MainBackgroundSprite->setFillColor(sf::Color(255, 255, 255, 255));
+	m_BackgroundSprite->setFillColor(sf::Color::White);
+}
+
 void Rendering::StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage)
 {
 	if (a_Type == EBUBBLE_TYPE::TYPE_NULL)
@@ -790,8 +795,8 @@ void Rendering::CreateScoreText()
 
 	m_Score = std::make_unique<sf::Text>(*m_Font);
 	m_Score->setFillColor(sf::Color(201,180,211));
-	m_ComboText->setOutlineColor(sf::Color::White);
-	m_ComboText->setOutlineThickness(4);
+	m_Score->setOutlineColor(sf::Color::White);
+	m_Score->setOutlineThickness(4);
 	m_Score->setCharacterSize(70);
 	m_Score->setString("0");
 	m_Score->setPosition(position);
