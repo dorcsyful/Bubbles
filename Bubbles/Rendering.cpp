@@ -166,14 +166,12 @@ void Rendering::MenuDraw() const
 	m_MenuButtons.at("High_Score")->DetectHover(mousePosition);
 	m_MenuButtons.at("Settings")->DetectHover(mousePosition);
 	m_MenuButtons.at("Exit")->DetectHover(mousePosition);
-	m_MenuButtons.at("How to play")->DetectHover(mousePosition);
 
 
 	m_MenuButtons.at("Play")->Draw(*m_Window);
 	m_MenuButtons.at("High_Score")->Draw(*m_Window);
 	m_MenuButtons.at("Settings")->Draw(*m_Window);
 	m_MenuButtons.at("Exit")->Draw(*m_Window);
-	m_MenuButtons.at("How to play")->Draw(*m_Window);
 }
 
 void Rendering::GameOverAnimationDraw() const
@@ -268,19 +266,6 @@ void Rendering::SettingsDraw() const
 	m_MenuButtons.at("Revert")->Draw(*m_Window);
 
 	m_Window->draw(*m_SettingsTitle);
-}
-
-void Rendering::HowToDraw() const
-{
-	for(auto& current : m_TutorialSprites)
-	{
-		m_Window->draw(*current);
-	}
-
-	for (auto& current : m_TutorialTexts)
-	{
-		m_Window->draw(*current);
-	}
 }
 
 void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
@@ -640,13 +625,26 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 
 void Rendering::CreatePointer()
 {
+	m_LineTexture = std::make_unique<sf::Texture>();
+	m_LineTexture->loadFromFile(LINE_FILENAME);
 	float containerHeight = Settings::get().GetContainerHeight();
 	sf::Vector2f position =
 		sf::Vector2f(m_Container->getGlobalBounds().position.x, m_Container->getGlobalBounds().position.y);
-	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f(5 / 2.f, containerHeight));
-	m_Line->setFillColor(sf::Color(255, 0, 0, 255));
+	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f((5 / 2.f) * Settings::get().GetScale(), containerHeight));
+	m_Line->setTexture(m_LineTexture.get());
 	m_Line->setPosition(position);
 
+	sf::Vector2f shapeSize = m_Line->getSize();
+	sf::Vector2f textureSize = BubbleMath::ToVector2f(m_LineTexture->getSize());
+	float scaleX = shapeSize.x / textureSize.x;
+	sf::IntRect intRect = sf::IntRect(
+		sf::Vector2i(0, 0),
+		sf::Vector2i(static_cast<int>(shapeSize.x / scaleX),
+		static_cast<int>(shapeSize.y / scaleX))
+	);
+	m_Line->setTextureRect(intRect);
+	m_LineTexture->setRepeated(true);
+	m_Line->setTexture(m_LineTexture.get());
 	for(size_t i = 0; i < 12; i++)
 	{
 		std::unique_ptr<AnimatedSprite> newSprite;
@@ -755,13 +753,6 @@ void Rendering::CreateMenuButtonSprites()
 	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton)));
-
-	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
-	newButton->SetText("How to play");
-	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
-	newButton->SetScale(buttonScale);
-	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("How to play", std::move(newButton)));
 
 	basePos.x += m_Title->getSize().x / 2;
 	basePos.y = m_Title->getPosition().y + m_Title->getSize().y + 10;
@@ -1123,19 +1114,6 @@ void Rendering::CreateSettings()
 
 	CreateSettingsButtons();
 
-}
-
-void Rendering::CreateTutorial()
-{
-	m_TutorialTextures = std::vector<std::unique_ptr<sf::Texture>>(2);
-	m_TutorialTextures[0] = std::make_unique<sf::Texture>();
-	m_TutorialTextures[0]->loadFromFile(TUTORIAL_ONE_FILENAME);
-	m_TutorialTextures[1] = std::make_unique<sf::Texture>();
-	m_TutorialTextures[1]->loadFromFile(TUTORIAL_TWO_FILENAME);
-
-	m_TutorialSprites = std::vector<std::unique_ptr<sf::RectangleShape>>(2);
-	m_TutorialSprites[0] = std::make_unique<sf::RectangleShape>();
-	m_TutorialSprites[0]->setTexture(m_TutorialTextures[0].get());
 }
 
 void Rendering::CreateStorageSprites()

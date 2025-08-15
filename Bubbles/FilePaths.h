@@ -3,7 +3,7 @@
 #define BUBBLE_PATH "Assets/Shapes/"
 #define BATH_BUBBLE_FILENAME "Assets/Shapes/bath.png"
 #define SPIKY_BUBBLE_FILENAME "Assets/Shapes/spiky.png"
-
+#define LINE_FILENAME "Assets/PlayMode/dottedline.png"
 #define NEXT_UP_PATH "Assets/Shapes/NextUp/"
 #define NEXT_UP_FILENAME "Assets/Shapes/NextUp/upnext.png"
 #define NEXT_UP_SPECIAL_PATH "Assets/Shapes/NextUp/special.png"

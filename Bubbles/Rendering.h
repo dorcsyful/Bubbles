@@ -149,6 +149,7 @@ private:
 	std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
 	std::unique_ptr<sf::Sprite> m_NextUpBubble;
 
+	std::unique_ptr<sf::Texture> m_LineTexture;
 	std::unique_ptr<sf::RectangleShape> m_Line;
 	std::unique_ptr<sf::Texture> m_DuckTexture;
 	std::unique_ptr<AnimatedSprite> m_Duck;
@@ -222,11 +223,6 @@ private:
 	std::vector<std::unique_ptr<Slider>> m_SettingSliders;
 	std::unique_ptr<sf::Texture> m_CheckboxTexture;
 	std::unique_ptr<Checkbox> m_FullscreenCheckbox;
-
-	//HowTo
-	std::vector<std::unique_ptr<sf::Texture>> m_TutorialTextures;
-	std::vector<std::unique_ptr<sf::RectangleShape>> m_TutorialSprites;
-	std::vector<std::unique_ptr<sf::Text>> m_TutorialTexts;
 
 	std::unique_ptr<sf::Image> m_Icon;
 };
