@@ -278,7 +278,7 @@ void BubbleGame::BackToMenu()
 	m_Wrapper->Clear();
 
 	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_LOADING; }, "SetLoadingState", 0.1f, false);
-	CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
+	CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->ResetAllBackground(); m_State = EGAME_STATE::STATE_MENU;  }, "SetMenuState", Settings::get().GetLoadTime(), false);
 }
 
 void BubbleGame::NextComboText()
@@ -464,7 +464,7 @@ void BubbleGame::GameOverInput(const sf::Event& a_Event)
 			m_Rendering->Reset();
 			m_Wrapper->Clear();
 
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
+			CallAfterDelay::getInstance().AddFunction([this]() { m_Rendering->ResetAllBackground(); m_State = EGAME_STATE::STATE_MENU; }, "BackToMenu", 0.2f, false);
 
 		}
 	}

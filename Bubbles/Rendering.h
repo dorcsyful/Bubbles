@@ -95,7 +95,6 @@ private:
 	void GameOverDraw() const;
 	void ConfirmationDraw() const;
 	void SettingsDraw() const;
-	void HowToDraw() const;
 
 	void LoadBackground();
 	void LoadBubbleTextures();
@@ -117,7 +116,6 @@ private:
 	void CreateConfirmationWindow();
 	void CreateSettingsButtons();
 	void CreateSettings();
-	void CreateTutorial();
 	void CreateStorageSprites();
 	void CreateCycleBottle();
 	void CreateScoreNumberSprites();
