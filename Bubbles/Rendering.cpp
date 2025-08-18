@@ -1082,7 +1082,7 @@ void Rendering::CreateSettings()
 
 	m_CheckboxTexture = std::make_unique<sf::Texture>();
 	m_CheckboxTexture->loadFromFile(CHECKBOX_FILENAME);
-	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50);
+	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50 *Settings::get().GetScale());
 	m_FullscreenCheckbox->SetEnableCheckbox(Settings::get().IsFullscreen());
 
 
@@ -1105,7 +1105,7 @@ void Rendering::CreateSettings()
 	max = std::max(max, lengths[2]);
 	m_SettingsText[0]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[0]->GetSliderPosition().y));
 	m_SettingsText[1]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[1]->GetSliderPosition().y));
-	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y));
+	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y + 25 * Settings::get().GetScale()));
 
 
 	CreateSettingsButtons();

@@ -12,7 +12,7 @@ Checkbox::Checkbox(const std::unique_ptr<sf::Texture>& a_Texture, const sf::Vect
 	m_Sprite->setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(spriteSize.x / 4, spriteSize.y)));
 	auto vector2 = BubbleMath::ToVector2f(a_Texture->getSize());
 	m_Sprite->setScale(sf::Vector2f(a_Width / (vector2.x / 4), a_Width / vector2.y));
-	m_Sprite->setOrigin(sf::Vector2f(m_Sprite->getLocalBounds().size.x / 2, m_Sprite->getLocalBounds().size.y / 2));
+	//m_Sprite->setOrigin(sf::Vector2f(m_Sprite->getLocalBounds().size.x / 2, m_Sprite->getLocalBounds().size.y / 2));
 	m_Sprite->setPosition(a_Position);
 	m_IsChecked = false;
 	m_IsHovered = false;
