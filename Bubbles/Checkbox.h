@@ -10,6 +10,7 @@ public:
 	Checkbox(const std::unique_ptr<sf::Texture>& a_Texture, const sf::Vector2f& a_Position, float a_Width);
 
 	void SetEnableCheckbox(bool a_Enable);
+	sf::Vector2f GetPosition() { return m_Sprite->getPosition(); }
 	bool DetectClick(const sf::Vector2f& a_MousePosition);
 	void DetectHover(const sf::Vector2f& a_MousePosition) const;
 	bool IsChecked() const { return m_IsChecked; }

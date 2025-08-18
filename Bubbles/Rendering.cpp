@@ -1059,9 +1059,6 @@ void Rendering::CreateSettingsButtons()
 
 void Rendering::CreateSettings()
 {
-
-	m_SettingSliders = std::vector<std::unique_ptr<Slider>>();
-	m_SettingsText = std::vector<std::unique_ptr<sf::Text>>();
 	m_SettingsTexture = std::make_unique<sf::Texture>();
 	m_SettingsTexture->loadFromFile(SETTINGS_FILENAME);
 
@@ -1075,42 +1072,41 @@ void Rendering::CreateSettings()
 	m_SettingsTitle->setOrigin(sf::Vector2f(m_SettingsTitle->getSize().x / 2, m_SettingsTitle->getSize().y / 2));
 	m_SettingsTitle->setPosition(m_Title->getPosition());
 
-	sf::Vector2f position = sf::Vector2f(m_SettingsTitle->getPosition().x, m_MenuButtons.at("Play")->GetPosition().y);
-	sf::Vector2f size = sf::Vector2f(titleSize.x / 2, titleSize.y / 10);
-	sf::Color baseColor = sf::Color(42, 112, 145, 255);
-	sf::Color hoverColor = sf::Color(188, 236, 244, 255);
-	sf::Color clickedColor = sf::Color(209, 226, 231, 255);
-	sf::Color sliderColor = sf::Color(128, 128, 128, 255);
-	m_SettingSliders.push_back(std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor));
-	position.y += 100;
-	m_SettingSliders.push_back(std::make_unique<Slider>(position, size, baseColor, hoverColor, clickedColor, sliderColor));
+	sf::Vector2f position = sf::Vector2f(m_SettingsTitle->getPosition().x, m_SettingsTitle->getPosition().y + m_SettingsTitle->getGlobalBounds().size.y / 2.f);
+	m_SettingSliders = std::vector<std::unique_ptr<Slider>>();
+	m_SettingSliders.push_back(std::make_unique<Slider>(position, 100 * Settings::get().GetScale()));
+	position.y += m_SettingsTitle->getGlobalBounds().size.y / 2.f;
+	m_SettingSliders.push_back(std::make_unique<Slider>(position, 100 * Settings::get().GetScale()));
 
-	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Music volume:"));
-	sf::Vector2f origin = sf::Vector2f(0, static_cast<float>(m_SettingsText[0]->getCharacterSize()) / 1.5f);
-	sf::Vector2f textPosition = sf::Vector2f(m_SettingsTitle->getPosition().x - m_SettingsTitle->getSize().x / 2, position.y - 100);
+	position.y += m_SettingsTitle->getGlobalBounds().size.y / 2.f;
 
-	m_SettingsText[0]->setOrigin(origin);
-	m_SettingsText[0]->setPosition(textPosition);
-	m_SettingsText[0]->setFillColor(sf::Color::Black);
-
-	textPosition.y = position.y;
-	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Sound effects:"));
-	m_SettingsText[1]->setOrigin(origin);
-	m_SettingsText[1]->setPosition(textPosition);
-	m_SettingsText[1]->setFillColor(sf::Color::Black);
-
-	position.y += 100;
-	position.x += size.x / 2;
 	m_CheckboxTexture = std::make_unique<sf::Texture>();
 	m_CheckboxTexture->loadFromFile(CHECKBOX_FILENAME);
-	textPosition.y = position.y;
-	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Fullscreen:"));
-	m_SettingsText[2]->setOrigin(origin);
-	m_SettingsText[2]->setPosition(textPosition);
-	m_SettingsText[2]->setFillColor(sf::Color::Black);
-
 	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50);
 	m_FullscreenCheckbox->SetEnableCheckbox(Settings::get().IsFullscreen());
+
+
+	m_SettingsText = std::vector<std::unique_ptr<sf::Text>>();
+
+	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Music volume:"));
+	m_SettingsText[0]->setFillColor(sf::Color::Black);
+	m_SettingsText[0]->setOrigin(sf::Vector2f(0, m_SettingsText[0]->getGlobalBounds().size.y));
+
+	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Sound effects:"));
+	m_SettingsText[1]->setFillColor(sf::Color::Black);
+	m_SettingsText[1]->setOrigin(sf::Vector2f(0, m_SettingsText[1]->getGlobalBounds().size.y));
+
+	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Fullscreen:"));
+	m_SettingsText[2]->setFillColor(sf::Color::Black);
+	m_SettingsText[2]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
+
+	float lengths[] = {m_SettingsText[0]->getGlobalBounds().size.x, m_SettingsText[1]->getGlobalBounds().size.x, m_SettingsText[2]->getGlobalBounds().size.x};
+	float max = std::max(lengths[0], lengths[1]);
+	max = std::max(max, lengths[2]);
+	m_SettingsText[0]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[0]->GetSliderPosition().y));
+	m_SettingsText[1]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[1]->GetSliderPosition().y));
+	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y));
+
 
 	CreateSettingsButtons();
 

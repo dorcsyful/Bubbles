@@ -18,6 +18,7 @@ public:
 		m_Score = 0;
 		m_CombineCombo = 0;
 		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
+
 	}
 
 	void Update(float a_Delta);

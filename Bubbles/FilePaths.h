@@ -50,12 +50,13 @@
 
 #define SOUND_FILENAME "Assets/Menu/Sound.png"
 
-#define TUTORIAL_ONE_FILENAME "Assets/HowTo/tutorial 1.png"
-#define TUTORIAL_TWO_FILENAME "Assets/HowTo/tutorial 2.png"
-
 #define CONFIRM_EXIT_GAME "Exit the game?"
 #define CONFIRM_RESTART "Restart game?"
 #define CONFIRM_BACK_TO_MENU "       Go back to menu? \n (all progress will be lost)"
 #define CONFIRM_SETTING_RESTART "Please restart for these changes \n to take effect"
+
+#define SETTINGS_SLIDER "Assets/Menu/slider-line.png"
+#define SETTINGS_SLIDER_POINTER "Assets/Menu/slider-grabber.png"
+
 
 #define ICON_PATH "Assets/favicon.png"

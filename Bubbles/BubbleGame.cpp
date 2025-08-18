@@ -16,7 +16,7 @@ void BubbleGame::Initialize()
 	m_Wrapper = std::make_unique<BubbleWrapper>();
 	Audio::getInstance().SetMusicVolume(Settings::get().GetMusicVolume());
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
-
+	
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetWindow()->getSize().x);
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
