@@ -50,6 +50,11 @@ void AnimatedSprite::SetFrame(int a_Frame)
 
 }
 
+void AnimatedSprite::SetScale(float x, float y)
+{
+	m_Sprite->setScale(sf::Vector2f(x,y));
+}
+
 bool AnimatedSprite::IsAnimFinished() const
 {
 	if (m_IsLooping) return false;

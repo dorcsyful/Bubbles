@@ -114,7 +114,7 @@ void Rendering::PlayDraw(float a_Delta)
 	//m_Window->draw(*m_Score);
 	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
-	m_Window->draw(*m_HighScoreTitleInPlay);
+	//m_Window->draw(*m_HighScoreTitleInPlay);
 	m_Window->draw(*m_StoredSprite);
 	m_Window->draw(*m_StorageText);
 
@@ -773,8 +773,8 @@ void Rendering::CreateMenuButtonSprites()
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
 	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), Settings::get().GetLoadTime(), Settings::get().GetLoadingFrames(), true);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
-	sf::Vector2f loadingTextureSize = BubbleMath::ToVector2f(m_LoadingTexture->getSize());
-	m_Loading->SetPosition(sf::Vector2f(windowSize.x - loadingTextureSize.x / 8, windowSize.y - loadingTextureSize.y));
+	m_Loading->SetScale(0.5, 0.5);
+	m_Loading->SetPosition(sf::Vector2f(windowSize.x - m_Loading->GetSize().x, windowSize.y - m_Loading->GetSize().y));
 }
 
 void Rendering::CreateScoreText()
@@ -891,25 +891,23 @@ void Rendering::CreateNextUpSprites()
 
 void Rendering::CreateHighScoreSpriteInPlay(sf::Vector2f& position)
 {
-	m_HighScoreTitleTextureInPlay = std::make_unique<sf::Texture>();
-	m_HighScoreTitleTextureInPlay->loadFromFile(PLAY_MODE_HIGHSCORE_TITLE_FILENAME);
+	//m_HighScoreTitleTextureInPlay = std::make_unique<sf::Texture>();
+	//m_HighScoreTitleTextureInPlay->loadFromFile(PLAY_MODE_HIGHSCORE_TITLE_FILENAME);
 
-	m_HighScoreTitleInPlay = std::make_unique<sf::Sprite>(*m_HighScoreTitleTextureInPlay);
-	m_HighScoreTitleInPlay->setOrigin(sf::Vector2f(m_HighScoreTitleInPlay->getLocalBounds().size.x / 2.f, m_HighScoreTitleInPlay->getLocalBounds().size.y / 2.f));
-	float scaleX = Settings::get().GetScale();
-	m_HighScoreTitleInPlay->setScale(sf::Vector2f(0.3f * scaleX, 0.3f * Settings::get().GetScale()));
+	//m_HighScoreTitleInPlay = std::make_unique<sf::Sprite>(*m_HighScoreTitleTextureInPlay);
+	//m_HighScoreTitleInPlay->setOrigin(sf::Vector2f(m_HighScoreTitleInPlay->getLocalBounds().size.x / 2.f, m_HighScoreTitleInPlay->getLocalBounds().size.y / 2.f));
+	//float scaleX = Settings::get().GetScale();
+	//m_HighScoreTitleInPlay->setScale(sf::Vector2f(0.3f * scaleX, 0.3f * Settings::get().GetScale()));
 
 	position = m_ScoreTitle->getPosition();
-	position.y += 250 *Settings::get().GetScale();
-	m_HighScoreTitleInPlay->setPosition(position);
-
-	m_HighScoreTextureInPlay = std::make_unique<sf::Texture>();
-	m_HighScoreTextureInPlay->loadFromFile(PLAY_MODE_SCOREBOARD);
+	position.y += 350 *Settings::get().GetScale();
+	//m_HighScoreTitleInPlay->setPosition(position);
+	m_HighScoreTextureInPlay = std::make_unique<sf::Texture>();m_HighScoreTextureInPlay->loadFromFile(PLAY_MODE_SCOREBOARD);
 
 	m_HighScoreSpriteInPlay = std::make_unique<sf::Sprite>(*m_HighScoreTextureInPlay);
 	m_HighScoreSpriteInPlay->setOrigin(sf::Vector2f(m_HighScoreSpriteInPlay->getLocalBounds().size.x / 2.f, m_HighScoreSpriteInPlay->getLocalBounds().size.y / 2.f));
-	m_HighScoreSpriteInPlay->setScale(sf::Vector2f(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale()));
-	m_HighScoreSpriteInPlay->setPosition(sf::Vector2f(m_HighScoreTitleInPlay->getPosition().x, m_HighScoreTitleInPlay->getPosition().y + m_HighScoreSpriteInPlay->getGlobalBounds().size.y / 2.f));
+	m_HighScoreSpriteInPlay->setScale(sf::Vector2f(0.4f * Settings::get().GetScale(), 0.4f * Settings::get().GetScale()));
+	m_HighScoreSpriteInPlay->setPosition(position);
 }
 
 void Rendering::CreatePlayScoreSprites()
@@ -941,7 +939,7 @@ void Rendering::CreatePlayScoreSprites()
 
 	m_HighScoresInPlay[0]->setString(std::to_string(rand()));
 	//position.x -= 78 * Settings::get().GetScale();
-	position.y = m_HighScoreTitleInPlay->getGlobalBounds().position.y + m_HighScoreTitleInPlay->getGlobalBounds().size.y / 6 + size;
+	//position.y = m_HighScoreTitleInPlay->getGlobalBounds().position.y + m_HighScoreTitleInPlay->getGlobalBounds().size.y / 6 + size;
 	m_HighScoresInPlay[0]->setPosition(position);
 	m_HighScoresInPlay[0]->setFont(*m_FontBold);
 	m_HighScoresInPlay[0]->setFillColor(textColor);

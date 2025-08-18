@@ -14,7 +14,7 @@ public:
 	void SetFrame(int a_Frame);
 	void SetPosition(const sf::Vector2f& a_Position) const { m_Sprite->setPosition(a_Position); }
 	void SetRotation(const float a_Rotation) const { sf::Angle a = sf::degrees(a_Rotation); m_Sprite->setRotation(a); }
-
+	void SetScale(float x, float y);
 	void SetTotalTime(float a_Time) { m_FrameTime = a_Time; }
 
 	void SetAnimate(bool a_Enable, bool a_Loop) { m_Animate = a_Enable; m_IsLooping = a_Loop; }
@@ -23,6 +23,7 @@ public:
 	void UpdateFrameToAnimate(int a_Number) { m_FramesToAnimate = a_Number; }
 	sf::Sprite* GetSprite() const { return m_Sprite.get(); }
 	sf::Vector2f GetPosition() const { return m_Sprite->getPosition(); }
+	sf::Vector2f GetSize() { return m_Sprite->getGlobalBounds().size; }
 
 	void Draw(sf::RenderTarget& a_Target);
 
