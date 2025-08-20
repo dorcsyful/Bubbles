@@ -939,7 +939,8 @@ void Rendering::CreatePlayScoreSprites()
 
 	m_HighScoresInPlay[0]->setString(std::to_string(rand()));
 	//position.x -= 78 * Settings::get().GetScale();
-	//position.y = m_HighScoreTitleInPlay->getGlobalBounds().position.y + m_HighScoreTitleInPlay->getGlobalBounds().size.y / 6 + size;
+	position.y = m_HighScoreSpriteInPlay->getGlobalBounds().getCenter().y - m_HighScoreSpriteInPlay->getGlobalBounds().size.y / 4.1f;
+	position.x = m_HighScoreSpriteInPlay->getGlobalBounds().getCenter().x - m_HighScoreSpriteInPlay->getGlobalBounds().size.x / 10;
 	m_HighScoresInPlay[0]->setPosition(position);
 	m_HighScoresInPlay[0]->setFont(*m_FontBold);
 	m_HighScoresInPlay[0]->setFillColor(textColor);
@@ -949,7 +950,7 @@ void Rendering::CreatePlayScoreSprites()
 
 	m_HighScoresInPlay[1] = std::make_unique<sf::Text>(*m_FontBold);
 	m_HighScoresInPlay[1]->setString(std::to_string(rand()));
-	position.y += 38 * Settings::get().GetScale() + 13 * Settings::get().GetScale();
+	position.y += m_HighScoreSpriteInPlay->getGlobalBounds().size.y / 4;
 	m_HighScoresInPlay[1]->setPosition(position);
 	m_HighScoresInPlay[1]->setFillColor(textColor);
 	//m_HighScoresInPlay[1]->setOutlineColor(sf::Color::White);
@@ -959,7 +960,7 @@ void Rendering::CreatePlayScoreSprites()
 
 	m_HighScoresInPlay[2] = std::make_unique<sf::Text>(*m_FontBold);
 	m_HighScoresInPlay[2]->setString(std::to_string(rand()));
-	position.y += 40 * Settings::get().GetScale() + 13 * Settings::get().GetScale();
+	position.y += m_HighScoreSpriteInPlay->getGlobalBounds().size.y / 4;
 	m_HighScoresInPlay[2]->setPosition(position);
 	m_HighScoresInPlay[2]->setFillColor(textColor);
 	//m_HighScoresInPlay[2]->setOutlineColor(sf::Color::White);
