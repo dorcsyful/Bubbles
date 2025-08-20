@@ -916,7 +916,7 @@ void Rendering::CreatePlayScoreSprites()
 	m_ScoreTitleTexture->loadFromFile(PLAY_MODE_SCORE_TITLE_FILENAME);
 
 	m_ScoreTitle = std::make_unique<sf::Sprite>(*m_ScoreTitleTexture);
-	m_ScoreTitle->setScale(sf::Vector2f(0.5f * Settings::get().GetScale(), 0.5f * Settings::get().GetScale()));
+	m_ScoreTitle->setScale(sf::Vector2f(0.6 * Settings::get().GetScale(), 0.6f * Settings::get().GetScale()));
 	m_ScoreTitle->setOrigin(sf::Vector2f(m_ScoreTitle->getLocalBounds().size.x / 2.f, m_ScoreTitle->getLocalBounds().size.y / 2.f));
 
 	auto position = sf::Vector2f(m_Frame->getGlobalBounds().position.x, m_Frame->getGlobalBounds().position.y);
