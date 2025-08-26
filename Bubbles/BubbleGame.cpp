@@ -32,6 +32,8 @@ void BubbleGame::Initialize()
 
 void BubbleGame::PlayUpdate(float a_Delta)
 {
+
+
 	m_Gameplay->Update(a_Delta);
 	m_Physics->Update(a_Delta);
 
@@ -42,8 +44,9 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 		if(bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB || bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_SPIKY_BOMB)
 		{
-			m_Wrapper->RemoveObjectByPointer(bubble1);
+			m_Wrapper->GetShapeByPointer(bubble1)->SetAnimate(true, false);
 			m_Wrapper->RemoveObjectByPointer(bubble2);
+
 			continue;
 		}
 
@@ -112,6 +115,13 @@ void BubbleGame::PlayUpdate(float a_Delta)
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
 	if (m_Physics->GetTouchedTopLine()) { GameOver();}
+	for (int i = 0; i < m_Wrapper->GetRendered().size(); i++)
+	{
+		if (m_Wrapper->GetRendered()[i]->IsAnimFinished())
+		{
+			m_Wrapper->RemoveObjectByIndex(i);
+		}
+	}
 
 }
 

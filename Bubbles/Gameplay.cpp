@@ -85,7 +85,7 @@ EBUBBLE_TYPE Gameplay::GenerateRandom()
 		// 70% chance: 0, 1, or 2
 		return static_cast<EBUBBLE_TYPE>(randomNum % 3);
 	}
-	if (randomNum < 90) {
+	if (randomNum < 95) {
 		// 20% chance: 3 or 4
 		return static_cast<EBUBBLE_TYPE>(3);
 	}

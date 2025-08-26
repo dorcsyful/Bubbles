@@ -26,6 +26,15 @@ public:
 	size_t GetNumOfObjects() const { return m_GameObjects.size(); }
 
 	AnimatedSprite* GetShapeByIndex(size_t a_Index) const { return m_Rendered[a_Index].get(); }
+	AnimatedSprite* GetShapeByPointer(const BubbleObject* a_Bubble) const {
+		for (size_t i = 0; i < m_GameObjects.size(); i++)
+		{
+			if (m_GameObjects[i].get() == a_Bubble)
+			{
+				return m_Rendered[i].get();
+			}
+		}
+	}
 	GameObject* GetObjectByIndex(size_t a_Index) const { return m_GameObjects[a_Index].get(); }
 
 	void AddObject(std::unique_ptr<GameObject> a_GameObject, std::unique_ptr<AnimatedSprite> a_Rendered)

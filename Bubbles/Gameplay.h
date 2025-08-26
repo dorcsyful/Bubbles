@@ -15,7 +15,7 @@ public:
 		m_ContainerEdges[0] = (a_WindowWidth / 2.f) - (Settings::get().GetContainerWidth() / 2.f);
 		m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
 		Move(0);
-		m_Score = 0;
+		m_Score = 1204;
 		m_CombineCombo = 0;
 		m_Storage = EBUBBLE_TYPE::TYPE_NULL;
 
