@@ -204,11 +204,12 @@ private:
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
 
 	//HighScore
-	std::vector<std::unique_ptr<SpriteWithText>> m_HighScoreSprites;
+	std::vector<std::unique_ptr<sf::Text>> m_HighScoreSprites;
 	std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
 	std::unique_ptr<sf::Texture> m_HighScoreTexture;
 	std::unique_ptr<Button> m_HSBackButton;
-
+	std::unique_ptr<sf::Texture> m_HSBackgroundTexture;
+	std::unique_ptr<sf::Sprite> m_HSBackgroundSprite;
 	//Confirm
 	std::unique_ptr<sf::RectangleShape> m_ConfirmationWindow;
 	std::unique_ptr<sf::Texture> m_ConfirmationTexture;

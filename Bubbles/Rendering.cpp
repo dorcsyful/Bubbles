@@ -196,6 +196,7 @@ void Rendering::HighScoreDraw() const
 
 	m_Window->draw(*m_HighScoreTitle);
 	m_HSBackButton->Draw(*m_Window);
+	m_Window->draw(*m_HSBackgroundSprite);
 	for (int i = 0; i < 10; i++)
 	{
 		m_Window->draw(*(m_HighScoreSprites[i]));
@@ -392,9 +393,9 @@ void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) cons
 {
 	for(int i = 0; i < 10; i++)
 	{
-		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
+		m_HighScoreSprites[i]->setString(std::to_string(a_Scores[i]));
 	}
-	m_Score->setString(m_HighScoreSprites[0]->GetText());
+	m_Score->setString(m_HighScoreSprites[0]->getString());
 
 }
 
@@ -445,7 +446,7 @@ void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
 {
 	for (size_t i = 0; i < a_Scores.size(); i++)
 	{
-		m_HighScoreSprites[i]->SetText(std::to_string(a_Scores[i]));
+		m_HighScoreSprites[i]->setString(std::to_string(a_Scores[i]));
 	}
 
 	m_HighScoresInPlay[0]->setString(std::to_string(a_Scores[0]));
@@ -809,7 +810,7 @@ void Rendering::CreateScoreText()
 
 void Rendering::CreateHighScoreSprites()
 {
-	m_HighScoreSprites = std::vector < std::unique_ptr<SpriteWithText>>(10);
+	m_HighScoreSprites = std::vector < std::unique_ptr<sf::Text>>(10);
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 
 	m_HighScoreTexture = std::make_unique<sf::Texture>();
@@ -825,16 +826,27 @@ void Rendering::CreateHighScoreSprites()
 	m_HighScoreTitle->setOrigin(sf::Vector2f(m_HighScoreTitle->getSize().x / 2.f, m_HighScoreTitle->getSize().y / 2.f));
 	m_HighScoreTitle->setPosition(m_Title->getPosition());
 
-	basePos.y += m_Title->getSize().y + 10;
+
+	m_HSBackgroundTexture = std::make_unique<sf::Texture>(ALL_HIGHSCORES);
+	m_HSBackgroundSprite = std::make_unique<sf::Sprite>(*m_HSBackgroundTexture);
+	m_HSBackgroundSprite->setScale(sf::Vector2f(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale()));
+	m_HSBackgroundSprite->setOrigin(sf::Vector2f(m_HSBackgroundSprite->getLocalBounds().size.x / 2, m_HSBackgroundSprite->getLocalBounds().size.y / 2));
+	float titleBottom = m_Title->getGlobalBounds().position.y + m_Title->getGlobalBounds().size.y;
+	m_HSBackgroundSprite->setPosition(sf::Vector2f(m_Window->getSize().x / 2, titleBottom + 20 * Settings::get().GetScale() + m_HSBackgroundSprite->getGlobalBounds().size.y / 2 ));
+
+	basePos.y += m_HSBackgroundSprite->getGlobalBounds().position.y - m_HSBackgroundSprite->getGlobalBounds().size.y / 2 + 5 *Settings::get().GetScale();
 
 	for(int i = 0; i < 10; i ++)
 	{
-		sf::Color textColor = i % 2 == 0 ? sf::Color::Blue : sf::Color::Green;
-		sf::Color shapeColor = i % 2 == 0 ? sf::Color::Green : sf::Color::Blue;
+		m_HighScoreSprites[i] = std::make_unique<sf::Text>(*m_Font, std::to_string(rand()));
+		m_HighScoreSprites[i]->setFillColor(sf::Color::Black);
+		m_HighScoreSprites[i]->setCharacterSize(40);
+		m_HighScoreSprites[i]->setPosition(basePos);
+		m_HighScoreSprites[i]->setFillColor(sf::Color(201, 180, 211));
+		m_HighScoreSprites[i]->setOutlineColor(sf::Color::White);
+		m_HighScoreSprites[i]->setOutlineThickness(2);
 
-		m_HighScoreSprites[i] = std::make_unique<SpriteWithText>(std::to_string(rand()), *m_Font, sf::Vector2f(Settings::get().GetHighScoreItemWidth(), Settings::get().GetHighScoreItemHeight()),
-							basePos, textColor,shapeColor);
-		basePos.y += Settings::get().GetHighScoreItemHeight();
+		basePos.y += m_HighScoreSprites[i]->getCharacterSize() * 1.3f;
 	}
 
 	sf::Vector2f BBTexture = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
