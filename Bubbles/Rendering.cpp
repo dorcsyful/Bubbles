@@ -1,18 +1,18 @@
 // ReSharper disable CppNoDiscardExpression
-#include "Rendering.h"
+#include "Declarations.h"
 
-#include <ranges>
+#include "Rendering.h"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include "Audio.h"
 #include "BubbleGame.h"
 #include "BubbleObject.h"
-#include "Declarations.h"
 #include "FilePaths.h"
 #include "LineObject.h"
 #include "Settings.h"
 #include <SFML/Graphics/Image.hpp>
+
 
 Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<AnimatedSprite>>& a_Wrapper):
 	m_RenderedBubbles(a_Wrapper)
@@ -65,7 +65,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	}
 
 	m_Window->setIcon(m_Icon->getSize(), m_Icon->getPixelsPtr());
-
 }
 
 void Rendering::FinishMoveToStorage()
@@ -271,6 +270,7 @@ void Rendering::SettingsDraw() const
 
 void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 {
+
 	m_Window->clear();
 
 	if (a_State == EGAME_STATE::STATE_PLAY)

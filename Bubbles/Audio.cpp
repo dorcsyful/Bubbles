@@ -1,6 +1,6 @@
-#include "Audio.h"
-
 #include "Declarations.h"
+# include "Audio.h"
+
 #include "FilePaths.h"
 
 void Audio::Initialize()

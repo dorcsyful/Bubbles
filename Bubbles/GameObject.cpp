@@ -1,8 +1,9 @@
+#include "Declarations.h"
+
 #include "GameObject.h"
 #include <SFML/System/Vector2.hpp>
 
 #include "BubbleMath.h"
-#include "Declarations.h"
 
 void GameObject::Integrate(float a_Delta)
 {

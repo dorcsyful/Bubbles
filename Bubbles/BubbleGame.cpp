@@ -1,3 +1,5 @@
+
+#include <windows.h>
 #include "BubbleGame.h"
 
 #include <SFML/Window/Event.hpp>
@@ -7,7 +9,9 @@
 
 #include "Audio.h"
 
-void BubbleGame::Initialize()
+
+
+BubbleGame::BubbleGame()
 {
 	m_IsMouseButtonPressed = false;
 	Random::getInstance().SetSeed(time(nullptr));
@@ -28,6 +32,7 @@ void BubbleGame::Initialize()
 	m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 	m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
 	m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
+
 }
 
 void BubbleGame::PlayUpdate(float a_Delta)
@@ -139,13 +144,17 @@ void BubbleGame::RestartGame()
 void BubbleGame::Update()
 {
 	sf::Clock dtClock;
+	bool isFocused = true;
+	const float SIM_DT = 1.0f / 60.0f;
+
+	float simTime = 0.0f;
+	float accumulator = 0.0f;
+
 	while(m_Rendering->GetWindow()->isOpen())
 	{
-		if(m_State == EGAME_STATE::STATE_START)
-		{
-			Initialize();
-		}
 		float frameTime = dtClock.restart().asSeconds();
+		if (frameTime > 0.25f) frameTime = 0.25f; // avoid spiral of death
+		accumulator += frameTime;
 
 		while (const std::optional event = m_Rendering->GetWindow()->pollEvent())
 		{
@@ -157,6 +166,15 @@ void BubbleGame::Update()
 			else if(event->is<sf::Event::Resized>())
 			{
 				m_Rendering = std::make_unique<Rendering>(m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y, m_Wrapper->GetRendered());
+			}
+			else if(event->is<sf::Event::FocusLost>())
+			{
+				std::cout << "Focus Lost";
+				isFocused = false;
+			}
+			else if(event->is<sf::Event::FocusGained>())
+			{
+				isFocused = true;
 			}
 			if(event->is<sf::Event::MouseButtonPressed>()&& event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left)
 			{
@@ -204,13 +222,17 @@ void BubbleGame::Update()
 			}
 			
 		}
-
-		if (m_State == EGAME_STATE::STATE_PLAY)
+		if(m_State == EGAME_STATE::STATE_PLAY)
 		{
-			PlayUpdate(frameTime);
+			while (accumulator >= SIM_DT)
+			{
+				simTime += frameTime;
+				PlayUpdate(SIM_DT);
+				accumulator -= SIM_DT;
+			}
 		}
 
-			CallAfterDelay::getInstance().LoopThroughFunctions();
+		CallAfterDelay::getInstance().LoopThroughFunctions();
 
 
 		m_Rendering->Draw(m_State, frameTime);

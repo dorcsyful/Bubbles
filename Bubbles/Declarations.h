@@ -4,6 +4,7 @@
 
 #define NAIL_LENGTH 0.3f
 #define NAIL_WEIGHT 0.3f
+#define NOMINMAX
 
 #include <map>
 

@@ -1,16 +1,17 @@
 #pragma once
-#include "BubbleWrapper.h"
 #include "Declarations.h"
+
+#include "BubbleWrapper.h"
 #include "Gameplay.h"
 #include "Physics.h"
 #include "Rendering.h"
 #include "Save.h"
-
+#include <windows.h>
 class BubbleGame
 {
 public:
 
-	void Initialize();
+	BubbleGame();
 	void Update();
 	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const;
 

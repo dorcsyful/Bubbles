@@ -3,6 +3,7 @@
 
 #include "Declarations.h"
 
+
 class Settings
 {
 public:
@@ -71,9 +72,7 @@ public:
     [[nodiscard]] float GetScale() const { return m_Scale; }
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
-
 private:
-
     bool m_FullScreen = false;
     float m_Scale = 1;
     float m_WindowWidth = 0;
