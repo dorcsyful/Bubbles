@@ -24,6 +24,7 @@ public:
 	sf::Sprite* GetSprite() const { return m_Sprite.get(); }
 	sf::Vector2f GetPosition() const { return m_Sprite->getPosition(); }
 	sf::Vector2f GetSize() { return m_Sprite->getGlobalBounds().size; }
+	void ResetFrame();
 
 	void Draw(sf::RenderTarget& a_Target);
 

@@ -280,6 +280,7 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 	if (a_State == EGAME_STATE::STATE_MENU) MenuDraw();
 	if(a_State == EGAME_STATE::STATE_LOADING)
 	{
+		m_Loading->SetAnimate(true, true);
 		if(CallAfterDelay::getInstance().HasFunction("SetPlayState"))
 		{
 			m_Window->draw(*m_BackgroundExtendedSprite);

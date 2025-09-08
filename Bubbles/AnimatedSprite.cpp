@@ -62,9 +62,16 @@ bool AnimatedSprite::IsAnimFinished() const
 	return false;
 }
 
+void AnimatedSprite::ResetFrame()
+{
+}
+
 void AnimatedSprite::Draw(sf::RenderTarget& a_Target)
 {
-	if (m_Animate) UpdateFrameByTime();
+	if (m_Animate)
+	{
+		UpdateFrameByTime();
+	}
 
 	a_Target.draw(*m_Sprite);
 }
