@@ -567,8 +567,8 @@ void BubbleGame::SettingsInput(const sf::Event& a_Event)
 	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
 	{
 		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-		//m_CloudSaves->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked()); 
-		//TODO
+	 
+		Settings::get().UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
 		if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
 		{
 			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());

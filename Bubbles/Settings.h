@@ -1,5 +1,12 @@
 #pragma once
 #include <string>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <cstdint>
+#include <filesystem>
+#include <chrono>
+#include <fstream>
 
 #include "Declarations.h"
 
@@ -72,6 +79,34 @@ public:
     [[nodiscard]] float GetScale() const { return m_Scale; }
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
+
+    void UpdateSettings(bool a_Fullscreen)
+    {
+        std::vector<std::string> lines;
+        std::ifstream infile("Assets/Settings.save");
+        std::string line;
+        int i;
+        int counter = 0;
+        while (getline(infile, line)) {
+            if (line.starts_with("FULLSCREEN|"))
+            {
+                i = counter;
+            }
+            lines.push_back(line);
+            counter++;
+        }
+        infile.close();
+
+        // Modify the last line
+        std::string asString = a_Fullscreen ? "YES" : "NO";
+        lines[i] = "FULLSCREEN|" + asString;
+
+        std::ofstream outfile("Assets/Settings.save");
+        for (const std::string& nline : lines) {
+            outfile << nline << '\n';
+        }
+        outfile.close();
+    }
 private:
     bool m_FullScreen = false;
     float m_Scale = 1;
