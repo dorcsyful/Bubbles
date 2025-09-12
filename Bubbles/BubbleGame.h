@@ -1,17 +1,20 @@
 #pragma once
+
+#define _CRT_SECURE_NO_WARNINGS
 #include "Declarations.h"
 
 #include "BubbleWrapper.h"
 #include "Gameplay.h"
 #include "Physics.h"
 #include "Rendering.h"
-#include "Save.h"
 #include <windows.h>
+#include "CloudSaves.h"
 class BubbleGame
 {
 public:
 
 	BubbleGame();
+	~BubbleGame();
 	void Update();
 	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const;
 
@@ -47,6 +50,6 @@ private:
 	sf::Clock m_ScaleTimer;
 
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
-	std::unique_ptr<Save> m_Save;
+	std::unique_ptr<CloudSaves> m_CloudSaves;
 };
 

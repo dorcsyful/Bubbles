@@ -1,9 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include "steam_api.h"
 
 #include <windows.h>
 #include "BubbleGame.h"
 
 #include <SFML/Window/Event.hpp>
-
 #include "Helpers.h"
 #include <chrono>
 
@@ -13,6 +14,12 @@
 
 BubbleGame::BubbleGame()
 {
+	if (!SteamAPI_Init()) {
+		std::cerr << "SteamAPI_Init() failed. Steam must be running.\n";
+	}
+
+	std::cout << "Steam API initialized for user: "
+		<< SteamFriends()->GetPersonaName() << "\n";
 	m_IsMouseButtonPressed = false;
 	Random::getInstance().SetSeed(time(nullptr));
 	CallAfterDelay::getInstance().ClearQueue();
@@ -24,14 +31,20 @@ BubbleGame::BubbleGame()
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
 	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetWindow()->getSize().x);
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
-	m_Save = std::make_unique<Save>();
-
+	m_CloudSaves = std::make_unique<CloudSaves>();
 	m_Physics->CreateContainerLines();
 
-	m_Rendering->UpdateHighScore(m_Save->GetScores());
+	m_CloudSaves->LoadPersonalTop10();
+	m_Rendering->UpdateHighScore(m_CloudSaves->GetAllScores());
 	m_Rendering->UpdateNextUp(m_Gameplay->GetNextBubble());
 	m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
 	m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
+	m_CloudSaves->PrintTop10();
+}
+
+BubbleGame::~BubbleGame()
+{
+	SteamAPI_Shutdown();
 
 }
 
@@ -270,8 +283,8 @@ void BubbleGame::AddBubble() const
 void BubbleGame::GameOver()
 {
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
-	m_Save->SaveIfHighScore(m_Gameplay->GetScore());
-	m_Rendering->UpdateHighScore(m_Save->GetScores());
+	m_CloudSaves->SubmitScore(m_Gameplay->GetScore());
+	m_Rendering->UpdateHighScore(m_CloudSaves->GetAllScores());
 	Audio::getInstance().PlaySadGameOver();
 	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;
 	m_Rendering->GetDuck()->SetAnimate(false, false);
@@ -386,6 +399,11 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 				
 			}
 		}
+
+		if (pressedCode == sf::Keyboard::Key::P)
+		{
+			GameOver();
+		}
 	}
 
 	if(m_IsMouseButtonPressed)
@@ -428,20 +446,6 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		{
 			m_IsStorageButtonPressed = false;
 		}
-
-		if (releasedCode == sf::Keyboard::Key::Num0) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_STAR);
-		if (releasedCode == sf::Keyboard::Key::Num1) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_CRAB);
-		if (releasedCode == sf::Keyboard::Key::Num2) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FISH);
-		if (releasedCode == sf::Keyboard::Key::Num3) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_FROG);
-		if (releasedCode == sf::Keyboard::Key::Num4) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_JELLY);
-		if (releasedCode == sf::Keyboard::Key::Num5) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_KRILL);
-		if (releasedCode == sf::Keyboard::Key::Num6) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SEAL);
-		if (releasedCode == sf::Keyboard::Key::Num7) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SHARK);
-		if (releasedCode == sf::Keyboard::Key::Num8) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SQUID);
-		if (releasedCode == sf::Keyboard::Key::Num9) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_WHALE);
-		if (releasedCode == sf::Keyboard::Key::Q) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_BATH_BOMB);
-		if (releasedCode == sf::Keyboard::Key::E) m_Gameplay->CheatNextBubble(EBUBBLE_TYPE::TYPE_SPIKY_BOMB);
-		if (releasedCode == sf::Keyboard::Key::P) GameOver();
 	}
 }
 
@@ -563,8 +567,8 @@ void BubbleGame::SettingsInput(const sf::Event& a_Event)
 	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
 	{
 		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-		m_Save->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-
+		//m_CloudSaves->UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked()); 
+		//TODO
 		if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
 		{
 			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
