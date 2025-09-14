@@ -31,7 +31,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	{
 		sf::Vector2u size = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(size.x, size.y)), "Bubbles!",
-			sf::Style::Default,sf::State::Windowed, context);
+			sf::Style::Titlebar | sf::Style::Close,sf::State::Windowed, context);
 
 	}
 	m_Window->setVerticalSyncEnabled(true);

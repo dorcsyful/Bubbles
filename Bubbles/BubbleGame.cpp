@@ -191,7 +191,11 @@ void BubbleGame::Update()
 			}
 			else if(event->is<sf::Event::Resized>())
 			{
-				m_Rendering = std::make_unique<Rendering>(m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y, m_Wrapper->GetRendered());
+				
+				//m_Rendering = std::make_unique<Rendering>(m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y, m_Wrapper->GetRendered());
+				sf::Vector2u newSize = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
+				if (!Settings::get().IsFullscreen()) { m_Rendering->GetWindow()->setSize(newSize); }
+				
 			}
 			else if(event->is<sf::Event::FocusLost>())
 			{
@@ -416,17 +420,17 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			}
 		}
 
-		if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
-		if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
-		if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
-		if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
-		if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
-		if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
-		if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
-		if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
-		if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
-		if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
-		if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
+		//if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
+		//if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
+		//if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
+		//if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
+		//if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
+		//if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
+		//if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
+		//if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
+		//if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
+		//if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
+		//if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
 	}
 
 	if(m_IsMouseButtonPressed)
