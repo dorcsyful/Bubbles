@@ -1,6 +1,4 @@
 #pragma once
-
-#define _CRT_SECURE_NO_WARNINGS
 #include "Declarations.h"
 
 #include "BubbleWrapper.h"
@@ -9,6 +7,7 @@
 #include "Rendering.h"
 #include <windows.h>
 #include "CloudSaves.h"
+#include "LeaderBoard.h"
 class BubbleGame
 {
 public:
@@ -49,6 +48,7 @@ private:
 	sf::Vector2f m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 	sf::Clock m_ScaleTimer;
 
+	std::unique_ptr<LeaderBoard> m_LeaderBoard;
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
 	std::unique_ptr<CloudSaves> m_CloudSaves;
 };

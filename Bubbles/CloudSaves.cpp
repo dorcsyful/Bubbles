@@ -1,9 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
 
 #include "CloudSaves.h"
 #include <iostream>
 #include <algorithm>
 #include <steam_api.h>
+#include "LeaderBoard.h"
 const char* CLOUD_FILE = "personal_top10.dat";
 const uint32_t XOR_KEY = 0xA5A5A5A5; // simple obfuscation key
 
@@ -53,6 +53,10 @@ void CloudSaves::SubmitScore(int score)
 
     SavePersonalTop10();
 
+}
+
+void LeaderBoard::DownloadTopScores(int count)
+{
 }
 
 void CloudSaves::PrintTop10()

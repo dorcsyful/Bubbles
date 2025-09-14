@@ -223,6 +223,11 @@ void Rendering::GameOverDraw() const
 	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->Draw(*m_Window);
 	m_MenuButtons.at("PlayAgain")->Draw(*m_Window);
+	m_Window->draw(*m_GOHighScoreBackground);
+	for (int i = 0; i < 3; i++)
+	{
+		m_Window->draw(*m_GOHighScores[i]);
+	}
 	//m_Duck->Draw(*m_Window);
 }
 
@@ -453,6 +458,11 @@ void Rendering::UpdateHighScore(const std::vector<unsigned int>& a_Scores) const
 	m_HighScoresInPlay[0]->setString(std::to_string(a_Scores[0]));
 	m_HighScoresInPlay[1]->setString(std::to_string(a_Scores[1]));
 	m_HighScoresInPlay[2]->setString(std::to_string(a_Scores[2]));
+
+	m_GOHighScores[0]->setString(std::to_string(a_Scores[0]));
+	m_GOHighScores[1]->setString(std::to_string(a_Scores[1]));
+	m_GOHighScores[2]->setString(std::to_string(a_Scores[2]));
+
 }
 
 void Rendering::ResetAllBackground()
@@ -682,7 +692,7 @@ void Rendering::CreateGameOverSprite()
 	titleSize.x = gameOverTextureSize.x * scale;
 	m_GameOver->setSize(titleSize);
 	m_GameOver->setOrigin(sf::Vector2f(titleSize.x / 2, titleSize.y / 2));
-	m_GameOver->setPosition(sf::Vector2f(m_Title->getPosition()));
+	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2.f,m_Window->getSize().y * (2.f/5.f)));
 
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.7f), Settings::get().GetMenuButtonHeight() / BBTextureSize.y);
@@ -701,9 +711,57 @@ void Rendering::CreateGameOverSprite()
 	float y = m_GOScoreNumberSprites[0]->getGlobalBounds().position.y + m_GOScoreNumberSprites[0]->getGlobalBounds().size.y;
 	m_GOScoreCloudSprite->setPosition(sf::Vector2f(m_GameOver->getGlobalBounds().position.x + m_GOScoreCloudSprite->getGlobalBounds().size.x / 2, y));
 
-	sf::Vector2f basePos = m_GameOver->getPosition();
+	
+	
+	m_GOHighScoreBackground = std::make_unique<sf::Sprite>(*m_HighScoreTextureInPlay); // HIII DOORTJE THIS TEXTURE WAS MISSING, SO I JUST ADDED THE GAME OvERE TEXTURE IN but idk what you wanted to show here so change it.
+
+
+	m_GOHighScoreBackground = std::make_unique<sf::Sprite>(*m_HighScoreTextureInPlay);
+	
+	m_GOHighScoreBackground->setOrigin(sf::Vector2f(m_HighScoreSpriteInPlay->getLocalBounds().size.x / 2.f, m_HighScoreSpriteInPlay->getLocalBounds().size.y / 2.f));
+	m_GOHighScoreBackground->setScale(sf::Vector2f(0.4f * Settings::get().GetScale(), 0.4f * Settings::get().GetScale()));
+	sf::Vector2f position = sf::Vector2f(m_GameOver->getPosition().x + m_GameOver->getGlobalBounds().size.x / 2.f - m_GOHighScoreBackground->getGlobalBounds().size.x, 0);
+	position.y = m_GameOver->getPosition().y + m_GameOver->getGlobalBounds().size.y / 2.f + m_GOHighScoreBackground->getGlobalBounds().size.y / 2.f + 5 * Settings::get().GetScale();
+	m_GOHighScoreBackground->setPosition(position);
+	int size = static_cast<int>(38.f * Settings::get().GetScale());
+	sf::Color textColor = sf::Color(225, 142, 149, 255);
+
+	position.y = m_GOHighScoreBackground->getGlobalBounds().getCenter().y - m_GOHighScoreBackground->getGlobalBounds().size.y / 4.1f;
+	position.x = m_GOHighScoreBackground->getGlobalBounds().getCenter().x - m_GOHighScoreBackground->getGlobalBounds().size.x / 10;
+
+
+	m_GOHighScores = std::vector<std::unique_ptr<sf::Text>>(3);
+	m_GOHighScores[0] = std::make_unique<sf::Text>(*m_FontBold);
+
+	m_GOHighScores[0]->setString(std::to_string(rand()));
+	//position.x -= 78 * Settings::get().GetScale();
+	position.y = m_GOHighScoreBackground->getGlobalBounds().getCenter().y - m_GOHighScoreBackground->getGlobalBounds().size.y / 4.1f;
+	position.x = m_GOHighScoreBackground->getGlobalBounds().getCenter().x - m_GOHighScoreBackground->getGlobalBounds().size.x / 10;
+	m_GOHighScores[0]->setPosition(position);
+	m_GOHighScores[0]->setFont(*m_FontBold);
+	m_GOHighScores[0]->setFillColor(textColor);
+	m_GOHighScores[0]->setCharacterSize(size);
+	position.y += m_GOHighScoreBackground->getGlobalBounds().size.y / 4;
+
+	m_GOHighScores[1] = std::make_unique<sf::Text>(*m_FontBold);
+	m_GOHighScores[1]->setString(std::to_string(rand()));
+	//m_GOHighScores.y += m_HighScoreSpriteInPlay->getGlobalBounds().size.y / 4;
+	m_GOHighScores[1]->setPosition(position);
+	m_GOHighScores[1]->setFillColor(textColor);
+	m_GOHighScores[1]->setCharacterSize(size);
+
+
+	m_GOHighScores[2] = std::make_unique<sf::Text>(*m_FontBold);
+	m_GOHighScores[2]->setString(std::to_string(rand()));
+	position.y += m_GOHighScoreBackground->getGlobalBounds().size.y / 4;
+	m_GOHighScores[2]->setPosition(position);
+	m_GOHighScores[2]->setFillColor(textColor);
+	m_GOHighScores[2]->setCharacterSize(size);
+
+
+	sf::Vector2f basePos = m_GOHighScoreBackground->getPosition();
 	basePos.x = m_GameOver->getGlobalBounds().position.x + Settings::get().GetMenuButtonWidth();
-	basePos.y = m_GOScoreCloudSprite->getGlobalBounds().position.y + m_GOScoreCloudSprite->getGlobalBounds().size.y *2;
+	basePos.y = m_GOHighScoreBackground->getGlobalBounds().position.y + m_GOHighScoreBackground->getGlobalBounds().size.y * 1.3;
 	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Play again");
 	newButton->ResizeCharacters(38 * static_cast<unsigned int>(Settings::get().GetScale()));

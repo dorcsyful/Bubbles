@@ -32,6 +32,7 @@ BubbleGame::BubbleGame()
 	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetWindow()->getSize().x);
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
 	m_CloudSaves = std::make_unique<CloudSaves>();
+	m_LeaderBoard = std::make_unique<LeaderBoard>();
 	m_Physics->CreateContainerLines();
 
 	m_CloudSaves->LoadPersonalTop10();
@@ -40,6 +41,9 @@ BubbleGame::BubbleGame()
 	m_Rendering->GetSettingSlider(0)->SetSliderValue(Settings::get().GetMusicVolume());
 	m_Rendering->GetSettingSlider(1)->SetSliderValue(Settings::get().GetSoundEffectsVolume());
 	m_CloudSaves->PrintTop10();
+	m_LeaderBoard->DownloadTopScores();
+
+
 }
 
 BubbleGame::~BubbleGame()
@@ -165,6 +169,8 @@ void BubbleGame::Update()
 
 	while(m_Rendering->GetWindow()->isOpen())
 	{
+		SteamAPI_RunCallbacks();
+
 		float frameTime = dtClock.restart().asSeconds();
 		if (frameTime > 0.25f) frameTime = 0.25f; // avoid spiral of death
 		accumulator += frameTime;
@@ -235,14 +241,15 @@ void BubbleGame::Update()
 			}
 			
 		}
-		if(m_State == EGAME_STATE::STATE_PLAY)
+
+		while (accumulator>= SIM_DT)
 		{
-			while (accumulator >= SIM_DT)
+			simTime += frameTime;
+			if (m_State == EGAME_STATE::STATE_PLAY)
 			{
-				simTime += frameTime;
 				PlayUpdate(SIM_DT);
-				accumulator -= SIM_DT;
 			}
+			accumulator -= SIM_DT;
 		}
 
 		CallAfterDelay::getInstance().LoopThroughFunctions();
@@ -284,6 +291,7 @@ void BubbleGame::GameOver()
 {
 	m_State = EGAME_STATE::STATE_GAME_OVER_ANIMATION;
 	m_CloudSaves->SubmitScore(m_Gameplay->GetScore());
+	m_LeaderBoard->SubmitScore(m_Gameplay->GetScore());
 	m_Rendering->UpdateHighScore(m_CloudSaves->GetAllScores());
 	Audio::getInstance().PlaySadGameOver();
 	float delay = Settings::get().GetBubbleAnimationTotalTime() / 2.f;

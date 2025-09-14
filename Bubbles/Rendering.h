@@ -191,6 +191,8 @@ private:
 	std::vector<std::unique_ptr<sf::Sprite>> m_GOScoreNumberSprites;
 	std::unique_ptr<sf::Sprite> m_GOScoreCloudSprite;
 	float m_GOStartPosition;
+	std::unique_ptr<sf::Sprite> m_GOHighScoreBackground;
+	std::vector<std::unique_ptr<sf::Text>> m_GOHighScores;
 
 	//Menu mode
 	std::unique_ptr<sf::RectangleShape> m_Title;

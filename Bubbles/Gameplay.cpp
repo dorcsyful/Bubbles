@@ -1,7 +1,7 @@
 #include "Gameplay.h"
 #include "BubbleMath.h"
 #include "Random.h"
-
+#include <iostream>
 void Gameplay::Update(float a_Delta)
 {
 	Move(Settings::get().GetPointerMoveSpeed() * m_MoveDirection * a_Delta);
@@ -80,15 +80,23 @@ EBUBBLE_TYPE Gameplay::GenerateRandom()
 {
 
 	int randomNum = Random::getInstance().GetRandomNumber(0,100);
-
-	if (randomNum < 70) {
-		// 70% chance: 0, 1, or 2
-		return static_cast<EBUBBLE_TYPE>(randomNum % 3);
+	std::cout << "Randum number: " << randomNum << std::endl;
+	if (randomNum < 50)
+	{
+		std::cout << "Executing < 50" << std::endl;
+		return static_cast<EBUBBLE_TYPE>(randomNum % 2);
 	}
-	if (randomNum < 95) {
+	else if (randomNum >= 50 && randomNum < 70) {
+		std::cout << "Executing < 70" << std::endl;
+		// 70% chance: 0, 1, or 2
+		return static_cast<EBUBBLE_TYPE>(2);
+	}
+	else if (randomNum >= 70 && randomNum < 95) {
 		// 20% chance: 3 or 4
+		std::cout << "Executing < 95" << std::endl;
 		return static_cast<EBUBBLE_TYPE>(3);
 	}
+	std::cout << "Executing leftover" << std::endl;
 	// 10% chance: 5 or 6
 	return static_cast<EBUBBLE_TYPE>(10 + randomNum % 2);
 }
