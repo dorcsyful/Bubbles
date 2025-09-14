@@ -60,7 +60,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	m_Icon = std::make_unique<sf::Image>();
 	if (!m_Icon->loadFromFile(ICON_PATH))
 	{
-		std::cout << "Could not open file";
 		// Error handling...
 	}
 

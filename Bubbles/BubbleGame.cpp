@@ -18,8 +18,6 @@ BubbleGame::BubbleGame()
 		std::cerr << "SteamAPI_Init() failed. Steam must be running.\n";
 	}
 
-	std::cout << "Steam API initialized for user: "
-		<< SteamFriends()->GetPersonaName() << "\n";
 	m_IsMouseButtonPressed = false;
 	Random::getInstance().SetSeed(time(nullptr));
 	CallAfterDelay::getInstance().ClearQueue();
@@ -100,7 +98,6 @@ void BubbleGame::PlayUpdate(float a_Delta)
 					bubble2 = temp;
 				}
 				int random = Random::getInstance().GetRandomNumber(0, 100);
-				std::cout << random << "\n";
 				if(random <= 50)
 				{
 					auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, true);
@@ -198,7 +195,6 @@ void BubbleGame::Update()
 			}
 			else if(event->is<sf::Event::FocusLost>())
 			{
-				std::cout << "Focus Lost";
 				isFocused = false;
 			}
 			else if(event->is<sf::Event::FocusGained>())

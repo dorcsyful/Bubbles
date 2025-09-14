@@ -54,7 +54,6 @@ private:
         }
         g_leaderboard = pResult->m_hSteamLeaderboard;
         g_leaderboardFound = true;
-        std::cout << "Leaderboard ready!\n";
     }
 
     void OnScoreUploaded(LeaderboardScoreUploaded_t* pResult, bool bIOFailure) {
@@ -62,22 +61,17 @@ private:
             std::cerr << "Failed to upload score\n";
             return;
         }
-        std::cout << "Score uploaded! New global rank: " << pResult->m_nGlobalRankNew << "\n";
     }
 
     void OnScoresDownloaded(LeaderboardScoresDownloaded_t* pResult, bool bIOFailure) {
         if (bIOFailure) {
-            std::cerr << "Failed to download leaderboard scores\n";
             return;
         }
 
         int numEntries = pResult->m_cEntryCount;
-        std::cout << "Top " << numEntries << " Global Scores:\n";
         for (int i = 0; i < numEntries; ++i) {
             LeaderboardEntry_t entry;
             SteamUserStats()->GetDownloadedLeaderboardEntry(pResult->m_hSteamLeaderboardEntries, i, &entry, nullptr, 0);
-            std::cout << entry.m_nGlobalRank << ". " << entry.m_nScore << " - "
-                << SteamFriends()->GetFriendPersonaName(entry.m_steamIDUser) << "\n";
         }
     }
 };

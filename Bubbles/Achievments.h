@@ -17,10 +17,8 @@ public:
         if (SteamUserStats()->GetAchievement(id.c_str(), &achieved) && !achieved) {
             SteamUserStats()->SetAchievement(id.c_str());
             SteamUserStats()->StoreStats();
-            std::cout << "Unlocked achievement: " << id << "\n";
         }
         else {
-            std::cout << "Achievement already unlocked or error: " << id << "\n";
         }
     }
 
@@ -39,11 +37,9 @@ private:
 
     void OnUserStatsReceived(UserStatsReceived_t* pCallback, bool bIOFailure) {
         if (bIOFailure || pCallback->m_eResult != k_EResultOK) {
-            std::cerr << "Failed to receive user stats/achievements\n";
             return;
         }
         statsInitialized = true;
-        std::cout << "Achievements initialized and ready!\n";
     }
 };
 

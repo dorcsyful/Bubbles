@@ -34,7 +34,6 @@ public:
 			float forceMagnitude = shakeIntensity * static_cast<float>(rand()) / RAND_MAX;
 			float forceX = forceMagnitude * cos(angle);
 			float forceY = forceMagnitude * sin(angle);
-			std::cout << forceX << " " << forceY << "\n";
 			circle->AddForce(sf::Vector2f(forceX, forceY));
 		}
 	}
