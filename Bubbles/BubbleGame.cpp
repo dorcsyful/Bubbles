@@ -33,6 +33,7 @@ BubbleGame::BubbleGame()
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
 	m_CloudSaves = std::make_unique<CloudSaves>();
 	m_LeaderBoard = std::make_unique<LeaderBoard>();
+	m_Achievments = std::make_unique<Achievments>();
 	m_Physics->CreateContainerLines();
 
 	m_CloudSaves->LoadPersonalTop10();
@@ -119,6 +120,14 @@ void BubbleGame::PlayUpdate(float a_Delta)
 		else
 		{
 			auto combined = m_Gameplay->CombineBubble(bubble1, bubble2, true);
+			if (combined->GetBubbleType() == EBUBBLE_TYPE::TYPE_WHALE)
+			{
+				m_Achievments->Unlock("DUCK_REACHED");
+			}
+			if (bubble1->GetBubbleType() == EBUBBLE_TYPE::TYPE_WHALE && bubble2->GetBubbleType() == EBUBBLE_TYPE::TYPE_WHALE)
+			{
+				m_Achievments->Unlock("DUCKS_COMBINED");
+			}
 			CreateWrapper(combined);			
 		}
 
@@ -128,6 +137,7 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 		m_Wrapper->RemoveObjectByPointer(bubble1);
 		m_Wrapper->RemoveObjectByPointer(bubble2);
+		m_Achievments->Unlock("FIRST_COMBINE");
 
 	}
 
@@ -302,6 +312,8 @@ void BubbleGame::GameOver()
 																delay * static_cast<float>(m_Wrapper->GetNumOfObjects()), false);
 	CallAfterDelay::getInstance().AddFunction([this](){ RemoveAtEnd(); }, "RemoveBubbles" , delay, true);
 	CallAfterDelay::getInstance().AddFunction([this]() { Audio::getInstance().PlayBackgroundMusic(); }, "RestartBackgroundMusic", 4.f, false);
+	m_Achievments->Unlock("DEAD");
+
 
 }
 
@@ -408,10 +420,17 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			}
 		}
 
-		if (pressedCode == sf::Keyboard::Key::P)
-		{
-			GameOver();
-		}
+		if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
+		if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
+		if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
+		if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
+		if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
+		if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
+		if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
+		if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
+		if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
+		if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
+		if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
 	}
 
 	if(m_IsMouseButtonPressed)

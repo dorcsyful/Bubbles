@@ -8,6 +8,7 @@
 #include <windows.h>
 #include "CloudSaves.h"
 #include "LeaderBoard.h"
+#include "Achievments.h"
 class BubbleGame
 {
 public:
@@ -51,5 +52,6 @@ private:
 	std::unique_ptr<LeaderBoard> m_LeaderBoard;
 	std::unique_ptr<BubbleWrapper> m_Wrapper;
 	std::unique_ptr<CloudSaves> m_CloudSaves;
+	std::unique_ptr<Achievments> m_Achievments;
 };
 
