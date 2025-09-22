@@ -31,7 +31,8 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	{
 		sf::Vector2u size = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(size.x, size.y)), "Bubbles!",
-			sf::Style::Default,sf::State::Windowed, context);
+			sf::Style::Titlebar | sf::Style::Close
+			,sf::State::Windowed, context);
 
 	}
 	m_Window->setVerticalSyncEnabled(true);
@@ -392,6 +393,130 @@ void Rendering::Reset()
 {
 	m_StoredSprite->setTexture(*m_StorageTextures.at(EBUBBLE_TYPE::TYPE_NULL));
 	m_ActiveBubble = EBUBBLE_TYPE::TYPE_STAR;
+}
+
+void Rendering::ResetSize()
+{
+	std::cout << "New scale: " << Settings::get().GetScale() << std::endl;
+	sf::Vector2u newSize = m_Window->getSize();
+	if (newSize.x != Settings::get().GetWindowWidth()) 
+	{
+		float scale = newSize.x / Settings::get().GetWindowWidth();
+		std::cout << scale << std::endl;
+		newSize.y = Settings::get().GetWindowHeight() * Settings::get().GetScale();
+		std::cout << newSize.x << " " << newSize.y << std::endl;
+		m_Window->setSize(newSize);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	m_BackgroundSprite->setSize(sf::Vector2f(m_BackgroundTexture->getSize().x * Settings::get().GetScale(), m_BackgroundTexture->getSize().y * Settings::get().GetScale()));
+	m_BackgroundExtendedSprite->setSize(sf::Vector2f(m_Window->getSize().x, m_Window->getSize().y));
+	//m_MainBackgroundSprite;
+	//std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
+	//std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;
+	//std::unique_ptr<sf::RectangleShape> m_MainBackgroundExtendedSprite;
+
+
+	////Play mode
+	//std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
+	//std::unique_ptr<sf::Texture> m_ContainerTexture;
+	//std::unique_ptr<sf::RectangleShape> m_Container;
+	//std::unique_ptr<sf::Texture> m_FrameTexture;
+	//std::unique_ptr<sf::RectangleShape> m_Frame;
+	//std::unique_ptr<ParticleSystem> m_ParticleSystem;
+	//std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>> m_BubbleTextures;
+	//std::unique_ptr<sf::Texture> m_NextUpTexture;
+	//EBUBBLE_TYPE m_ActiveBubble;
+	//EBUBBLE_TYPE m_ActiveNextUp;
+	//std::map<EBUBBLE_TYPE, std::unique_ptr<AnimatedSprite>> m_PreviewBubbles;
+	//std::unique_ptr<sf::Sprite> m_NextUpBubble;
+
+	//std::unique_ptr<sf::Texture> m_LineTexture;
+	//std::unique_ptr<sf::RectangleShape> m_Line;
+	//std::unique_ptr<sf::Texture> m_DuckTexture;
+	//std::unique_ptr<AnimatedSprite> m_Duck;
+
+	////Play mode UI
+	//std::unique_ptr<sf::Texture> m_ScoreBackgroundTexture;
+	//std::unique_ptr<sf::Sprite> m_ScoreBackgroundSprite;
+	//std::unique_ptr<sf::Texture> m_ScoreBackgroundInPlayTexture;
+	//std::unique_ptr<sf::Sprite> m_ScoreBackgroundInPlaySprite;
+	//std::unique_ptr<sf::Text> m_ComboText;
+	//std::unique_ptr<sf::Text> m_Score;
+	//std::unique_ptr<sf::Sprite> m_ScoreTitle;
+	//std::unique_ptr<sf::Texture> m_ScoreTitleTexture;
+	//std::vector<std::unique_ptr<sf::Texture>> m_ScoreNumberTextures;
+	//std::vector<std::unique_ptr<sf::Sprite>> m_ScoreNumberSprites;
+	//float m_ScoreStartPosition;
+
+	//std::unique_ptr<sf::Sprite> m_HighScoreTitleInPlay;
+	//std::unique_ptr<sf::Texture> m_HighScoreTitleTextureInPlay;
+	//std::vector<std::unique_ptr<sf::Text>> m_HighScoresInPlay;
+	//std::unique_ptr<sf::Texture> m_HighScoreTextureInPlay;
+	//std::unique_ptr<sf::Sprite> m_HighScoreSpriteInPlay;
+
+	//std::unique_ptr<sf::Text> m_StorageText;
+	//std::unique_ptr<sf::Sprite> m_StoredSprite;
+	//std::unique_ptr<sf::Sprite> m_MovingStorageSprite;
+	//float m_MovingStorageLerp = 0;
+	//float m_MovingDirection = 0;
+	//EBUBBLE_TYPE m_TypeInStorage = EBUBBLE_TYPE::TYPE_NULL;
+	//std::map<EBUBBLE_TYPE, std::unique_ptr<sf::Texture>> m_StorageTextures;
+
+	//std::unique_ptr<sf::Texture> m_InstructionTexture;
+	//std::unique_ptr<sf::Sprite> m_InstructionShape;
+
+	//std::unique_ptr<sf::Texture> m_CycleTexture;
+	//std::unique_ptr<sf::RectangleShape> m_CycleSprite;
+
+	////Game over mode
+	//std::unique_ptr<sf::RectangleShape> m_GameOver;
+	//std::unique_ptr<sf::Texture> m_GameOverTexture;
+	//std::unique_ptr<sf::Text> m_GameOverScoreText;
+	//std::vector<std::unique_ptr<sf::Sprite>> m_GOScoreNumberSprites;
+	//std::unique_ptr<sf::Sprite> m_GOScoreCloudSprite;
+	//float m_GOStartPosition;
+	//std::unique_ptr<sf::Sprite> m_GOHighScoreBackground;
+	//std::vector<std::unique_ptr<sf::Text>> m_GOHighScores;
+
+	////Menu mode
+	//std::unique_ptr<sf::RectangleShape> m_Title;
+	//std::unique_ptr<sf::Texture> m_TitleTexture;
+	//std::map<std::string, std::unique_ptr<Button>> m_MenuButtons;
+	//std::unique_ptr<sf::Font> m_Font;
+	//std::unique_ptr<sf::Font> m_FontBold;
+	//std::unique_ptr<AnimatedSprite> m_Loading;
+	//std::unique_ptr<sf::Texture> m_LoadingTexture;
+	//std::unique_ptr<sf::Texture> m_BaseButtonTexture;
+
+	////HighScore
+	//std::vector<std::unique_ptr<sf::Text>> m_HighScoreSprites;
+	//std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
+	//std::unique_ptr<sf::Texture> m_HighScoreTexture;
+	//std::unique_ptr<Button> m_HSBackButton;
+	//std::unique_ptr<sf::Texture> m_HSBackgroundTexture;
+	//std::unique_ptr<sf::Sprite> m_HSBackgroundSprite;
+	////Confirm
+	//std::unique_ptr<sf::RectangleShape> m_ConfirmationWindow;
+	//std::unique_ptr<sf::Texture> m_ConfirmationTexture;
+	//std::unique_ptr<sf::Text> m_ConfirmationText;
+
+	////Settings
+	//std::unique_ptr<sf::RectangleShape> m_SettingsTitle;
+	//std::unique_ptr<sf::Texture> m_SettingsTexture;
+	//std::vector<std::unique_ptr<sf::Text>> m_SettingsText;
+	//std::vector<std::unique_ptr<Slider>> m_SettingSliders;
+	//std::unique_ptr<sf::Texture> m_CheckboxTexture;
+	//std::unique_ptr<Checkbox> m_FullscreenCheckbox;
+
+	//std::unique_ptr<sf::Image> m_Icon;
 }
 
 void Rendering::UpdateHighScores(const std::vector<unsigned int>& a_Scores) const

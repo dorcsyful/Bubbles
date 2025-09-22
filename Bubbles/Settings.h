@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <chrono>
 #include <fstream>
+#include <iostream>
 
 #include "Declarations.h"
 
@@ -79,6 +80,7 @@ public:
     [[nodiscard]] float GetScale() const { return m_Scale; }
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
+
 
     void UpdateSettings(bool a_Fullscreen)
     {

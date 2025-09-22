@@ -86,6 +86,7 @@ public:
 	std::unique_ptr<Checkbox>& GetFullscreenCheckbox() { return m_FullscreenCheckbox; }
 	void StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage);
 	void Reset();
+	void ResetSize();
 
 private:
 	void PlayDraw(float a_Delta);

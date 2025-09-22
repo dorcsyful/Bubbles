@@ -188,15 +188,6 @@ void BubbleGame::Update()
 			{
 				m_Rendering->GetWindow()->close();
 			}
-
-			else if(event->is<sf::Event::FocusLost>())
-			{
-				isFocused = false;
-			}
-			else if(event->is<sf::Event::FocusGained>())
-			{
-				isFocused = true;
-			}
 			if(event->is<sf::Event::MouseButtonPressed>()&& event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left)
 			{
 				m_IsMouseButtonPressed = true;
