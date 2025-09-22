@@ -22,6 +22,7 @@ private:
 	}
 
 	std::unique_ptr<sf::Sprite> m_Sprite;
+	bool isCooldown;
 	bool m_IsChecked;
 	bool m_IsHovered;
 };

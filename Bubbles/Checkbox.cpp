@@ -29,8 +29,11 @@ void Checkbox::SetEnableCheckbox(bool a_Enable)
 
 bool Checkbox::DetectClick(const sf::Vector2f& a_MousePosition)
 {
+	if (isCooldown) { return false; }
 	if(m_Sprite->getGlobalBounds().contains(a_MousePosition))
 	{
+		isCooldown = true;
+		CallAfterDelay::getInstance().AddFunction([this]() { isCooldown = false; }, "DisableCooldown", 1.f, false);
 		Audio::getInstance().PlayClick();
 		int rect = m_IsChecked ? 0 : 1;
 		int x = m_Sprite->getTexture().getSize().x;
@@ -54,5 +57,6 @@ void Checkbox::DetectHover(const sf::Vector2f& a_MousePosition) const
 		return;
 	}
 	rect = m_IsChecked ? 1 : 0;
+	
 	m_Sprite->setTextureRect(sf::IntRect(sf::Vector2i(vector2U.x / 4 * (rect), 0), sf::Vector2i(vector2U.x / 4, vector2U.y)));
 }

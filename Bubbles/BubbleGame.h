@@ -13,7 +13,8 @@ class BubbleGame
 {
 public:
 
-	BubbleGame();
+	BubbleGame() {}
+	void Initialize();
 	~BubbleGame();
 	void Update();
 	void CreateWrapper(std::unique_ptr<BubbleObject>& a_NewBubble) const;

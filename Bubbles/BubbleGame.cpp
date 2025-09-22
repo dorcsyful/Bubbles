@@ -12,7 +12,7 @@
 
 
 
-BubbleGame::BubbleGame()
+void BubbleGame::Initialize()
 {
 	if (!SteamAPI_Init()) {
 		std::cerr << "SteamAPI_Init() failed. Steam must be running.\n";
@@ -53,8 +53,6 @@ BubbleGame::~BubbleGame()
 
 void BubbleGame::PlayUpdate(float a_Delta)
 {
-
-
 	m_Gameplay->Update(a_Delta);
 	m_Physics->Update(a_Delta);
 
@@ -176,6 +174,7 @@ void BubbleGame::Update()
 
 	while(m_Rendering->GetWindow()->isOpen())
 	{
+		if (m_State == EGAME_STATE::STATE_START) { Initialize(); }
 		SteamAPI_RunCallbacks();
 
 		float frameTime = dtClock.restart().asSeconds();
@@ -189,14 +188,7 @@ void BubbleGame::Update()
 			{
 				m_Rendering->GetWindow()->close();
 			}
-			else if(event->is<sf::Event::Resized>())
-			{
-				
-				//m_Rendering = std::make_unique<Rendering>(m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y, m_Wrapper->GetRendered());
-				sf::Vector2u newSize = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
-				if (!Settings::get().IsFullscreen()) { m_Rendering->GetWindow()->setSize(newSize); }
-				
-			}
+
 			else if(event->is<sf::Event::FocusLost>())
 			{
 				isFocused = false;
