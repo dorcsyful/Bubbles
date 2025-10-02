@@ -6,6 +6,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include "Helpers.h"
+#include <algorithm>
 #include <chrono>
 
 #include "Audio.h"
@@ -178,7 +179,7 @@ void BubbleGame::Update()
 		SteamAPI_RunCallbacks();
 
 		float frameTime = dtClock.restart().asSeconds();
-		if (frameTime > 0.25f) frameTime = 0.25f; // avoid spiral of death
+		frameTime = std::min(frameTime, 0.25f); // avoid spiral of death
 		accumulator += frameTime;
 
 		while (const std::optional event = m_Rendering->GetWindow()->pollEvent())
@@ -431,7 +432,6 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_RESTART_CONFIRM; m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_RESTART_CONFIRM); },
 				"SetConfirmState2", 0.1f, false);
 
-			RestartGame();
 		}
 	}
 
