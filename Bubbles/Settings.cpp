@@ -175,6 +175,18 @@ void Settings::SetSoundEnabled(float a_Music, float a_Effects)
     outfile.close();
 }
 
+std::string Settings::GetResSizeAsString(int a_Index)
+{
+    if (a_Index < m_ResolutionOptions.size())
+    {
+        return std::string(std::to_string(m_ResolutionOptions[a_Index].first) + " x " + std::to_string(m_ResolutionOptions[a_Index].second));
+    }
+    else
+    {
+	    return std::string(std::to_string(m_ResolutionOptions[0].first) + " x " + std::to_string(m_ResolutionOptions[0].second));
+    }
+}
+
 void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
 {
     float xScale = a_WindowX / m_WindowWidth;

@@ -78,7 +78,7 @@ public:
     [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
 
     [[nodiscard]] float GetScale() const { return m_Scale; }
-    std::string GetResSizeAsString(int a_Index) { return std::string(std::to_string(m_ResolutionOptions[a_Index].first) + " x " + std::to_string(m_ResolutionOptions[a_Index].second)); }
+    std::string GetResSizeAsString(int a_Index);
     int GetCurrentRes() { return m_SelectedResOption; }
     int FindResIndex(int a_X) { for (int i = 0; i < m_ResolutionOptions.size(); i++) { if (m_ResolutionOptions[i].first == a_X) return i; } return -1; }
 

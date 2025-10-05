@@ -395,7 +395,9 @@ void Rendering::UpdateResolutionList()
 {
 	std::string currentRes = m_Resolution_List->getString();
 	std::string temp = currentRes.substr(0, 4);
-	std::string newIndex = Settings::get().GetResSizeAsString(Settings::get().FindResIndex(stoi(temp)) + 1);
+	int index = Settings::get().FindResIndex(stoi(temp)) + 1;
+	if (index == -1) { index = 0; }
+	std::string newIndex = Settings::get().GetResSizeAsString(index);
 	m_Resolution_List->setString(newIndex);
 }
 
