@@ -32,6 +32,8 @@ public:
 
 	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
+	Button* GetResolutionArrow() { return m_RightResArrow.get(); }
+	void UpdateResolutionList();
 
 	void UpdateScore(const unsigned int a_Score)
 	{
@@ -224,7 +226,9 @@ private:
 	std::vector<std::unique_ptr<Slider>> m_SettingSliders;
 	std::unique_ptr<sf::Texture> m_CheckboxTexture;
 	std::unique_ptr<Checkbox> m_FullscreenCheckbox;
-
+	std::unique_ptr<sf::Text> m_Resolution_List;
+	std::unique_ptr<Button> m_RightResArrow;
+	std::unique_ptr<sf::Texture> m_ArrowTexture;
 	std::unique_ptr<sf::Image> m_Icon;
 };
 

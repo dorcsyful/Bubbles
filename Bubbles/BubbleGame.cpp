@@ -578,7 +578,7 @@ void BubbleGame::SettingsInput(const sf::Event& a_Event)
 	{
 		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
 	 
-		Settings::get().UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+		Settings::get().UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked(),0);
 		if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
 		{
 			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
@@ -600,6 +600,9 @@ void BubbleGame::SettingsInput(const sf::Event& a_Event)
 				m_State = EGAME_STATE::STATE_MENU;
 		}, "RevertSettings", 0.1f, false);
 	}
-
+	if (m_IsMouseButtonPressed && m_Rendering->GetResolutionArrow()->DetectClick(mousePosition))
+	{
+		m_Rendering->UpdateResolutionList();
+	}
 	if(m_IsMouseButtonPressed) m_Rendering->GetFullscreenCheckbox()->DetectClick(mousePosition);
 }

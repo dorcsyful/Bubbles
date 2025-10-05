@@ -22,7 +22,7 @@ public:
 
     void LoadSettings();
     void LoadBubbleSizes(const std::string& a_Length);
-
+    void LoadResolutions(const std::string& a_String);
     [[nodiscard]] float GetWindowWidth() const { return m_WindowWidth; }
     [[nodiscard]] float GetWindowHeight() const { return m_WindowHeight; }
     [[nodiscard]] float GetContainerWidth() const { return m_ContainerWidth; }
@@ -78,11 +78,15 @@ public:
     [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
 
     [[nodiscard]] float GetScale() const { return m_Scale; }
+    std::string GetResSizeAsString(int a_Index) { return std::string(std::to_string(m_ResolutionOptions[a_Index].first) + " x " + std::to_string(m_ResolutionOptions[a_Index].second)); }
+    int GetCurrentRes() { return m_SelectedResOption; }
+    int FindResIndex(int a_X) { for (int i = 0; i < m_ResolutionOptions.size(); i++) { if (m_ResolutionOptions[i].first == a_X) return i; } return -1; }
+
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
 
 
-    void UpdateSettings(bool a_Fullscreen)
+    void UpdateSettings(bool a_Fullscreen, int a_Resolution)
     {
         std::vector<std::string> lines;
         std::ifstream infile("Assets/Settings.save");
@@ -158,5 +162,7 @@ private:
     int m_MainButtonFontSize = 0;
 
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
+    std::vector<std::pair<int, int>> m_ResolutionOptions;
+    int m_SelectedResOption;
 };
 

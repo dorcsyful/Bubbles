@@ -91,6 +91,10 @@ void Settings::LoadSettings()
                 m_StorageSpriteHeight = stof(value);
             if (name == "MAIN_BUTTON_FONT_SIZE")
                 m_MainButtonFontSize = stoi(value);
+            if (name == "RESOLUTION")
+                LoadResolutions(value);
+            if (name == "SELECTED_RESOLUTION")
+                m_SelectedResOption = stoi(value);
         }
         file.close();
     }
@@ -109,6 +113,23 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
         else
         {
             temp += a_Length[i];
+        }
+    }
+}
+
+void Settings::LoadResolutions(const std::string& a_String)
+{
+    std::string temp;
+    for (size_t i = 0; i < a_String.length(); i++)
+    {
+        if (a_String[i] == ',')
+        {
+            m_ResolutionOptions.insert(m_ResolutionOptions.end(),std::pair(m_WindowWidth * std::stof(temp), m_WindowHeight * std::stof(temp)));
+            temp = "";
+        }
+        else
+        {
+            temp += a_String[i];
         }
     }
 }

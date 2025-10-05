@@ -265,11 +265,13 @@ void Rendering::SettingsDraw() const
 
 	m_MenuButtons.at("ApplySettings")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("Revert")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	m_RightResArrow->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_FullscreenCheckbox->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_Window->draw(*m_FullscreenCheckbox);
 	m_MenuButtons.at("ApplySettings")->Draw(*m_Window);
 	m_MenuButtons.at("Revert")->Draw(*m_Window);
-
+	m_RightResArrow->Draw(*m_Window);
+	m_Window->draw(*m_Resolution_List);
 	m_Window->draw(*m_SettingsTitle);
 }
 
@@ -387,6 +389,14 @@ void Rendering::ResetButtons() const
 	{
 		element.second->ApplyBaseTexture();
 	}
+}
+
+void Rendering::UpdateResolutionList()
+{
+	std::string currentRes = m_Resolution_List->getString();
+	std::string temp = currentRes.substr(0, 4);
+	std::string newIndex = Settings::get().GetResSizeAsString(Settings::get().FindResIndex(stoi(temp)) + 1);
+	m_Resolution_List->setString(newIndex);
 }
 
 void Rendering::Reset()
@@ -1255,6 +1265,8 @@ void Rendering::CreateSettings()
 {
 	m_SettingsTexture = std::make_unique<sf::Texture>();
 	m_SettingsTexture->loadFromFile(SETTINGS_FILENAME);
+	m_ArrowTexture = std::make_unique<sf::Texture>();
+	m_ArrowTexture->loadFromFile(RESOLUTION_ARROW);
 
 	m_SettingsTitle = std::make_unique<sf::RectangleShape>();
 	m_SettingsTitle->setTexture(m_SettingsTexture.get());
@@ -1279,6 +1291,12 @@ void Rendering::CreateSettings()
 	m_FullscreenCheckbox = std::make_unique<Checkbox>(m_CheckboxTexture, position, 50 *Settings::get().GetScale());
 	m_FullscreenCheckbox->SetEnableCheckbox(Settings::get().IsFullscreen());
 
+	std::string temp = Settings::get().GetResSizeAsString(Settings::get().GetCurrentRes());
+	m_Resolution_List = std::make_unique<sf::Text>(*m_Font, temp);
+	m_Resolution_List->setFillColor(sf::Color::Black);
+	position.y += m_SettingsTitle->getGlobalBounds().size.y / 1.5f;
+	m_Resolution_List->setPosition(position);
+	m_Resolution_List->setOrigin(sf::Vector2f(0, m_Resolution_List->getGlobalBounds().size.y));
 
 	m_SettingsText = std::vector<std::unique_ptr<sf::Text>>();
 
@@ -1294,12 +1312,20 @@ void Rendering::CreateSettings()
 	m_SettingsText[2]->setFillColor(sf::Color::Black);
 	m_SettingsText[2]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
 
+	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font, "Resolution:"));
+	m_SettingsText[3]->setFillColor(sf::Color::Black);
+	m_SettingsText[3]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
+
+	position.x += m_Resolution_List->getGlobalBounds().size.x * 1.3f;
+	m_RightResArrow = std::make_unique<Button>(position, *m_Font, m_ArrowTexture.get());
+	m_RightResArrow->SetScale(sf::Vector2f(0.3f, 0.3f));
 	float lengths[] = {m_SettingsText[0]->getGlobalBounds().size.x, m_SettingsText[1]->getGlobalBounds().size.x, m_SettingsText[2]->getGlobalBounds().size.x};
 	float max = std::max(lengths[0], lengths[1]);
 	max = std::max(max, lengths[2]);
 	m_SettingsText[0]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[0]->GetSliderPosition().y));
 	m_SettingsText[1]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[1]->GetSliderPosition().y));
 	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y + 25 * Settings::get().GetScale()));
+	m_SettingsText[3]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_Resolution_List->getPosition().y));
 
 
 	CreateSettingsButtons();

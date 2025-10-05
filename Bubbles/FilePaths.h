@@ -61,3 +61,4 @@
 
 #define ICON_PATH "Assets/favicon.png"
 #define ALL_HIGHSCORES "Assets/Menu/highscores.png"
+#define RESOLUTION_ARROW "Assets/Menu/Arrow.png"
