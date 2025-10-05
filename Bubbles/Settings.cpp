@@ -216,7 +216,7 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_HighScoreItemHeight *= m_Scale;
     m_DuckHeight *= m_Scale;
     float MainButtonFontSize = static_cast<float>(m_MainButtonFontSize) * m_Scale;
-    m_MainButtonFontSize = static_cast<int>(MainButtonFontSize);
+    m_MainButtonFontSize = std::round(MainButtonFontSize);
     m_DuckWidth *= m_Scale;
     m_NextUpWidth *= m_Scale;
     m_NextUpHeight *= m_Scale;

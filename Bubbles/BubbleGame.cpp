@@ -577,16 +577,12 @@ void BubbleGame::SettingsInput(const sf::Event& a_Event)
 	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("ApplySettings")->DetectClick(mousePosition))
 	{
 		Settings::get().SetSoundEnabled(m_Rendering->GetSettingSlider(0)->GetSliderValue(), m_Rendering->GetSettingSlider(1)->GetSliderValue());
-	 
-		Settings::get().UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked(),0);
-		if (m_Rendering->GetFullscreenCheckbox()->IsChecked() != Settings::get().IsFullscreen())
-		{
-			Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
-			m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
-		}
-		else
-			CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_MENU; }, "ApplySettings", 0.1f, false);
+		Settings::get().SetFullscreen(m_Rendering->GetFullscreenCheckbox()->IsChecked());
+
+		Settings::get().UpdateSettings(m_Rendering->GetFullscreenCheckbox()->IsChecked(),m_Rendering->GetChosenResolution());
+
+		m_Rendering->UpdateConfirmText(EGAME_STATE::STATE_SETTINGS_CONFIRM);
+		CallAfterDelay::getInstance().AddFunction([this]() { m_State = EGAME_STATE::STATE_SETTINGS_CONFIRM; }, "ApplySettings", 0.1f, false);
 	}
 	if (m_IsMouseButtonPressed && m_Rendering->GetMenuButtons().at("Revert")->DetectClick(mousePosition))
 	{

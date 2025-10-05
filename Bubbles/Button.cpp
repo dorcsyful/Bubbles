@@ -6,6 +6,7 @@
 
 #include "Audio.h"
 #include "Helpers.h"
+#include "Settings.h"
 
 Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Texture* a_BaseTexture)
 {
@@ -21,7 +22,7 @@ Button::Button(const sf::Vector2f& a_Position, const sf::Font& a_Font, sf::Textu
 
 
 	m_Text->setFont(a_Font);
-	m_Text->setCharacterSize(40);
+	m_Text->setCharacterSize(static_cast<int>(38 * Settings::get().GetScale()));
 	sf::Color temp = sf::Color::White;
 	m_Text->setFillColor(temp);
 	m_Text->setStyle(sf::Text::Bold);

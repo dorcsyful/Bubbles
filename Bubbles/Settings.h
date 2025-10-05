@@ -79,24 +79,39 @@ public:
 
     [[nodiscard]] float GetScale() const { return m_Scale; }
     std::string GetResSizeAsString(int a_Index);
-    int GetCurrentRes() { return m_SelectedResOption; }
-    int FindResIndex(int a_X) { for (int i = 0; i < m_ResolutionOptions.size(); i++) { if (m_ResolutionOptions[i].first == a_X) return i; } return -1; }
-
+    int GetCurrentRes() const { return m_SelectedResOption; }
+    int FindResIndex(int a_X) const
+    { for (int i = 0; i < m_ResolutionOptions.size(); i++) { if (m_ResolutionOptions[i].first == a_X) return i; } return -1; }
+    std::pair<int, int> GetResSizeAsPair(int a_Index) const { return m_ResolutionOptions[a_Index]; }
 
     void IncreaseIfFullScreen(float a_WindowX, float a_WindowY);
 
 
-    void UpdateSettings(bool a_Fullscreen, int a_Resolution)
+    void UpdateSettings(bool a_Fullscreen, std::string a_Resolution)
     {
+        for (int i = 0; i < m_ResolutionOptions.size();i++)
+        {
+	        if (a_Resolution.substr(0,4) == std::to_string(m_ResolutionOptions[i].first))
+	        {
+                m_SelectedResOption = i;
+	        }
+        }
+
+
         std::vector<std::string> lines;
         std::ifstream infile("Assets/Settings.save");
         std::string line;
         int i;
         int counter = 0;
+        int resLine;
         while (getline(infile, line)) {
             if (line.starts_with("FULLSCREEN|"))
             {
                 i = counter;
+            }
+            if (line.starts_with("SELECTED_RESOLUTION|"))
+            {
+                resLine = counter;
             }
             lines.push_back(line);
             counter++;
@@ -106,7 +121,7 @@ public:
         // Modify the last line
         std::string asString = a_Fullscreen ? "YES" : "NO";
         lines[i] = "FULLSCREEN|" + asString;
-
+        lines[resLine] = "SELECTED_RESOLUTION|" + std::to_string(m_SelectedResOption);
         std::ofstream outfile("Assets/Settings.save");
         for (const std::string& nline : lines) {
             outfile << nline << '\n';

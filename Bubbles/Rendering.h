@@ -33,6 +33,7 @@ public:
 	std::map<std::string, std::unique_ptr<Button>>& GetMenuButtons() { return m_MenuButtons; }
 	void ResetButtons() const;
 	Button* GetResolutionArrow() { return m_RightResArrow.get(); }
+	std::string GetChosenResolution() { return m_Resolution_List->getString(); }
 	void UpdateResolutionList();
 
 	void UpdateScore(const unsigned int a_Score)
