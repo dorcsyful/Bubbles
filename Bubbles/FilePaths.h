@@ -29,7 +29,7 @@
 #define GENERIC_BACKGROUND_FILENAME "Assets/Menu/GenericBackground.png"
 #define GAME_BACKGROUND_FILENAME "Assets/background.png"
 #define GAME_BACKGROUND_EXTENDED_FILENAME "Assets/background-orange.png"
-#define MENU_BACKGROUND_FILENAME "Assets/background-main.png"
+#define MENU_BACKGROUND_FILENAME "Assets/mainmenu2.png"
 #define MENU_BACKGROUND_EXTENDED_FILENAME "Assets/background-main-pink.png"
 #define SOAP_BOTTLE_FILENAME "Assets/PlayMode/soapbottle.png"
 #define INSTRUCTION_FILENAME "Assets/PlayMode/Controls.png"
@@ -62,3 +62,8 @@
 #define ICON_PATH "Assets/favicon.png"
 #define ALL_HIGHSCORES "Assets/Menu/highscores.png"
 #define RESOLUTION_ARROW "Assets/Menu/Arrow.png"
+
+#define SETTINGS_BUTTON "Assets/Menu/button-settings.png"
+#define PLAY_BUTTON "Assets/Menu/button-play.png"
+#define HIGH_SCORES_BUTTON "Assets/Menu/button-highscores.png"
+#define EXIT_BUTTON "Assets/Menu/button-exit.png"

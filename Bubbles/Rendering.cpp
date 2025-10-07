@@ -932,38 +932,45 @@ void Rendering::CreateMenuButtonSprites()
 	m_FontBold = std::make_unique<sf::Font>();
 	m_FontBold->openFromFile(FONT_BOLD_FILENAME);
 
+
+	m_PlayButtonTexture = std::make_unique<sf::Texture>(HIGH_SCORES_BUTTON);
+	m_HighScoresButtonTexture = std::make_unique<sf::Texture>(HIGH_SCORES_BUTTON);
+	m_SettingsButtonTexture = std::make_unique<sf::Texture>(HIGH_SCORES_BUTTON);
+	m_ExitButtonTexture = std::make_unique<sf::Texture>(HIGH_SCORES_BUTTON);
+
+
 	sf::Vector2f basePos = sf::Vector2f(m_Title->getPosition());
 	basePos.y += m_Title->getSize().y + 10;
-	basePos.x -= m_Title->getSize().x / 4;
+	basePos.x -= m_Title->getSize().x / 3;
 	m_BaseButtonTexture = std::make_unique<sf::Texture>();
 	m_BaseButtonTexture->loadFromFile(BUTTON_FILENAME);
 	m_MenuButtons = std::map<std::string, std::unique_ptr<Button>>();
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.f), Settings::get().GetMenuButtonHeight() / BBTextureSize.y);
 
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_BaseButtonTexture.get());
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos,*m_Font, m_PlayButtonTexture.get());
 	newButton->SetText("Play");
 	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(),std::pair<std::string, std::unique_ptr<Button>>("Play", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_HighScoresButtonTexture.get());
 	newButton->SetText("High Scores");
 	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("High_Score", std::move(newButton)));
 
-	basePos.x += m_Title->getSize().x / 2;
+	basePos.x += m_Title->getSize().x / 1.5f;
 	basePos.y = m_Title->getPosition().y + m_Title->getSize().y + 10;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_SettingsButtonTexture.get());
 	newButton->SetText("Settings");
 	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Settings", std::move(newButton)));
 
 	basePos.y += Settings::get().GetMenuButtonHeight() * 1.1f;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_ExitButtonTexture.get());
 	newButton->SetText("Exit");
 	newButton->ResizeCharacters(Settings::get().GetMainButtonFontSize());
 	newButton->SetScale(buttonScale);

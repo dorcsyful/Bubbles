@@ -208,6 +208,12 @@ private:
 	std::unique_ptr<sf::Texture> m_LoadingTexture;
 	std::unique_ptr<sf::Texture> m_BaseButtonTexture;
 
+	std::unique_ptr<sf::Texture> m_PlayButtonTexture;
+	std::unique_ptr<sf::Texture> m_SettingsButtonTexture;
+	std::unique_ptr<sf::Texture> m_HighScoresButtonTexture;
+	std::unique_ptr<sf::Texture> m_ExitButtonTexture;
+
+
 	//HighScore
 	std::vector<std::unique_ptr<sf::Text>> m_HighScoreSprites;
 	std::unique_ptr<sf::RectangleShape> m_HighScoreTitle;
