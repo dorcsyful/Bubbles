@@ -40,7 +40,7 @@ void Settings::LoadSettings()
             if (name == "HIGH_SCORE_ITEM_HEIGHT")
                 m_HighScoreItemHeight = stof(value);
             if (name == "SIZES")
-                LoadBubbleSizes(value);
+                LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 0.5, 0.5, ");
             if (name == "COMBO_EXTRA_SCORE")
                 m_ComboScore = stoi(value);
             if (name == "GAME_OVER_ANIMATION_TOTAL_TIME")

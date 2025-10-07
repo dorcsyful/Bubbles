@@ -1267,7 +1267,7 @@ void Rendering::CreateSettingsButtons()
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
 
-	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 1.75f;
+	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 2.f;
 	newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
 	newButton->SetText("Revert");
 	newButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
