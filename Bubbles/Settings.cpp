@@ -22,9 +22,9 @@ void Settings::LoadSettings()
             if (name == "WINDOW_HEIGHT")
                 m_WindowHeight = stof(value);
             if (name ==  "CONTAINER_WIDTH")
-                m_ContainerWidth = stof(value);
+                m_ContainerWidth = stof(value) * 1.3f;
             if (name == "CONTAINER_HEIGHT")
-                m_ContainerHeight = stof(value);
+                m_ContainerHeight = stof(value) * 1.3f;
             if (name == "POINTER_MOVE_SPEED")
                 m_PointerMoveSpeed = stof(value);
             if (name == "PIXEL_TO_METER")
@@ -54,17 +54,17 @@ void Settings::LoadSettings()
             if (name == "ANTI_ALIASING")
                 m_AntiAliasingLevel = stoi(value);
             if (name == "DUCK_WIDTH")
-                m_DuckWidth = stof(value);
+                m_DuckWidth = stof(value) * 1.3f;
             if (name == "DUCK_HEIGHT")
-                m_DuckHeight = stof(value);
+                m_DuckHeight = stof(value) * 1.3f;
             if (name == "NEXT_UP_WIDTH")
-                m_NextUpWidth = stof(value);
+                m_NextUpWidth = stof(value) * 1.31f;
             if (name == "NEXT_UP_HEIGHT")
-                m_NextUpHeight = stof(value);
+                m_NextUpHeight = stof(value) * 1.31f;
             if (name == "CONTAINER_FRAME_WIDTH")
-                m_FrameWidth = stof(value);
+                m_FrameWidth = stof(value) * 1.3f;
             if (name == "CONTAINER_FRAME_HEIGHT")
-                m_FrameHeight = stof(value);
+                m_FrameHeight = stof(value) * 1.3f;
             if (name == "CONFIRMATION_WIDTH")
                 m_ConfirmationWidth = stof(value);
             if (name == "CONFIRMATION_HEIGHT")
@@ -107,7 +107,7 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
     {
 	    if(a_Length[i] == ',')
 	    {
-            m_BubbleSizes.insert(std::pair(static_cast<EBUBBLE_TYPE>(m_BubbleSizes.size()), stof(temp)));
+            m_BubbleSizes.insert(std::pair(static_cast<EBUBBLE_TYPE>(m_BubbleSizes.size()), stof(temp) * 1.3f));
             temp = "";
 	    }
         else

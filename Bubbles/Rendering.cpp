@@ -732,28 +732,29 @@ void Rendering::LoadBackground()
 	{
 		//throw std::exception("Failed to load container texture");
 	}
+
 	m_ContainerTexture->setRepeated(false);
 	m_Container = std::make_unique<sf::RectangleShape>();
 	m_Container->setTexture(m_ContainerTexture.get());
-	float width = Settings::get().GetContainerWidth();
-	float height = Settings::get().GetContainerHeight() ;
-	m_Container->setSize(sf::Vector2f(width, height));
-	sf::Vector2f basePos = sf::Vector2f((windowSize.x / 2.f) - (width / 2.f), ((windowSize.y - height) / 1.755f));
-	m_Container->setPosition(basePos);
-
 	m_FrameTexture = std::make_unique<sf::Texture>();
 	m_FrameTexture->loadFromFile(FRAME_FILENAME);
 	m_Frame = std::make_unique<sf::RectangleShape>();
 	m_Frame->setTexture(m_FrameTexture.get());
 
-	sf::Vector2f containerSize = BubbleMath::ToVector2f(m_ContainerTexture->getSize());
-	sf::Vector2f frameSize = BubbleMath::ToVector2f(m_FrameTexture->getSize());
-	float x = (Settings::get().GetContainerWidth() / containerSize.x) * frameSize.x;
-	float y = (Settings::get().GetContainerHeight() / containerSize.y) * frameSize.y;
-	m_Frame->setSize(sf::Vector2f(x, y));
 
-	m_Frame->setOrigin(sf::Vector2f(m_Frame->getSize().x / 2.f, m_Frame->getSize().y / 2.f));
-	m_Frame->setPosition(sf::Vector2f(m_Container->getPosition().x + m_Container->getSize().x / 2, m_Container->getPosition().y + m_Container->getSize().y / 2 - Settings::get().GetFrameCorrection()));
+	float width = Settings::get().GetFrameWidth();
+	float height = Settings::get().GetFrameHeight() ;
+	m_Container->setSize(sf::Vector2f(width, height));
+	m_Frame->setSize(sf::Vector2f(width, height));
+	m_Container->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
+	m_Frame->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
+
+
+
+	sf::Vector2f basePos = sf::Vector2f(windowSize.x / 2.f, windowSize.y / 2.f);
+	m_Container->setPosition(basePos);
+	m_Frame->setPosition(basePos);
+	//m_Frame->setPosition(sf::Vector2f(m_Container->getPosition().x + m_Container->getSize().x / 2, m_Container->getPosition().y + m_Container->getSize().y / 2 - Settings::get().GetFrameCorrection()));
 }
 
 void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Position, const float a_Rotation, std::unique_ptr<AnimatedSprite>& a_NewSprite) const
@@ -781,7 +782,7 @@ void Rendering::CreatePointer()
 	m_LineTexture->loadFromFile(LINE_FILENAME);
 	float containerHeight = Settings::get().GetContainerHeight();
 	sf::Vector2f position =
-		sf::Vector2f(m_Container->getGlobalBounds().position.x, m_Container->getGlobalBounds().position.y);
+		sf::Vector2f(m_Container->getGlobalBounds().position.x, m_Container->getGlobalBounds().position.y + ((Settings::get().GetFrameHeight() - Settings::get().GetContainerHeight()) / 1.65f));
 	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f((5 / 2.f) * Settings::get().GetScale(), containerHeight));
 	m_Line->setTexture(m_LineTexture.get());
 	m_Line->setPosition(position);
@@ -1396,8 +1397,9 @@ void Rendering::CreateCycleBottle()
 
 	sf::Vector2f cycleTextureSize = BubbleMath::ToVector2f(m_CycleTexture->getSize());
 
-	float temp = (m_Container->getSize().y * 0.95f) / cycleTextureSize.y;
-	sf::Vector2f f(cycleTextureSize.x * temp, m_Container->getSize().y * 0.95f);
+	float temp = (m_Container->getSize().y * 0.8f) / cycleTextureSize.y;
+	sf::Vector2f f(m_CycleTexture->getSize().x * temp, m_CycleTexture->getSize().y * temp);
+	std::cout << m_CycleTexture->getSize().x;
 	m_CycleSprite->setSize(f);
 	m_CycleSprite->setOrigin(sf::Vector2f(m_CycleSprite->getLocalBounds().position.x + m_CycleSprite->getLocalBounds().size.x / 2.f,
 		m_CycleSprite->getLocalBounds().position.y + m_CycleSprite->getLocalBounds().size.y / 2.f));
