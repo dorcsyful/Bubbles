@@ -833,7 +833,7 @@ void Rendering::CreateGameOverSprite()
 	titleSize.x = gameOverTextureSize.x * scale;
 	m_GameOver->setSize(titleSize);
 	m_GameOver->setOrigin(sf::Vector2f(titleSize.x / 2, titleSize.y / 2));
-	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2.f,m_Window->getSize().y * (2.f/5.f)));
+	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2.f,m_Window->getSize().y * 0.33f));
 
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.7f), Settings::get().GetMenuButtonHeight() / BBTextureSize.y);
@@ -850,7 +850,7 @@ void Rendering::CreateGameOverSprite()
 	m_GOScoreCloudSprite->setOrigin(sf::Vector2f(m_GOScoreCloudSprite->getLocalBounds().size.x / 2, m_GOScoreCloudSprite->getLocalBounds().size.y / 2));
 	m_GOScoreCloudSprite->setScale(sf::Vector2f(0.3f * Settings::get().GetScale(), 0.3f * Settings::get().GetScale()));
 	float y = m_GOScoreNumberSprites[0]->getGlobalBounds().position.y + m_GOScoreNumberSprites[0]->getGlobalBounds().size.y;
-	m_GOScoreCloudSprite->setPosition(sf::Vector2f(m_GameOver->getGlobalBounds().position.x + m_GOScoreCloudSprite->getGlobalBounds().size.x / 2, y));
+	m_GOScoreCloudSprite->setPosition(sf::Vector2f(m_GameOver->getPosition().x  - m_GameOver->getGlobalBounds().size.x /4, y));
 
 	
 	
@@ -1192,20 +1192,20 @@ void Rendering::CreatePlayModeButtons()
 {
 	sf::Vector2f basePos;
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
-	float buttonWidth = (Settings::get().GetButtonWidth() + 15.f) / (BBTextureSize.x / 3.f);
+	float buttonWidth = (Settings::get().GetButtonWidth()) / (BBTextureSize.x / 3.f);
 	basePos.x = m_Frame->getGlobalBounds().position.x - Settings::get().GetButtonWidth() * 2;
 	basePos.y = m_Frame->getGlobalBounds().position.y + m_Frame->getGlobalBounds().size.y - Settings::get().GetButtonHeight() / 2;
 
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_HighScoresButtonTexture.get());
 	newButton->SetText("menu");
 	newButton->ResizeCharacters(std::round(35.f * Settings::get().GetScale()));
-	sf::Vector2f buttonScale = sf::Vector2f(buttonWidth, Settings::get().GetButtonHeight() / (BBTextureSize.y));
+	sf::Vector2f buttonScale = sf::Vector2f(0.25f * Settings::get().GetScale(), 0.25f *Settings::get().GetScale());
 
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("Back to menu", std::move(newButton)));
 
-	basePos.x += (Settings::get().GetButtonWidth() + 15.f) * 1.1f;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	basePos.x += m_MenuButtons.at("Back to menu")->GetWidth() * 1.05f;
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_HighScoresButtonTexture.get());
 	newButton->SetText("restart");
 	newButton->ResizeCharacters(std::round(35.f * Settings::get().GetScale()));
 	newButton->SetScale(buttonScale);
@@ -1369,7 +1369,7 @@ void Rendering::CreateStorageSprites()
 	m_StorageText = std::make_unique<sf::Text>(*m_Font);
 	m_StorageText->setOutlineColor(sf::Color::White);
 	m_StorageText->setOutlineThickness(3 * Settings::get().GetScale());
-	m_StorageText->setCharacterSize(35 * static_cast<int>(Settings::get().GetScale()));
+	m_StorageText->setCharacterSize(std::round(38 * Settings::get().GetScale()));
 	m_StorageText->setFillColor(sf::Color(225, 142, 149, 255));
 	m_StorageText->setStyle(sf::Text::Bold);
 	m_StorageText->setString("Storage:");

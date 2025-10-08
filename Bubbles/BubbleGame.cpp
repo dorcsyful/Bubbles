@@ -18,6 +18,8 @@ void BubbleGame::Initialize()
 	if (!SteamAPI_Init()) {
 		std::cerr << "SteamAPI_Init() failed. Steam must be running.\n";
 	}
+	Settings::get().LoadSettings();
+	Audio::getInstance().Initialize();
 
 	m_IsMouseButtonPressed = false;
 	Random::getInstance().SetSeed(time(nullptr));
@@ -359,6 +361,9 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 
 	if (const auto* keyEvent = a_Event.getIf<sf::Event::KeyPressed>()) {
 		sf::Keyboard::Key pressedCode = keyEvent->code;
+
+		//TODO: REMOVE
+		if (pressedCode == sf::Keyboard::Key::F) { GameOver(); }
 
 		if (pressedCode == sf::Keyboard::Key::Space && !m_IsSpacePressed) 
 		{
