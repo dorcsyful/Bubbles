@@ -409,17 +409,17 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			}
 		}
 
-		//if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
-		//if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
-		//if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
-		//if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
-		//if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
-		//if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
-		//if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
-		//if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
-		//if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
-		//if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
-		//if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
+		if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
+		if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
+		if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
+		if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
+		if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
+		if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
+		if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
+		if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
+		if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
+		if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
+		if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
 	}
 
 	if(m_IsMouseButtonPressed)
