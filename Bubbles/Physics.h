@@ -22,7 +22,7 @@ public:
 
 	bool GetTouchedTopLine() const { return m_TouchedTopLine; }
 	float GetTopLineHeight() const { return m_TopLine->GetPosition().y; }
-	void CreateContainerLines();
+	void CreateContainerLines(sf::Vector2f a_TopLeft);
 
 	void Reset();
 	std::vector<std::pair<const BubbleObject*, const BubbleObject*>> m_BubblesToCombine;

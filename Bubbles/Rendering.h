@@ -34,6 +34,7 @@ public:
 	void ResetButtons() const;
 	Button* GetResolutionArrow() { return m_RightResArrow.get(); }
 	std::string GetChosenResolution() { return m_Resolution_List->getString(); }
+	sf::Vector2f GetContainerPos() { return m_Container->getGlobalBounds().position; }
 	void UpdateResolutionList();
 
 	void UpdateScore(const unsigned int a_Score)

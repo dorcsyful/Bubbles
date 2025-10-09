@@ -77,6 +77,10 @@ public:
     [[nodiscard]] float GetStorageBoxWidth() const { return m_StorageSpriteWidth; }
     [[nodiscard]] float GetStorageBoxHeight() const { return m_StorageSpriteHeight; }
 
+    float GetContainerBottom() { return m_ContainerBottom; }
+    float GetContainerLeft() {return m_ContainerLeft; }
+    void UpdateContainerPos(float newBottom, float newLeft) { m_ContainerBottom = newBottom; m_ContainerLeft = newLeft; }
+
     [[nodiscard]] float GetScale() const { return m_Scale; }
     std::string GetResSizeAsString(int a_Index);
     int GetCurrentRes() const { return m_SelectedResOption; }
@@ -179,5 +183,8 @@ private:
 	std::map<EBUBBLE_TYPE, float> m_BubbleSizes;
     std::vector<std::pair<int, int>> m_ResolutionOptions;
     int m_SelectedResOption;
+
+    float m_ContainerBottom;
+    float m_ContainerLeft;
 };
 

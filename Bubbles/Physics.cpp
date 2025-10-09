@@ -95,12 +95,12 @@ bool Physics::BubbleAlreadyInCombineList(const BubbleObject* a_Bubble) const
     return false;
 }
 
-void Physics::CreateContainerLines()
+void Physics::CreateContainerLines(sf::Vector2f a_TopLeft)
 {
 	float containerWidth = Settings::get().GetContainerWidth();
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f basePos = sf::Vector2f(m_WindowWidth / 2.f - (containerWidth / 2.f), ((m_WindowHeight - containerHeight) / 1.75f));
-
+	sf::Vector2f basePos = sf::Vector2f(a_TopLeft.x + Settings::get().GetContainerLeft(), a_TopLeft.y + Settings::get().GetContainerBottom());
+	std::cout << "Pos " << basePos.x << " " << basePos.y;
 	sf::Vector2f start = basePos;
 	float pixelToMeter = Settings::get().GetPixelToMeter();
 	start.x /= pixelToMeter;

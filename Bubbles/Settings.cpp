@@ -40,7 +40,7 @@ void Settings::LoadSettings()
             if (name == "HIGH_SCORE_ITEM_HEIGHT")
                 m_HighScoreItemHeight = stof(value);
             if (name == "SIZES")
-                LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 0.5, 0.5, ");
+                LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 0.2, 0.2, ");
             if (name == "COMBO_EXTRA_SCORE")
                 m_ComboScore = stoi(value);
             if (name == "GAME_OVER_ANIMATION_TOTAL_TIME")
@@ -95,6 +95,11 @@ void Settings::LoadSettings()
                 LoadResolutions(value);
             if (name == "SELECTED_RESOLUTION")
                 m_SelectedResOption = stoi(value);
+            if (name == "CONTAINER_BOTTOM")
+                m_ContainerBottom = stof(value);
+            if (name == "CONTAINER_SIDE")
+                m_ContainerLeft = stof(value);
+
         }
         file.close();
     }
@@ -221,7 +226,7 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_NextUpWidth *= m_Scale;
     m_NextUpHeight *= m_Scale;
     m_Correction *= m_Scale;
-
+    LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 0.2, 0.2, ");
     for(int i = 0; i < 10; i++)
     {
         m_BubbleSizes[static_cast<EBUBBLE_TYPE>(i)] *= m_Scale;

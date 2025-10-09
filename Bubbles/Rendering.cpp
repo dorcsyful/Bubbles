@@ -20,25 +20,25 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	sf::ContextSettings context;
 	context.antiAliasingLevel = Settings::get().GetAaLevel();
 
-	if(Settings::get().IsFullscreen())
-	{
-		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(sf::VideoMode::getDesktopMode().size.x, sf::VideoMode::getDesktopMode().size.y)), "Bubbles!",
-			sf::Style::Default,sf::State::Fullscreen, context);
-		Settings::get().IncreaseIfFullScreen(static_cast<float>(sf::VideoMode::getDesktopMode().size.x), static_cast<float>(sf::VideoMode::getDesktopMode().size.y));
+	//if(Settings::get().IsFullscreen())
+	//{
+	//	m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(sf::VideoMode::getDesktopMode().size.x, sf::VideoMode::getDesktopMode().size.y)), "Bubbles!",
+	//		sf::Style::Default,sf::State::Fullscreen, context);
+	//	Settings::get().IncreaseIfFullScreen(static_cast<float>(sf::VideoMode::getDesktopMode().size.x), static_cast<float>(sf::VideoMode::getDesktopMode().size.y));
 
-	}
-	else
-	{
+	//}
+	//else
+	//{
 		std::pair<int, int> resSizeAsPair = Settings::get().GetResSizeAsPair(Settings::get().GetCurrentRes());
 
 		Settings::get().IncreaseIfFullScreen(static_cast<float>(resSizeAsPair.first), static_cast<float>(resSizeAsPair.second));
-
+		std::cout << resSizeAsPair.first;
 		sf::Vector2u size = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(size.x, size.y)), "Bubbles!",
 			sf::Style::Titlebar | sf::Style::Close
 			,sf::State::Windowed, context);
 
-	}
+	//}
 	m_Window->setVerticalSyncEnabled(true);
 
 
@@ -270,8 +270,8 @@ void Rendering::SettingsDraw() const
 	m_MenuButtons.at("ApplySettings")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("Revert")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_RightResArrow->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-	m_FullscreenCheckbox->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
-	m_Window->draw(*m_FullscreenCheckbox);
+	//m_FullscreenCheckbox->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
+	//m_Window->draw(*m_FullscreenCheckbox);
 	m_MenuButtons.at("ApplySettings")->Draw(*m_Window);
 	m_MenuButtons.at("Revert")->Draw(*m_Window);
 	m_RightResArrow->Draw(*m_Window);
@@ -413,14 +413,11 @@ void Rendering::Reset()
 
 void Rendering::ResetSize()
 {
-	std::cout << "New scale: " << Settings::get().GetScale() << std::endl;
 	sf::Vector2u newSize = m_Window->getSize();
 	if (newSize.x != Settings::get().GetWindowWidth()) 
 	{
 		float scale = newSize.x / Settings::get().GetWindowWidth();
-		std::cout << scale << std::endl;
 		newSize.y = Settings::get().GetWindowHeight() * Settings::get().GetScale();
-		std::cout << newSize.x << " " << newSize.y << std::endl;
 		m_Window->setSize(newSize);
 	}
 	
@@ -749,7 +746,7 @@ void Rendering::LoadBackground()
 	m_Container->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
 	m_Frame->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
 
-
+	Settings::get().UpdateContainerPos((height / m_ContainerTexture->getSize().y) * Settings::get().GetContainerBottom(), (width / m_ContainerTexture->getSize().x) * Settings::get().GetContainerLeft());
 
 	sf::Vector2f basePos = sf::Vector2f(windowSize.x / 2.f, windowSize.y / 2.f);
 	m_Container->setPosition(basePos);
@@ -1323,13 +1320,13 @@ void Rendering::CreateSettings()
 	m_SettingsText[1]->setFillColor(sf::Color::Black);
 	m_SettingsText[1]->setOrigin(sf::Vector2f(0, m_SettingsText[1]->getGlobalBounds().size.y));
 
-	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Fullscreen:"));
-	m_SettingsText[2]->setFillColor(sf::Color::Black);
-	m_SettingsText[2]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
+	//m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font,"Fullscreen:"));
+	//m_SettingsText[2]->setFillColor(sf::Color::Black);
+	//m_SettingsText[2]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
 
 	m_SettingsText.push_back(std::make_unique<sf::Text>(*m_Font, "Resolution:"));
-	m_SettingsText[3]->setFillColor(sf::Color::Black);
-	m_SettingsText[3]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
+	m_SettingsText[2]->setFillColor(sf::Color::Black);
+	m_SettingsText[2]->setOrigin(sf::Vector2f(0, m_SettingsText[2]->getGlobalBounds().size.y));
 
 	position.x += m_Resolution_List->getGlobalBounds().size.x * 1.3f;
 	m_RightResArrow = std::make_unique<Button>(position, *m_Font, m_ArrowTexture.get());
@@ -1339,8 +1336,8 @@ void Rendering::CreateSettings()
 	max = std::max(max, lengths[2]);
 	m_SettingsText[0]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[0]->GetSliderPosition().y));
 	m_SettingsText[1]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_SettingSliders[1]->GetSliderPosition().y));
-	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y + 25 * Settings::get().GetScale()));
-	m_SettingsText[3]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_Resolution_List->getPosition().y));
+	//m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_FullscreenCheckbox->GetPosition().y + 25 * Settings::get().GetScale()));
+	m_SettingsText[2]->setPosition(sf::Vector2f(m_SettingsTitle->getPosition().x - max - m_SettingsTitle->getPosition().x / 8.f, m_Resolution_List->getPosition().y));
 
 
 	CreateSettingsButtons();
@@ -1399,7 +1396,6 @@ void Rendering::CreateCycleBottle()
 
 	float temp = (m_Container->getSize().y * 0.8f) / cycleTextureSize.y;
 	sf::Vector2f f(m_CycleTexture->getSize().x * temp, m_CycleTexture->getSize().y * temp);
-	std::cout << m_CycleTexture->getSize().x;
 	m_CycleSprite->setSize(f);
 	m_CycleSprite->setOrigin(sf::Vector2f(m_CycleSprite->getLocalBounds().position.x + m_CycleSprite->getLocalBounds().size.x / 2.f,
 		m_CycleSprite->getLocalBounds().position.y + m_CycleSprite->getLocalBounds().size.y / 2.f));

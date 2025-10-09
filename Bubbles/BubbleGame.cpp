@@ -35,7 +35,7 @@ void BubbleGame::Initialize()
 	m_CloudSaves = std::make_unique<CloudSaves>();
 	m_LeaderBoard = std::make_unique<LeaderBoard>();
 	m_Achievments = std::make_unique<Achievments>();
-	m_Physics->CreateContainerLines();
+	m_Physics->CreateContainerLines(m_Rendering->GetContainerPos());
 
 	m_CloudSaves->LoadPersonalTop10();
 	m_Rendering->UpdateHighScore(m_CloudSaves->GetAllScores());
