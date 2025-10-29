@@ -93,7 +93,7 @@ public:
 
     void UpdateSettings(bool a_Fullscreen, std::string a_Resolution)
     {
-        for (int i = 0; i < m_ResolutionOptions.size();i++)
+        for (int i = 0; i < 3; i++)
         {
 	        if (a_Resolution.substr(0,4) == std::to_string(m_ResolutionOptions[i].first))
 	        {

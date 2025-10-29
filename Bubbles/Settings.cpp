@@ -40,7 +40,7 @@ void Settings::LoadSettings()
             if (name == "HIGH_SCORE_ITEM_HEIGHT")
                 m_HighScoreItemHeight = stof(value);
             if (name == "SIZES")
-                LoadBubbleSizes("0.2, 0.25, 0.3, 0.4, 0.5, 0.65, 0.8, 0.95, 1.05, 1.15, 0.2, 0.2, ");
+                LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.95, 1.05, 1.15, 0.2, 0.2, ");
             if (name == "COMBO_EXTRA_SCORE")
                 m_ComboScore = stoi(value);
             if (name == "GAME_OVER_ANIMATION_TOTAL_TIME")
@@ -112,7 +112,8 @@ void Settings::LoadBubbleSizes(const std::string& a_Length)
     {
 	    if(a_Length[i] == ',')
 	    {
-            m_BubbleSizes.insert(std::pair(static_cast<EBUBBLE_TYPE>(m_BubbleSizes.size()), stof(temp) * 1.3f));
+		    float size = stof(temp) * 1.3f;
+            m_BubbleSizes.insert(std::pair(static_cast<EBUBBLE_TYPE>(m_BubbleSizes.size()), size));
             temp = "";
 	    }
         else
@@ -202,10 +203,10 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
 
 	m_WindowWidth *= m_Scale;
     m_WindowHeight *= m_Scale;
-    m_ContainerWidth *= m_Scale;
-    m_ContainerHeight *= m_Scale;
-    m_FrameWidth *= m_Scale;
-    m_FrameHeight *= m_Scale;
+    //m_ContainerWidth *= m_Scale;
+    //m_ContainerHeight *= m_Scale;
+    //m_FrameWidth *= m_Scale;
+    //m_FrameHeight *= m_Scale;
     m_ConfirmationWidth *= m_Scale;
     m_ConfirmationHeight *= m_Scale;
     m_TitleWidth *= m_Scale;
@@ -226,9 +227,5 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_NextUpWidth *= m_Scale;
     m_NextUpHeight *= m_Scale;
     m_Correction *= m_Scale;
-    LoadBubbleSizes("0.2, 0.25, 0.3, 0.4, 0.5, 0.65, 0.8, 0.95, 1.05, 1.15, 0.2, 0.2, ");
-    for(int i = 0; i < 10; i++)
-    {
-        m_BubbleSizes[static_cast<EBUBBLE_TYPE>(i)] *= m_Scale;
-    }
+    LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.95, 1.05, 1.15, 0.2, 0.2, ");
 }

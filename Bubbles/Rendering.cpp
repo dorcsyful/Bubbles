@@ -32,7 +32,6 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 		std::pair<int, int> resSizeAsPair = Settings::get().GetResSizeAsPair(Settings::get().GetCurrentRes());
 
 		Settings::get().IncreaseIfFullScreen(static_cast<float>(resSizeAsPair.first), static_cast<float>(resSizeAsPair.second));
-		std::cout << resSizeAsPair.first;
 		sf::Vector2u size = sf::Vector2u(static_cast<int>(Settings::get().GetWindowWidth()), static_cast<int>(Settings::get().GetWindowHeight()));
 		m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(size.x, size.y)), "Bubbles!",
 			sf::Style::Titlebar | sf::Style::Close
@@ -739,8 +738,8 @@ void Rendering::LoadBackground()
 	m_Frame->setTexture(m_FrameTexture.get());
 
 
-	float width = Settings::get().GetFrameWidth();
-	float height = Settings::get().GetFrameHeight() ;
+	float width = Settings::get().GetFrameWidth() * Settings::get().GetScale();
+	float height = Settings::get().GetFrameHeight() * Settings::get().GetScale();
 	m_Container->setSize(sf::Vector2f(width, height));
 	m_Frame->setSize(sf::Vector2f(width, height));
 	m_Container->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
@@ -761,8 +760,8 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= static_cast<float>(Settings::get().GetBubbleFrames());
 	float pixelToMeter = Settings::get().GetPixelToMeter();
-	float factorX = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.x;
-	float factorY = Settings::get().BubbleSize(a_Type) * pixelToMeter * 2 / size.y;
+	float factorX = ((Settings::get().BubbleSize(a_Type) * Settings::get().GetScale()) * pixelToMeter * 2) / size.x;
+	float factorY = (Settings::get().BubbleSize(a_Type) * Settings::get().GetScale() * pixelToMeter * 2) / size.y;
 	a_NewSprite->GetSprite()->setScale(sf::Vector2f(factorX, factorY));
 
 	float x = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().x;
@@ -779,7 +778,7 @@ void Rendering::CreatePointer()
 	m_LineTexture->loadFromFile(LINE_FILENAME);
 	float containerHeight = Settings::get().GetContainerHeight();
 	sf::Vector2f position =
-		sf::Vector2f(m_Container->getGlobalBounds().position.x, m_Container->getGlobalBounds().position.y + ((Settings::get().GetFrameHeight() - Settings::get().GetContainerHeight()) / 1.65f));
+		sf::Vector2f(m_Container->getGlobalBounds().position.x, (m_Container->getGlobalBounds().position.y) + ((Settings::get().GetFrameHeight() - Settings::get().GetContainerHeight()) / 1.65f));
 	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f((5 / 2.f) * Settings::get().GetScale(), containerHeight));
 	m_Line->setTexture(m_LineTexture.get());
 	m_Line->setPosition(position);
@@ -1006,7 +1005,7 @@ void Rendering::CreateScoreText()
 	m_ComboText->setString("Combo:\n 0");
 	m_ComboText->setOrigin(sf::Vector2f(m_ComboText->getGlobalBounds().position.y + m_ComboText->getGlobalBounds().size.y, 0));
 	position = m_Container->getPosition();
-	position.x += Settings::get().GetContainerWidth();
+	position.x += Settings::get().GetContainerWidth() * Settings::get().GetScale();
 	position.y += 100;
 	m_ComboText->setPosition(position);
 	m_ParticleSystem = std::make_unique<ParticleSystem>();

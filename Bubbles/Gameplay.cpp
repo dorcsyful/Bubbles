@@ -1,6 +1,7 @@
 #include "Gameplay.h"
 #include "BubbleMath.h"
 #include "Random.h"
+#include <algorithm>
 #include <iostream>
 void Gameplay::Update(float a_Delta)
 {
@@ -18,7 +19,7 @@ std::unique_ptr<BubbleObject> Gameplay::CombineBubble(const BubbleObject* a_Firs
 	int amount = a_Enlarge ? 1 : -1;
 	int i = static_cast<int>(a_First->GetBubbleType()) + amount;
 	if (i >= 10) { i = 0; }
-	if (i < 0) { i = 0; }
+	i = std::max(i, 0);
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(static_cast<EBUBBLE_TYPE>(i));
 	newBubble->SetPosition(center);
 	m_Score += static_cast<unsigned int>(bubble_weights.at(a_First->GetBubbleType())) / 10;
