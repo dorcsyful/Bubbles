@@ -30,7 +30,7 @@ void BubbleGame::Initialize()
 	Audio::getInstance().SetEffectsVolume(Settings::get().GetSoundEffectsVolume());
 	
 	m_Rendering = std::make_unique<Rendering>(Settings::get().GetWindowWidth(), Settings::get().GetWindowHeight(), m_Wrapper->GetRendered());
-	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetWindow()->getSize().x);
+	m_Gameplay = std::make_unique<Gameplay>(m_Rendering->GetContainerPos().x);
 	m_Physics = std::make_unique<Physics>(m_Wrapper->GetGameObjects(), m_Rendering->GetWindow()->getSize().x, m_Rendering->GetWindow()->getSize().y);
 	m_CloudSaves = std::make_unique<CloudSaves>();
 	m_LeaderBoard = std::make_unique<LeaderBoard>();
@@ -71,11 +71,16 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 			continue;
 		}
-
-		m_ComboTextPositions = BubbleMath::Lerp(bubble1->GetPosition(),bubble2->GetPosition(), 0.5f);
+		float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
+		float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
+		m_ComboTextPositions = BubbleMath::Lerp(bubble1->GetPosition(), bubble2->GetPosition(), 0.5f);
 		m_ComboTextPositions.x *= Settings::get().GetPixelToMeter();
+		m_ComboTextPositions.x += containerLeft;
+
 		m_ComboTextPositions.y *= Settings::get().GetPixelToMeter();
 		m_ComboTextPositions.y *= -1;
+		m_ComboTextPositions.y += containerTop;
+
 		m_Rendering->UpdateComboPosition(m_ComboTextPositions);
 
 		m_Rendering->UpScaleComboText(0.5);
@@ -273,10 +278,11 @@ void BubbleGame::AddBubble() const
 	m_Rendering->GetDuck()->SetFrame(2);
 	CallAfterDelay::getInstance().AddFunction([this] { m_Rendering->GetDuck()->SetAnimate(true, true); }, "EnableDuckAnimate", 0.5f, false);
 	m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
-
+	float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
 	sf::Vector2f start = m_Rendering->GetPreviewPosition();
+	start.x -= containerLeft;
 	start.x /= Settings::get().GetPixelToMeter();
-	start.y = m_Physics->GetTopLineHeight();
+	start.y = 0;
 	std::unique_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
 	CreateWrapper(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());

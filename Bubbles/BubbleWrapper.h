@@ -14,10 +14,15 @@ public:
 	{
 		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
+			float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
+			float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
 			sf::Vector2f position = m_GameObjects[i]->GetPosition();
 			position.x *= Settings::get().GetPixelToMeter();
+			position.x += containerLeft;
+
 			position.y *= Settings::get().GetPixelToMeter();
 			position.y *= -1;
+			position.y += containerTop;
 			m_Rendered[i]->SetPosition(position);
 			m_Rendered[i]->SetRotation(m_GameObjects[i]->GetRotation() * 57.2957795f);
 		}

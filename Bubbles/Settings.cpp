@@ -227,5 +227,7 @@ void Settings::IncreaseIfFullScreen(float a_WindowX, float a_WindowY)
     m_NextUpWidth *= m_Scale;
     m_NextUpHeight *= m_Scale;
     m_Correction *= m_Scale;
+    //m_ContainerBottom *= m_Scale;
+    //m_ContainerLeft *= m_Scale;
     LoadBubbleSizes("0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.95, 1.05, 1.15, 0.2, 0.2, ");
 }

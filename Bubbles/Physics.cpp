@@ -99,8 +99,7 @@ void Physics::CreateContainerLines(sf::Vector2f a_TopLeft)
 {
 	float containerWidth = Settings::get().GetContainerWidth();
 	float containerHeight = Settings::get().GetContainerHeight();
-	sf::Vector2f basePos = sf::Vector2f(a_TopLeft.x + Settings::get().GetContainerLeft(), a_TopLeft.y + Settings::get().GetContainerBottom());
-	std::cout << "Pos " << basePos.x << " " << basePos.y;
+	sf::Vector2f basePos = sf::Vector2f(0,0);
 	sf::Vector2f start = basePos;
 	float pixelToMeter = Settings::get().GetPixelToMeter();
 	start.x /= pixelToMeter;

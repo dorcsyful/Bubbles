@@ -135,7 +135,7 @@ private:
 	std::unique_ptr<sf::Texture> m_MainBackgroundTexture;
 	std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;
 	std::unique_ptr<sf::RectangleShape> m_MainBackgroundExtendedSprite;
-
+	std::unique_ptr<sf::CircleShape> m_DebugCircle;
 
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)

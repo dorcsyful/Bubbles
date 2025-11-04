@@ -42,10 +42,10 @@ void Gameplay::Move(float a_Direction)
 {
 	float temp = m_CurrentPosition + a_Direction;
 
-	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
+	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter() * Settings::get().GetScale();
 	if (temp < x) temp = x;
 
-	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
+	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter() * Settings::get().GetScale();
 	if (temp > x) temp = x;
 
 	m_CurrentPosition = temp;
@@ -70,8 +70,7 @@ void Gameplay::Reset(float a_WindowWidth)
 	m_CurrentBubble = GenerateRandom();
 	m_NextBubble = GenerateRandom();
 	Random::getInstance().SetSeed(time(nullptr));
-	m_ContainerEdges[0] = a_WindowWidth / 2.f - Settings::get().GetContainerWidth() / 2.f;
-	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth();
+	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth() * Settings::get().GetScale();
 	m_CurrentPosition = 0;
 	Move(0);
 	m_Score = 0;

@@ -68,6 +68,11 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	}
 
 	m_Window->setIcon(m_Icon->getSize(), m_Icon->getPixelsPtr());
+
+	m_DebugCircle = std::make_unique<sf::CircleShape>();
+	m_DebugCircle->setFillColor(sf::Color::Red);
+	m_DebugCircle->setRadius(10.f);
+	m_DebugCircle->setOrigin(sf::Vector2f(5, 5));
 }
 
 void Rendering::FinishMoveToStorage()
@@ -156,6 +161,11 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_NextUpBubble);
 	m_ParticleSystem->Draw(*m_Window);
 
+	float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
+	float containerTop = m_Container->getGlobalBounds().position.y + Settings::get().GetContainerBottom();
+	std::cout << "Container bottom: " << Settings::get().GetContainerBottom() << std::endl;
+	m_DebugCircle->setPosition(sf::Vector2f(containerLeft, containerTop));
+	m_Window->draw(*m_DebugCircle);
 }
 
 void Rendering::MenuDraw() const
@@ -745,7 +755,11 @@ void Rendering::LoadBackground()
 	m_Container->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
 	m_Frame->setOrigin(sf::Vector2f(width / 2.f, height / 2.f));
 
-	Settings::get().UpdateContainerPos((height / m_ContainerTexture->getSize().y) * Settings::get().GetContainerBottom(), (width / m_ContainerTexture->getSize().x) * Settings::get().GetContainerLeft());
+	Settings::get().UpdateContainerPos(
+		(height / m_ContainerTexture->getSize().y) * Settings::get().GetContainerBottom(),
+		(width / m_ContainerTexture->getSize().x) * Settings::get().GetContainerLeft()
+	);
+
 
 	sf::Vector2f basePos = sf::Vector2f(windowSize.x / 2.f, windowSize.y / 2.f);
 	m_Container->setPosition(basePos);
