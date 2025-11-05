@@ -73,6 +73,7 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	m_DebugCircle->setFillColor(sf::Color::Red);
 	m_DebugCircle->setRadius(10.f);
 	m_DebugCircle->setOrigin(sf::Vector2f(5, 5));
+	SetupView();
 }
 
 void Rendering::FinishMoveToStorage()
@@ -110,10 +111,7 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_ScoreBackgroundInPlaySprite);
 
 	m_PreviewBubbles.at(m_ActiveBubble)->Draw(*m_Window);
-	for (auto& element : m_RenderedBubbles)
-	{
-		element->Draw(*m_Window);
-	}
+	
 	m_Window->draw(*m_HighScoreSpriteInPlay);
 
 	m_MenuButtons.at("Back to menu")->Draw(*m_Window);
@@ -159,11 +157,16 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_HighScoresInPlay[1]);
 	m_Window->draw(*m_HighScoresInPlay[2]);
 	m_Window->draw(*m_NextUpBubble);
+
+
+	RenderBubbles();
+
+
 	m_ParticleSystem->Draw(*m_Window);
 
-	float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
-	float containerTop = m_Container->getGlobalBounds().position.y + Settings::get().GetContainerBottom();
-	std::cout << "Container bottom: " << Settings::get().GetContainerBottom() << std::endl;
+	float left = m_Container->getGlobalBounds().position.x;
+	float containerLeft = left + Settings::get().GetContainerLeft();
+	float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom() + Settings::get().GetContainerHeight();
 	m_DebugCircle->setPosition(sf::Vector2f(containerLeft, containerTop));
 	m_Window->draw(*m_DebugCircle);
 }
@@ -286,6 +289,69 @@ void Rendering::SettingsDraw() const
 	m_RightResArrow->Draw(*m_Window);
 	m_Window->draw(*m_Resolution_List);
 	m_Window->draw(*m_SettingsTitle);
+}
+
+void Rendering::SetupView() {
+	// These are the UNCALED dimensions in base pixels
+	const float containerWidth = Settings::get().GetContainerWidth();
+	const float containerHeight = Settings::get().GetContainerHeight();
+
+	// Define the World Coordinates (the area we want to see). 
+	// Origin is (0,0), size is container dimensions.
+	m_WorldView.setSize(sf::Vector2f(containerWidth, containerHeight));
+	m_WorldView.setCenter(sf::Vector2f(containerWidth / 2.f, containerHeight / 2.f));
+}
+
+void Rendering::RenderBubbles()
+{
+	const float scale = Settings::get().GetScale();
+	const float windowWidth = Settings::get().GetWindowWidth();
+	const float windowHeight = Settings::get().GetWindowHeight();
+	const float containerWidth = Settings::get().GetContainerWidth();
+	const float containerHeight = Settings::get().GetContainerHeight();
+
+	float viewportW = (containerWidth * scale) / windowWidth;
+	float viewportH = (containerHeight * scale) / windowHeight;
+
+	// 2. Calculate Viewport Position (Normalized Top-Left Corner)
+	// The base position (300, 488) is where the container's (0,0) *should* be at Scale=1.
+	// When scaled, the top-left corner shifts.
+
+	// Calculate the scaled screen position of the container's top-left corner (in pixels):
+	// The scale factor applies to the distance from the window's (0,0) if that distance is relative
+	// to the container's base position. However, since your physics is top-left, 
+	// you need to calculate the actual position based on the centering/offset logic. 
+
+	// Since (300, 488) is the base position of the container's top-left, 
+	// we use that as the starting offset, and then apply centering logic relative to the window size.
+
+	// The new top-left X/Y (in pixels) for the scaled container:
+	// This is essentially your old 'containerLeft' and 'containerTop' calculations but defined explicitly.
+	// Assuming (300, 488) is where the container is centered in your original setup:
+
+	float scaledOffsetX = m_Container->getGlobalBounds().position.x + Settings::get().GetContainerLeft();
+	float scaledOffsetY = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
+	//std::cout << Settings::get().GetFrameWidth() << std::endl;;
+
+	// Normalized Viewport Position (Viewport X/Y)
+	float viewportX = scaledOffsetX / windowWidth;
+	float viewportY = scaledOffsetY / windowHeight;
+
+	// *If your (300,488) was based on a different centering logic, use that logic here and apply scale.*
+
+	m_WorldView.setViewport(sf::FloatRect(sf::Vector2f(viewportX, viewportY), sf::Vector2f(viewportW, viewportH)));
+
+	// 3. Apply the custom View and draw...
+	m_Window->setView(m_WorldView);
+	for (auto& element : m_RenderedBubbles)
+	{
+		element->Draw(*m_Window);
+	}
+	// ... draw m_Rendered objects ...
+
+	m_Window->setView(m_Window->getDefaultView());
+	// ... window.display() ...
+
 }
 
 void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
@@ -774,8 +840,8 @@ void Rendering::CreateSprite(const EBUBBLE_TYPE a_Type, const sf::Vector2f& a_Po
 	sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(a_Type)->getSize());
 	size.x /= static_cast<float>(Settings::get().GetBubbleFrames());
 	float pixelToMeter = Settings::get().GetPixelToMeter();
-	float factorX = ((Settings::get().BubbleSize(a_Type) * Settings::get().GetScale()) * pixelToMeter * 2) / size.x;
-	float factorY = (Settings::get().BubbleSize(a_Type) * Settings::get().GetScale() * pixelToMeter * 2) / size.y;
+	float factorX = (Settings::get().BubbleSize(a_Type) * pixelToMeter * 2) / size.x;
+	float factorY = (Settings::get().BubbleSize(a_Type) * pixelToMeter * 2) / size.y;
 	a_NewSprite->GetSprite()->setScale(sf::Vector2f(factorX, factorY));
 
 	float x = Settings::get().BubbleSize(a_Type) * pixelToMeter / a_NewSprite->GetSprite()->getScale().x;
@@ -790,9 +856,9 @@ void Rendering::CreatePointer()
 {
 	m_LineTexture = std::make_unique<sf::Texture>();
 	m_LineTexture->loadFromFile(LINE_FILENAME);
-	float containerHeight = Settings::get().GetContainerHeight();
+	float containerHeight = Settings::get().GetContainerHeight() * Settings::get().GetScale();
 	sf::Vector2f position =
-		sf::Vector2f(m_Container->getGlobalBounds().position.x, (m_Container->getGlobalBounds().position.y) + ((Settings::get().GetFrameHeight() - Settings::get().GetContainerHeight()) / 1.65f));
+		sf::Vector2f(m_Container->getGlobalBounds().position.x, (m_Container->getGlobalBounds().position.y) + (Settings::get().GetContainerBottom()));
 	m_Line = std::make_unique<sf::RectangleShape>(sf::Vector2f((5 / 2.f) * Settings::get().GetScale(), containerHeight));
 	m_Line->setTexture(m_LineTexture.get());
 	m_Line->setPosition(position);

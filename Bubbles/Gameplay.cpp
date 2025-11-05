@@ -42,7 +42,7 @@ void Gameplay::Move(float a_Direction)
 {
 	float temp = m_CurrentPosition + a_Direction;
 
-	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter() * Settings::get().GetScale();
+	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
 	if (temp < x) temp = x;
 
 	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter() * Settings::get().GetScale();

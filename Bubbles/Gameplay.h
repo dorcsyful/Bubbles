@@ -12,7 +12,7 @@ public:
 	explicit Gameplay(float a_ContainerX) {
 		m_CurrentBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
 		m_NextBubble = static_cast<EBUBBLE_TYPE>(Random::getInstance().GetRandomNumber(0,3));
-		m_ContainerEdges[0] =  a_ContainerX + Settings::get().GetContainerLeft();
+		m_ContainerEdges[0] = a_ContainerX + Settings::get().GetContainerLeft();
 		m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth() * Settings::get().GetScale();
 		Move(0);
 		m_Score = 0;

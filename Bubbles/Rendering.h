@@ -100,7 +100,8 @@ private:
 	void GameOverDraw() const;
 	void ConfirmationDraw() const;
 	void SettingsDraw() const;
-
+	void RenderBubbles();
+	void SetupView();
 	void LoadBackground();
 	void LoadBubbleTextures();
 	void LoadNextUpTextures();
@@ -136,7 +137,7 @@ private:
 	std::unique_ptr<sf::Texture> m_MainBackgroundExtendedTexture;
 	std::unique_ptr<sf::RectangleShape> m_MainBackgroundExtendedSprite;
 	std::unique_ptr<sf::CircleShape> m_DebugCircle;
-
+	sf::View m_WorldView;
 	//Play mode
 	std::vector<std::unique_ptr<AnimatedSprite>>& m_RenderedBubbles;  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 	std::unique_ptr<sf::Texture> m_ContainerTexture;

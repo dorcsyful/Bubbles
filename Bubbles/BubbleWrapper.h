@@ -12,18 +12,22 @@ public:
 
 	void Update()
 	{
+		const float pixelToMeter = Settings::get().GetPixelToMeter();
 		for(size_t i = 0; i < m_GameObjects.size(); i++)
 		{
-			float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
-			float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
-			sf::Vector2f position = m_GameObjects[i]->GetPosition();
-			position.x *= Settings::get().GetPixelToMeter();
-			position.x += containerLeft;
+			sf::Vector2f position = m_GameObjects[i]->GetPosition(); // Physics Pos (meters, Y-up, 0 at top)
+			sf::Vector2f basePixelPos;
 
-			position.y *= Settings::get().GetPixelToMeter();
-			position.y *= -1;
-			position.y += containerTop;
-			m_Rendered[i]->SetPosition(position);
+			// 1. Meters to Base Pixels (X-axis)
+			basePixelPos.x = position.x * pixelToMeter;
+
+			// 2. Meters to Base Pixels (Y-axis - FLIP)
+			// Since physics Y is UP and base pixel Y is DOWN, and both origins are TOP:
+			// base_pix_y = -phys_y * PPM
+			basePixelPos.y = position.y * pixelToMeter * -1.f;
+
+			// Set the UNCALED position on the wrapper object.
+			m_Rendered[i]->SetPosition(basePixelPos);
 			m_Rendered[i]->SetRotation(m_GameObjects[i]->GetRotation() * 57.2957795f);
 		}
 	}
