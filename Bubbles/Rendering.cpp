@@ -855,6 +855,14 @@ void Rendering::CreatePointer()
 		std::unique_ptr<AnimatedSprite> newSprite;
 		CreateSprite(static_cast<EBUBBLE_TYPE>(i), sf::Vector2f(position), 0, newSprite);
 		m_PreviewBubbles.insert(std::pair(static_cast<EBUBBLE_TYPE>(i), std::move(newSprite)));
+		sf::Vector2f temp = m_PreviewBubbles.at(static_cast<EBUBBLE_TYPE>(i))->GetSprite()->getScale();
+		sf::Vector2f size = BubbleMath::ToVector2f(m_BubbleTextures.at(static_cast<EBUBBLE_TYPE>(i))->getSize());
+		size.x /= static_cast<float>(Settings::get().GetBubbleFrames());
+
+		float factorX = (Settings::get().BubbleSize(static_cast<EBUBBLE_TYPE>(i)) * Settings::get().GetPixelToMeter() * 2) / size.x * Settings::get().GetScale();
+		float factorY = (Settings::get().BubbleSize(static_cast<EBUBBLE_TYPE>(i)) * Settings::get().GetPixelToMeter() * 2) / size.y * Settings::get().GetScale();
+
+		m_PreviewBubbles.at(static_cast<EBUBBLE_TYPE>(i))->GetSprite()->setScale(sf::Vector2f(factorX, factorY));
 	}
 }
 
