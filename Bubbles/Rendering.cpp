@@ -158,7 +158,7 @@ void Rendering::PlayDraw(float a_Delta)
 	m_Window->draw(*m_HighScoresInPlay[2]);
 	m_Window->draw(*m_NextUpBubble);
 	m_DebugCircle->setPosition(sf::Vector2f(m_Frame->getGlobalBounds().position.x + Settings::get().GetContainerLeft(), m_Frame->getGlobalBounds().position.y + Settings::get().GetContainerBottom()));
-	m_Window->draw(*m_DebugCircle);
+	//m_Window->draw(*m_DebugCircle);
 
 
 	RenderBubbles();
