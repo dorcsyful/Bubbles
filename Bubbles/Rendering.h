@@ -91,6 +91,17 @@ public:
 	void StartMoveToStorage(EBUBBLE_TYPE a_Type, bool a_ToStorage);
 	void Reset();
 	void ResetSize();
+	void PositionDebugCircle(sf::Vector2f a_NewPosition) { 
+		sf::Vector2f temp = a_NewPosition;
+	//	sf::Vector2f basePixelPos;
+
+	//	basePixelPos.x = temp.x * 100;
+	//basePixelPos.y = temp.y * 100 * -1.f;
+	
+
+		m_DebugCircle->setPosition(temp);
+
+	}
 
 private:
 	void PlayDraw(float a_Delta);

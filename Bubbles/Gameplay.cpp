@@ -43,10 +43,21 @@ void Gameplay::Move(float a_Direction)
 	float temp = m_CurrentPosition + a_Direction;
 
 	float x = m_ContainerEdges[0] + Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
-	if (temp < x) temp = x;
+	
+		if (temp < x)
+		{
+			std::cout << "Out of left bounds" << x << std::endl;
 
-	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter() * Settings::get().GetScale();
-	if (temp > x) temp = x;
+			temp = x;
+		}
+
+	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
+	if (temp > x) 
+	{
+		std::cout << "Out of right bounds: " << x << std::endl;
+
+		temp = x;
+	}
 
 	m_CurrentPosition = temp;
 }

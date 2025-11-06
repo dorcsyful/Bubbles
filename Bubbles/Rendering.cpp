@@ -150,23 +150,21 @@ void Rendering::PlayDraw(float a_Delta)
 			FinishMoveToStorage();
 		}
 	}
+
 	m_Window->draw(*m_CycleSprite);
 	m_Window->draw(*m_InstructionShape);
 	m_Window->draw(*m_HighScoresInPlay[0]);
 	m_Window->draw(*m_HighScoresInPlay[1]);
 	m_Window->draw(*m_HighScoresInPlay[2]);
 	m_Window->draw(*m_NextUpBubble);
+	m_DebugCircle->setPosition(sf::Vector2f(m_Frame->getGlobalBounds().position.x + Settings::get().GetContainerLeft(), m_Frame->getGlobalBounds().position.y + Settings::get().GetContainerBottom()));
+	m_Window->draw(*m_DebugCircle);
 
 
 	RenderBubbles();
 
 
 
-	float left = m_Container->getGlobalBounds().position.x;
-	float containerLeft = left + Settings::get().GetContainerLeft();
-	float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom() + Settings::get().GetContainerHeight();
-	m_DebugCircle->setPosition(sf::Vector2f(containerLeft, containerTop));
-	//m_Window->draw(*m_DebugCircle);
 }
 
 void Rendering::MenuDraw() const
@@ -410,10 +408,16 @@ void Rendering::Draw(const EGAME_STATE a_State,float a_Delta)
 void Rendering::MovePointerLine(const float a_X) const
 {
 
+	float scale = Settings::get().GetScale();
+	float scaledMovement = a_X * scale;
+	float newScreenX = m_Frame->getGlobalBounds().position.x + Settings::get().GetContainerLeft() + scaledMovement;
+
 	sf::Vector2f temp = m_Line->getPosition();
-	temp.x = a_X;
+	temp.x = newScreenX;
+
 	m_Line->setPosition(temp);
-	if(a_X == m_Duck->GetPosition().x)  // NOLINT(clang-diagnostic-float-equal)
+
+	if(temp.x == m_Duck->GetPosition().x)  // NOLINT(clang-diagnostic-float-equal)
 	{
 		m_Duck->SetAnimate(false, false);
 	}
@@ -421,11 +425,11 @@ void Rendering::MovePointerLine(const float a_X) const
 	{
 		m_Duck->SetAnimate(true, true);
 	}
-	if (a_X > m_Duck->GetPosition().x)
+	if (temp.x > m_Duck->GetPosition().x)
 	{
 		m_Duck->GetSprite()->setScale(sf::Vector2f(- abs(m_Duck->GetSprite()->getScale().x), m_Duck->GetSprite()->getScale().y));
 	}
-	if(a_X <m_Duck->GetPosition().x)
+	if(temp.x <m_Duck->GetPosition().x)
 	{
 		m_Duck->GetSprite()->setScale(sf::Vector2f(abs(m_Duck->GetSprite()->getScale().x), m_Duck->GetSprite()->getScale().y));
 	}

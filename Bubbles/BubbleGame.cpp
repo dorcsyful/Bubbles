@@ -274,17 +274,17 @@ void BubbleGame::AddBubble() const
 	Audio::getInstance().PlayBubbleDrop();
 	m_Rendering->GetDuck()->SetAnimate(false, false);
 	m_Rendering->GetDuck()->SetFrame(2);
-	CallAfterDelay::getInstance().AddFunction([this] { m_Rendering->GetDuck()->SetAnimate(true, true); }, "EnableDuckAnimate", 0.5f, false);
-	m_Gameplay->SetLastDrop(std::chrono::system_clock::now());
-	float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
-	sf::Vector2f start = m_Rendering->GetPreviewPosition();
-	start.x -= containerLeft;
-	start.x /= Settings::get().GetPixelToMeter();
-	start.y = 0;
+	sf::Vector2f start = sf::Vector2f(0, 100);
+	start.x = m_Gameplay->GetCurrentPosition();
+	start.x -= m_Rendering->GetContainerPos().x + Settings::get().GetContainerLeft();
+	start.x /= 100;
 	std::unique_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
 	CreateWrapper(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
+	std::cout << "Start: " << start.x;
+
+	m_Rendering->PositionDebugCircle(start);
 }
 
 void BubbleGame::GameOver()
