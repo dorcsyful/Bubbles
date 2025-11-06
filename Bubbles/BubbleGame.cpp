@@ -274,15 +274,13 @@ void BubbleGame::AddBubble() const
 	Audio::getInstance().PlayBubbleDrop();
 	m_Rendering->GetDuck()->SetAnimate(false, false);
 	m_Rendering->GetDuck()->SetFrame(2);
-	sf::Vector2f start = sf::Vector2f(0, 100);
+	sf::Vector2f start = sf::Vector2f(0, 0);
 	start.x = m_Gameplay->GetCurrentPosition();
-	start.x -= m_Rendering->GetContainerPos().x + Settings::get().GetContainerLeft();
 	start.x /= 100;
 	std::unique_ptr<BubbleObject> newBubble = m_Gameplay->Drop(start);
 	CreateWrapper(newBubble);
 	m_Rendering->MovePointerLine(m_Gameplay->GetCurrentPosition());
 	m_Rendering->MovePreviewBubble(m_Gameplay->GetCurrentBubble());
-	std::cout << "Start: " << start.x;
 
 	m_Rendering->PositionDebugCircle(start);
 }
@@ -367,12 +365,14 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 		sf::Keyboard::Key pressedCode = keyEvent->code;
 
 		//TODO: REMOVE
-		if (pressedCode == sf::Keyboard::Key::F) { GameOver(); }
 
 		if (pressedCode == sf::Keyboard::Key::Space && !m_IsSpacePressed) 
 		{
 			m_IsSpacePressed = true;
-			if (std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - m_Gameplay->GetLastDrop(); elapsedSeconds.count() > 1)
+			std::chrono::duration<double, std::milli> elapsed_ms = std::chrono::steady_clock::now() - m_Gameplay->GetLastDrop();
+			std::chrono::duration<double> elapsed_s = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed_ms);
+
+			if (elapsed_s.count() > 1.f)
 			{
 				m_ComboTextPositions = sf::Vector2f(INFINITY, INFINITY);
 				AddBubble();
@@ -413,17 +413,17 @@ void BubbleGame::PlayInput(const sf::Event& a_Event, float a_Delta)
 			}
 		}
 
-		if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
-		if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
-		if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
-		if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
-		if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
-		if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
-		if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
-		if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
-		if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
-		if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
-		if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
+		//if (pressedCode == sf::Keyboard::Key::P) { GameOver(); }
+		//if (pressedCode == sf::Keyboard::Key::Num0) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(0)); }
+		//if (pressedCode == sf::Keyboard::Key::Num1) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(1)); }
+		//if (pressedCode == sf::Keyboard::Key::Num2) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(2)); }
+		//if (pressedCode == sf::Keyboard::Key::Num3) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(3)); }
+		//if (pressedCode == sf::Keyboard::Key::Num4) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(4)); }
+		//if (pressedCode == sf::Keyboard::Key::Num5) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(5)); }
+		//if (pressedCode == sf::Keyboard::Key::Num6) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(6)); }
+		//if (pressedCode == sf::Keyboard::Key::Num7) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(7)); }
+		//if (pressedCode == sf::Keyboard::Key::Num8) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(8)); }
+		//if (pressedCode == sf::Keyboard::Key::Num9) { m_Gameplay->CheatNextBubble(static_cast<EBUBBLE_TYPE>(9)); }
 	}
 
 	if(m_IsMouseButtonPressed)

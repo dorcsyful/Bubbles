@@ -32,8 +32,8 @@ public:
 	float GetCurrentPosition() const { return m_CurrentPosition; }
 	EBUBBLE_TYPE GetCurrentBubble() const { return m_CurrentBubble; }
 	EBUBBLE_TYPE GetNextBubble() const { return m_NextBubble; }
-	std::chrono::time_point<std::chrono::system_clock> GetLastDrop() const { return m_LastDrop; }
-	void SetLastDrop(const std::chrono::time_point<std::chrono::system_clock>& a_Time) { m_LastDrop = a_Time; }
+	std::chrono::time_point<std::chrono::steady_clock> GetLastDrop() const { return m_LastDrop; }
+	void SetLastDrop(const std::chrono::time_point<std::chrono::steady_clock>& a_Time) { m_LastDrop = a_Time; }
 	void UpdateMoveDirection(float a_Direction) { m_MoveDirection = a_Direction; }
 	void Reset(float a_WindowWidth);
 
@@ -63,7 +63,7 @@ private:
 	float m_MoveDirection = 0;
 	unsigned int m_CombineCombo;
 	unsigned int m_Score;
-	std::chrono::time_point<std::chrono::system_clock> m_LastDrop;
+	std::chrono::time_point<std::chrono::steady_clock> m_LastDrop;
 	float m_ContainerEdges[2];
 
 	float m_CurrentPosition;

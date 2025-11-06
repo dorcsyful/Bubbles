@@ -106,7 +106,7 @@ public:
 private:
 	void PlayDraw(float a_Delta);
 	void MenuDraw() const;
-	void GameOverAnimationDraw() const;
+	void GameOverAnimationDraw();
 	void HighScoreDraw() const;
 	void GameOverDraw() const;
 	void ConfirmationDraw() const;

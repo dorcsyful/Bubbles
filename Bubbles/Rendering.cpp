@@ -185,18 +185,15 @@ void Rendering::MenuDraw() const
 	m_MenuButtons.at("Exit")->Draw(*m_Window);
 }
 
-void Rendering::GameOverAnimationDraw() const
+void Rendering::GameOverAnimationDraw()
 {
 	m_Window->draw(*m_BackgroundSprite);
 
 	m_Window->draw(*m_Container);
 	m_Window->draw(*m_Frame);
 	m_Duck->Draw(*m_Window);
+	RenderBubbles();
 
-	for (auto& element : m_RenderedBubbles)
-	{
-		element->Draw(*m_Window);
-	}
 
 	m_Window->draw(*m_GameOver);
 }
@@ -308,7 +305,6 @@ void Rendering::RenderBubbles()
 
 	float scaledOffsetX = m_Container->getGlobalBounds().position.x + Settings::get().GetContainerLeft();
 	float scaledOffsetY = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
-	//std::cout << Settings::get().GetFrameWidth() << std::endl;;
 
 	float viewportX = scaledOffsetX / windowWidth;
 	float viewportY = scaledOffsetY / windowHeight;

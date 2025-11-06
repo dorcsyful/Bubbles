@@ -46,7 +46,6 @@ void Gameplay::Move(float a_Direction)
 	
 		if (temp < x)
 		{
-			std::cout << "Out of left bounds" << x << std::endl;
 
 			temp = x;
 		}
@@ -54,7 +53,6 @@ void Gameplay::Move(float a_Direction)
 	x = m_ContainerEdges[1] - Settings::get().BubbleSize(m_CurrentBubble) * Settings::get().GetPixelToMeter();
 	if (temp > x) 
 	{
-		std::cout << "Out of right bounds: " << x << std::endl;
 
 		temp = x;
 	}
@@ -67,7 +65,7 @@ std::unique_ptr<BubbleObject> Gameplay::Drop(const sf::Vector2f& a_Start)
 	std::unique_ptr<BubbleObject> newBubble = std::make_unique<BubbleObject>(m_CurrentBubble);
 	sf::Vector2f temp = a_Start;
 	temp.y -= Settings::get().BubbleSize(m_CurrentBubble) + 0.001f;
-
+	m_LastDrop = std::chrono::steady_clock::now();
 	newBubble->SetPosition(temp);
 	m_CurrentBubble = m_NextBubble;
 	m_NextBubble = GenerateRandom();
