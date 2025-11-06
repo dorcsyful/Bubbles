@@ -18,15 +18,10 @@ public:
 			sf::Vector2f position = m_GameObjects[i]->GetPosition(); // Physics Pos (meters, Y-up, 0 at top)
 			sf::Vector2f basePixelPos;
 
-			// 1. Meters to Base Pixels (X-axis)
 			basePixelPos.x = position.x * pixelToMeter;
 
-			// 2. Meters to Base Pixels (Y-axis - FLIP)
-			// Since physics Y is UP and base pixel Y is DOWN, and both origins are TOP:
-			// base_pix_y = -phys_y * PPM
 			basePixelPos.y = position.y * pixelToMeter * -1.f;
 
-			// Set the UNCALED position on the wrapper object.
 			m_Rendered[i]->SetPosition(basePixelPos);
 			m_Rendered[i]->SetRotation(m_GameObjects[i]->GetRotation() * 57.2957795f);
 		}

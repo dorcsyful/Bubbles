@@ -117,7 +117,6 @@ void Rendering::PlayDraw(float a_Delta)
 	m_MenuButtons.at("Back to menu")->Draw(*m_Window);
 	m_MenuButtons.at("Restart")->Draw(*m_Window);
 	//m_Window->draw(*m_Score);
-	m_Window->draw(*m_ComboText);
 	m_Window->draw(*m_ScoreTitle);
 	//m_Window->draw(*m_HighScoreTitleInPlay);
 	m_Window->draw(*m_StoredSprite);
@@ -162,13 +161,12 @@ void Rendering::PlayDraw(float a_Delta)
 	RenderBubbles();
 
 
-	m_ParticleSystem->Draw(*m_Window);
 
 	float left = m_Container->getGlobalBounds().position.x;
 	float containerLeft = left + Settings::get().GetContainerLeft();
 	float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom() + Settings::get().GetContainerHeight();
 	m_DebugCircle->setPosition(sf::Vector2f(containerLeft, containerTop));
-	m_Window->draw(*m_DebugCircle);
+	//m_Window->draw(*m_DebugCircle);
 }
 
 void Rendering::MenuDraw() const
@@ -292,12 +290,9 @@ void Rendering::SettingsDraw() const
 }
 
 void Rendering::SetupView() {
-	// These are the UNCALED dimensions in base pixels
 	const float containerWidth = Settings::get().GetContainerWidth();
 	const float containerHeight = Settings::get().GetContainerHeight();
 
-	// Define the World Coordinates (the area we want to see). 
-	// Origin is (0,0), size is container dimensions.
 	m_WorldView.setSize(sf::Vector2f(containerWidth, containerHeight));
 	m_WorldView.setCenter(sf::Vector2f(containerWidth / 2.f, containerHeight / 2.f));
 }
@@ -313,44 +308,25 @@ void Rendering::RenderBubbles()
 	float viewportW = (containerWidth * scale) / windowWidth;
 	float viewportH = (containerHeight * scale) / windowHeight;
 
-	// 2. Calculate Viewport Position (Normalized Top-Left Corner)
-	// The base position (300, 488) is where the container's (0,0) *should* be at Scale=1.
-	// When scaled, the top-left corner shifts.
-
-	// Calculate the scaled screen position of the container's top-left corner (in pixels):
-	// The scale factor applies to the distance from the window's (0,0) if that distance is relative
-	// to the container's base position. However, since your physics is top-left, 
-	// you need to calculate the actual position based on the centering/offset logic. 
-
-	// Since (300, 488) is the base position of the container's top-left, 
-	// we use that as the starting offset, and then apply centering logic relative to the window size.
-
-	// The new top-left X/Y (in pixels) for the scaled container:
-	// This is essentially your old 'containerLeft' and 'containerTop' calculations but defined explicitly.
-	// Assuming (300, 488) is where the container is centered in your original setup:
-
 	float scaledOffsetX = m_Container->getGlobalBounds().position.x + Settings::get().GetContainerLeft();
 	float scaledOffsetY = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
 	//std::cout << Settings::get().GetFrameWidth() << std::endl;;
 
-	// Normalized Viewport Position (Viewport X/Y)
 	float viewportX = scaledOffsetX / windowWidth;
 	float viewportY = scaledOffsetY / windowHeight;
 
-	// *If your (300,488) was based on a different centering logic, use that logic here and apply scale.*
 
 	m_WorldView.setViewport(sf::FloatRect(sf::Vector2f(viewportX, viewportY), sf::Vector2f(viewportW, viewportH)));
 
-	// 3. Apply the custom View and draw...
 	m_Window->setView(m_WorldView);
 	for (auto& element : m_RenderedBubbles)
 	{
 		element->Draw(*m_Window);
 	}
-	// ... draw m_Rendered objects ...
+	m_ParticleSystem->Draw(*m_Window);
+	m_Window->draw(*m_ComboText);
 
 	m_Window->setView(m_Window->getDefaultView());
-	// ... window.display() ...
 
 }
 
@@ -653,9 +629,9 @@ void Rendering::UpdateComboPosition(const sf::Vector2f& a_NewPos) const
 	adjustedCoord.y = std::max(rectBounds.position.y, std::min(rectBounds.position.y + rectBounds.size.y - textBounds.size.y, adjustedCoord.y));
 
 	// Position the text
-	m_ComboText->setPosition(adjustedCoord);
+	m_ComboText->setPosition(a_NewPos);
 	sf::Color comboColor = sf::Color::Red;
-	m_ParticleSystem->SpawnBurst(adjustedCoord, 10, comboColor);
+	m_ParticleSystem->SpawnBurst(a_NewPos, 10, comboColor);
 
 
 }

@@ -71,15 +71,13 @@ void BubbleGame::PlayUpdate(float a_Delta)
 
 			continue;
 		}
-		float containerLeft = Settings::get().GetWindowWidth() / 2.f - Settings::get().GetContainerWidth() * Settings::get().GetScale() / 2.f;
-		float containerTop = (Settings::get().GetWindowHeight() / 2.f - ((Settings::get().GetFrameHeight() * Settings::get().GetScale()) / 2.f)) + Settings::get().GetContainerBottom();
 		m_ComboTextPositions = BubbleMath::Lerp(bubble1->GetPosition(), bubble2->GetPosition(), 0.5f);
 		m_ComboTextPositions.x *= Settings::get().GetPixelToMeter();
-		m_ComboTextPositions.x += containerLeft;
+		//m_ComboTextPositions.x += containerLeft;
 
 		m_ComboTextPositions.y *= Settings::get().GetPixelToMeter();
 		m_ComboTextPositions.y *= -1;
-		m_ComboTextPositions.y += containerTop;
+		//m_ComboTextPositions.y += containerTop;
 
 		m_Rendering->UpdateComboPosition(m_ComboTextPositions);
 
