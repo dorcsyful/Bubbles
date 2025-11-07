@@ -1323,7 +1323,7 @@ void Rendering::CreateSettingsButtons()
 	newButton->SetText("Apply");
 	newButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
 	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
-	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.f), Settings::get().GetButtonHeight() / (BBTextureSize.y));
+	sf::Vector2f buttonScale = sf::Vector2f(0.3 * Settings::get().GetScale(), 0.3 * Settings::get().GetScale());
 
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
