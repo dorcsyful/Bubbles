@@ -79,11 +79,13 @@ void Gameplay::Reset(float a_WindowWidth)
 	m_CurrentBubble = GenerateRandom();
 	m_NextBubble = GenerateRandom();
 	Random::getInstance().SetSeed(time(nullptr));
-	m_ContainerEdges[1] = m_ContainerEdges[0] + Settings::get().GetContainerWidth() * Settings::get().GetScale();
+	m_ContainerEdges[0] = 0;
+	m_ContainerEdges[1] = Settings::get().GetContainerWidth();
 	m_CurrentPosition = 0;
 	Move(0);
 	m_Score = 0;
 }
+
 
 EBUBBLE_TYPE Gameplay::GenerateRandom()
 {
