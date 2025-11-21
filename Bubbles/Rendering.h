@@ -69,7 +69,7 @@ public:
 	void UpScaleComboText(float a_Amount) const { m_ComboText->setScale(sf::Vector2f(a_Amount, a_Amount)); }
 	void UpdateNextUp(EBUBBLE_TYPE a_Type)
 	{
-		int position = static_cast<int>(m_NextUpBubble->getTexture().getSize().y);
+		int position = static_cast<int>(m_NextUpBubble->getTexture().getSize().x / 6);
 		if(a_Type == EBUBBLE_TYPE::TYPE_BATH_BOMB || a_Type ==EBUBBLE_TYPE::TYPE_SPIKY_BOMB)
 		{
 			m_NextUpBubble->setTextureRect(sf::IntRect(sf::Vector2(position * 5, 0),sf::Vector2<int>(position, position)));
