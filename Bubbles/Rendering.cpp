@@ -896,7 +896,7 @@ void Rendering::CreateGameOverSprite()
 	m_GameOver->setOrigin(sf::Vector2f(titleSize.x / 2, titleSize.y / 2));
 	m_GameOver->setPosition(sf::Vector2f(m_Window->getSize().x / 2.f,m_Window->getSize().y * 0.33f));
 
-	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
+	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_HighScoresButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetMenuButtonWidth() / (BBTextureSize.x / 3.7f), Settings::get().GetMenuButtonHeight() / BBTextureSize.y);
 
 	
@@ -964,14 +964,14 @@ void Rendering::CreateGameOverSprite()
 	sf::Vector2f basePos = m_GOHighScoreBackground->getPosition();
 	basePos.x = m_GameOver->getGlobalBounds().position.x + Settings::get().GetMenuButtonWidth();
 	basePos.y = m_GOHighScoreBackground->getGlobalBounds().position.y + m_GOHighScoreBackground->getGlobalBounds().size.y * 1.3;
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(basePos, *m_Font, m_HighScoresButtonTexture.get());
 	newButton->SetText("Play again");
 	newButton->ResizeCharacters(std::round(38.f * Settings::get().GetScale()));
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("PlayAgain", std::move(newButton)));
 
 	basePos.x += m_MenuButtons.at("PlayAgain")->GetWidth() * 1.1f;
-	newButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	newButton = std::make_unique<Button>(basePos, *m_Font, m_HighScoresButtonTexture.get());
 	newButton->SetText("Back to menu");
 	newButton->ResizeCharacters(std::round(38.f * Settings::get().GetScale()));
 	newButton->SetScale(buttonScale);
