@@ -1041,7 +1041,7 @@ void Rendering::CreateMenuButtonSprites()
 	m_LoadingTexture->loadFromFile(LOADING_FILENAME);
 	m_Loading = std::make_unique<AnimatedSprite>(m_LoadingTexture.get(), Settings::get().GetLoadTime(), Settings::get().GetLoadingFrames(), true);
 	sf::Vector2f windowSize = BubbleMath::ToVector2f(m_Window->getSize());
-	m_Loading->SetScale(0.5, 0.5);
+	m_Loading->SetScale(0.4, 0.4);
 	m_Loading->SetPosition(sf::Vector2f(windowSize.x - m_Loading->GetSize().x, windowSize.y - m_Loading->GetSize().y));
 }
 
@@ -1116,13 +1116,13 @@ void Rendering::CreateHighScoreSprites()
 		basePos.y += m_HighScoreSprites[i]->getCharacterSize() * 1.3f;
 	}
 
-	sf::Vector2f BBTexture = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
+	sf::Vector2f BBTexture = BubbleMath::ToVector2f(m_PlayButtonTexture->getSize());
 	float x = BBTexture.x;
 	sf::Vector2f(x / 2, BBTexture.y);
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
 	basePos.y -= static_cast<float>(m_Window->getSize().y) / 10;
-	m_HSBackButton = std::make_unique<Button>(basePos, *m_Font, m_BaseButtonTexture.get());
+	m_HSBackButton = std::make_unique<Button>(basePos, *m_Font, m_PlayButtonTexture.get());
 	m_HSBackButton->SetText("Back");
 	m_HSBackButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
 	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetButtonWidth() / (BBTexture.x / 3.5f), Settings::get().GetButtonHeight() / BBTexture.y);
@@ -1319,17 +1319,17 @@ void Rendering::CreateConfirmationWindow()
 void Rendering::CreateSettingsButtons()
 {
 	sf::Vector2f position = m_MenuButtons.at("Back to menu")->GetPosition();
-	std::unique_ptr<Button> newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
+	std::unique_ptr<Button> newButton = std::make_unique<Button>(position, *m_Font, m_PlayButtonTexture.get());
 	newButton->SetText("Apply");
 	newButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
-	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_BaseButtonTexture->getSize());
+	sf::Vector2f BBTextureSize = BubbleMath::ToVector2f(m_PlayButtonTexture->getSize());
 	sf::Vector2f buttonScale = sf::Vector2f(0.3 * Settings::get().GetScale(), 0.3 * Settings::get().GetScale());
 
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
 
 	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 2.f;
-	newButton = std::make_unique<Button>(position, *m_Font, m_BaseButtonTexture.get());
+	newButton = std::make_unique<Button>(position, *m_Font, m_PlayButtonTexture.get());
 	newButton->SetText("Revert");
 	newButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
 	newButton->SetScale(buttonScale);
@@ -1457,7 +1457,7 @@ void Rendering::CreateCycleBottle()
 
 	sf::Vector2f cycleTextureSize = BubbleMath::ToVector2f(m_CycleTexture->getSize());
 
-	float temp = (m_Container->getSize().y * 0.8f) / cycleTextureSize.y;
+	float temp = (m_Container->getSize().y * 0.75f) / cycleTextureSize.y;
 	sf::Vector2f f(m_CycleTexture->getSize().x * temp, m_CycleTexture->getSize().y * temp);
 	m_CycleSprite->setSize(f);
 	m_CycleSprite->setOrigin(sf::Vector2f(m_CycleSprite->getLocalBounds().position.x + m_CycleSprite->getLocalBounds().size.x / 2.f,
