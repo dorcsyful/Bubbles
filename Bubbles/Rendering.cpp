@@ -220,6 +220,8 @@ void Rendering::GameOverDraw() const
 
 	float lastPosition = m_GOStartPosition;
 	std::string scoreString = m_Score->getString();
+	m_Window->draw(*m_GOScoreCloudSprite);
+
 	for (size_t i = 0; i < scoreString.size(); i++)
 	{
 		unsigned char asChar = scoreString[i];
@@ -228,7 +230,6 @@ void Rendering::GameOverDraw() const
 		m_Window->draw(*m_GOScoreNumberSprites[value]);
 		lastPosition += m_GOScoreNumberSprites[value]->getGlobalBounds().size.x + 2;
 	}
-	m_Window->draw(*m_GOScoreCloudSprite);
 	m_MenuButtons.at("PlayAgain")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->DetectHover(m_Window->mapPixelToCoords(sf::Mouse::getPosition(*m_Window)));
 	m_MenuButtons.at("BackToMenu")->Draw(*m_Window);
