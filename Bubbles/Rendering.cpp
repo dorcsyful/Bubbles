@@ -47,11 +47,12 @@ Rendering::Rendering(const int a_X, const int a_Y, std::vector<std::unique_ptr<A
 	LoadStorageTextures();
 	CreatePointer();
 	CreateMenuSprites();
-	CreateHighScoreSprites();
 	CreateScoreText();
 
 	CreateDuck();
 	CreatePlayModeButtons();
+	CreateHighScoreSprites();
+
 	CreateConfirmationWindow();
 	CreateSettings();
 	CreateCycleBottle();
@@ -1122,10 +1123,11 @@ void Rendering::CreateHighScoreSprites()
 	basePos = BubbleMath::ToVector2f(m_Window->getSize());
 	basePos.x = static_cast<float>(m_Window->getSize().x) / 10;
 	basePos.y -= static_cast<float>(m_Window->getSize().y) / 10;
+	basePos = m_MenuButtons.at("Back to menu")->GetPosition();
 	m_HSBackButton = std::make_unique<Button>(basePos, *m_Font, m_PlayButtonTexture.get());
 	m_HSBackButton->SetText("Back");
 	m_HSBackButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
-	sf::Vector2f buttonScale = sf::Vector2f(Settings::get().GetButtonWidth() / (BBTexture.x / 3.5f), Settings::get().GetButtonHeight() / BBTexture.y);
+	sf::Vector2f buttonScale = sf::Vector2f(0.3 * Settings::get().GetScale(), 0.3 * Settings::get().GetScale());
 
 	m_HSBackButton->SetScale(buttonScale);
 }
@@ -1328,7 +1330,7 @@ void Rendering::CreateSettingsButtons()
 	newButton->SetScale(buttonScale);
 	m_MenuButtons.insert(m_MenuButtons.begin(), std::pair<std::string, std::unique_ptr<Button>>("ApplySettings", std::move(newButton)));
 
-	position.x += m_MenuButtons.at("Back to menu")->GetWidth() * 2.f;
+	position.x = m_MenuButtons.at("ApplySettings")->GetPosition().x + m_MenuButtons.at("ApplySettings")->GetWidth();
 	newButton = std::make_unique<Button>(position, *m_Font, m_PlayButtonTexture.get());
 	newButton->SetText("Revert");
 	newButton->ResizeCharacters(std::round(30.f * Settings::get().GetScale()));
